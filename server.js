@@ -6,283 +6,239 @@ const { WebcastPushConnection } = require('tiktok-live-connector');
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
+const PORT = process.env.PORT || 3000;
 
-// Serve static files (game assets)
 app.use(express.static('.'));
 
-let tiktokConnection = null;
-let currentUsername = '';
-let isConnected = false;
+// ── Per-client sessions ──────────────────────────────────────────────────────
+// Map<ws, { tiktokConnection, username, isConnected }>
+const sessions = new Map();
 
-// Broadcast to all connected browser clients
-function broadcast(data) {
-  const msg = JSON.stringify(data);
-  let sent = 0;
-  wss.clients.forEach(client => {
-    if (client.readyState === 1) { client.send(msg); sent++; }
-  });
-  if (data.type === 'chat' || data.type === 'like' || data.type === 'member') {
-    console.log(`📡 Broadcast ${data.type} to ${sent} client(s)`);
-  }
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function getAvatar(user, data) {
+  return (user && user.profilePictureUrl) || (data && data.profilePictureUrl) || '';
+}
+function getUser(user, data, fallback) {
+  var u = user || {};
+  return (u.uniqueId || (data && data.uniqueId) || u.nickname || (data && data.nickname) || fallback || '').toLowerCase();
+}
+function getNick(user, data, fallback) {
+  return (user && user.nickname) || (data && data.nickname) || fallback || '';
 }
 
-function connectTikTok(username, retryMode) {
-  if (tiktokConnection) {
-    try { tiktokConnection.disconnect(); } catch (e) {}
+function send(ws, obj) {
+  try {
+    if (ws.readyState === 1) ws.send(JSON.stringify(obj));
+  } catch (e) { /* ignore closed sockets */ }
+}
+
+// ── Connect a single client to TikTok ────────────────────────────────────────
+function connectTikTok(ws, username) {
+  var session = sessions.get(ws);
+  // Disconnect previous connection if any
+  if (session && session.tiktokConnection) {
+    try { session.tiktokConnection.disconnect(); } catch (e) {}
   }
 
-  currentUsername = username;
+  var opts = { processInitialData: true, enableExtendedGiftInfo: true };
+  if (process.env.TIKTOK_SESSION_ID) opts.sessionId = process.env.TIKTOK_SESSION_ID;
 
-  const options = {
-    processInitialData: true,
-    enableExtendedGiftInfo: true,
-    fetchRoomInfoOnConnect: true,
-    requestPollingIntervalMs: 1000
-  };
+  var tiktok = new WebcastPushConnection(username, opts);
 
-  // retryMode: undefined = first attempt (bypass), 'direct' = direct scraping, 'polling' = request polling
-  if (!retryMode) {
-    options.connectWithUniqueId = true;
-  }
+  sessions.set(ws, { tiktokConnection: tiktok, username: username, isConnected: false });
 
-  // If a sessionId is set via env var, use request polling
-  if (process.env.TIKTOK_SESSION_ID) {
-    options.sessionId = process.env.TIKTOK_SESSION_ID;
-  }
+  console.log('[TikTok] Connecting to @' + username + '...');
 
-  // If a Sign API key is set via env var, use it for higher rate limits
-  if (process.env.TIKTOK_SIGN_KEY) {
-    options.signApiKey = process.env.TIKTOK_SIGN_KEY;
-  }
-
-  console.log(`Connecting to TikTok @${username} (mode: ${retryMode || 'bypass'}, sessionId: ${options.sessionId ? 'yes' : 'no'})`);
-  tiktokConnection = new WebcastPushConnection(username, options);
-
-  tiktokConnection.connect().then(state => {
-    isConnected = true;
-    console.log(`Connected to TikTok @${username} (roomId: ${state.roomId})`);
-    broadcast({
-      type: 'connected',
-      username: username,
-      roomId: state.roomId
-    });
-  }).catch(err => {
-    isConnected = false;
-    const msg = err.message || String(err);
-    console.error('TikTok connection failed:', msg);
-
-    // Retry chain: bypass -> direct -> polling (if sessionId available)
-    if (!retryMode && (msg.includes('user_not_found') || msg.includes('not_found'))) {
-      console.log('Retrying with direct scraping...');
-      broadcast({ type: 'status', connected: false, username, message: 'Retrying connection...' });
-      connectTikTok(username, 'direct');
-      return;
-    }
-
-    if (retryMode !== 'polling' && msg.includes('websocket upgrade')) {
-      console.log('WebSocket upgrade rejected. Retrying with request polling...');
-      broadcast({ type: 'status', connected: false, username, message: 'Retrying with polling...' });
-      connectTikTok(username, 'polling');
-      return;
-    }
-
-    let userMsg = msg;
-    if (msg.includes('user_not_found')) {
-      userMsg = 'User not found or not currently live. Check the username and make sure the stream is active.';
-    } else if (msg.includes('LIVE has ended')) {
-      userMsg = 'This user is not currently live.';
-    } else if (msg.includes('rate') || msg.includes('429')) {
-      userMsg = 'Rate limited. Wait a moment and try again.';
-    } else if (msg.includes('websocket upgrade')) {
-      userMsg = 'TikTok blocked the connection. Set TIKTOK_SESSION_ID env var with your browser session cookie to use polling mode.';
-    }
-
-    broadcast({ type: 'error', message: userMsg });
+  tiktok.connect().then(function(state) {
+    console.log('[TikTok] Connected to @' + username + ' | roomId:', state.roomId);
+    var s = sessions.get(ws);
+    if (s) s.isConnected = true;
+    send(ws, { type: 'connected', username: username, roomId: state.roomId });
+  }).catch(function(err) {
+    console.error('[TikTok] Connection failed for @' + username + ':', err.message);
+    send(ws, { type: 'error', message: 'TikTok connection failed: ' + err.message });
   });
 
-  // Chat messages
-  tiktokConnection.on('chat', data => {
-    const user = data.user || {};
-    const uniqueId = (user.uniqueId || data.uniqueId || '').toLowerCase();
-    const nickname = user.nickname || data.nickname || '';
-    const comment = data.comment || '';
-    const effectiveUser = uniqueId || nickname.toLowerCase() || currentUsername.toLowerCase();
-    console.log(`💬 Chat: @${effectiveUser}${nickname ? ' (' + nickname + ')' : ''}: "${comment}"`);
-    broadcast({
-      type: 'chat',
-      user: effectiveUser,
-      nickname: nickname || effectiveUser,
-      comment: comment,
-      avatar: user.profilePictureUrl || data.profilePictureUrl || '',
-      userId: user.userId || data.userId || ''
+  // ── Chat ──
+  tiktok.on('chat', function(data) {
+    var user = data.user || {};
+    var uid = getUser(user, data, username);
+    var nick = getNick(user, data, uid);
+    var avatar = getAvatar(user, data);
+    console.log('[Chat] @' + uid + ': ' + (data.comment || ''));
+    send(ws, { type: 'chat', user: uid, nickname: nick, avatar: avatar, comment: data.comment || '' });
+  });
+
+  // ── Member join ──
+  tiktok.on('member', function(data) {
+    var user = data.user || {};
+    var uid = getUser(user, data, '');
+    var nick = getNick(user, data, uid);
+    var avatar = getAvatar(user, data);
+    if (!uid) return;
+    console.log('[Member] @' + uid + ' joined');
+    send(ws, { type: 'member', user: uid, nickname: nick, avatar: avatar });
+  });
+
+  // ── Gift ──
+  tiktok.on('gift', function(data) {
+    var user = data.user || {};
+    var uid = getUser(user, data, 'unknown');
+    var nick = getNick(user, data, uid);
+    var avatar = getAvatar(user, data);
+    var giftName = (data.giftName || data.describe || '').toLowerCase();
+    var diamonds = data.diamondCount || 1;
+    var repeat = data.repeatCount || 1;
+    console.log('[Gift] @' + uid + ' sent ' + giftName + ' x' + repeat + ' (' + diamonds + ' diamonds)');
+    send(ws, {
+      type: 'gift', user: uid, nickname: nick, avatar: avatar,
+      giftName: giftName, diamondCount: diamonds, repeatCount: repeat,
+      giftId: data.giftId || 0
     });
   });
 
-  // New viewer joins
-  tiktokConnection.on('member', data => {
-    const user = data.user || {};
-    const effectiveUser = user.uniqueId || data.uniqueId || user.nickname || data.nickname || '';
-    if (!effectiveUser) return; // skip anonymous viewers
-    console.log(`👋 Member joined: @${effectiveUser}`);
-    broadcast({
-      type: 'member',
-      user: effectiveUser,
-      nickname: user.nickname || data.nickname || effectiveUser,
-      avatar: user.profilePictureUrl || data.profilePictureUrl || ''
-    });
+  // ── Like ──
+  tiktok.on('like', function(data) {
+    var user = data.user || {};
+    var uid = getUser(user, data, '');
+    var nick = getNick(user, data, uid);
+    var avatar = getAvatar(user, data);
+    if (!uid) return;
+    console.log('[Like] @' + uid + ' x' + (data.likeCount || 1));
+    send(ws, { type: 'like', user: uid, nickname: nick, avatar: avatar, likeCount: data.likeCount || 1 });
   });
 
-  // Gifts
-  tiktokConnection.on('gift', data => {
-    if (data.giftType === 1 && !data.repeatEnd) return;
-    const user = data.user || {};
-    const ext = data.extendedGiftInfo || {};
-    const effectiveUser = user.uniqueId || data.uniqueId || user.nickname || data.nickname || '';
-    broadcast({
-      type: 'gift',
-      user: effectiveUser,
-      nickname: user.nickname || data.nickname || effectiveUser,
-      avatar: user.profilePictureUrl || data.profilePictureUrl || '',
-      giftId: data.giftId,
-      giftName: ext.name || data.describe || '',
-      diamondCount: ext.diamond_count || data.diamondCount || 0,
-      repeatCount: data.repeatCount || 1
-    });
+  // ── Follow ──
+  tiktok.on('follow', function(data) {
+    var user = data.user || {};
+    var uid = getUser(user, data, 'unknown');
+    var nick = getNick(user, data, uid);
+    var avatar = getAvatar(user, data);
+    console.log('[Follow] @' + uid);
+    send(ws, { type: 'follow', user: uid, nickname: nick, avatar: avatar });
   });
 
-  // Likes
-  tiktokConnection.on('like', data => {
-    const user = data.user || {};
-    const effectiveUser = user.uniqueId || data.uniqueId || user.nickname || data.nickname || '';
-    if (!effectiveUser) {
-      console.log('Like event without user identity, skipping');
-      return;
-    }
-    console.log(`❤ Like from @${effectiveUser} (x${data.likeCount || 1})`);
-    broadcast({
-      type: 'like',
-      user: effectiveUser,
-      nickname: user.nickname || data.nickname || effectiveUser,
-      avatar: user.profilePictureUrl || data.profilePictureUrl || '',
-      likeCount: data.likeCount || 1,
-      totalLikes: data.totalLikeCount || 0
-    });
+  // ── Share ──
+  tiktok.on('share', function(data) {
+    var user = data.user || {};
+    var uid = getUser(user, data, 'unknown');
+    var nick = getNick(user, data, uid);
+    var avatar = getAvatar(user, data);
+    console.log('[Share] @' + uid);
+    send(ws, { type: 'share', user: uid, nickname: nick, avatar: avatar });
   });
 
-  // Social events (follow, share)
-  tiktokConnection.on('social', data => {
-    const user = data.user || {};
-    const effectiveUser = user.uniqueId || data.uniqueId || user.nickname || data.nickname || '';
-    const display = (data.displayType || '').toLowerCase();
-    if (display.includes('follow')) {
-      broadcast({
-        type: 'follow',
-        user: effectiveUser,
-        nickname: user.nickname || data.nickname || effectiveUser,
-        avatar: user.profilePictureUrl || ''
-      });
-    } else if (display.includes('share')) {
-      broadcast({
-        type: 'share',
-        user: effectiveUser,
-        nickname: user.nickname || data.nickname || effectiveUser,
-        avatar: user.profilePictureUrl || ''
-      });
-    }
+  // ── Social ──
+  tiktok.on('social', function(data) {
+    var user = data.user || {};
+    var uid = getUser(user, data, '');
+    var nick = getNick(user, data, uid);
+    var avatar = getAvatar(user, data);
+    if (!uid) return;
+    var label = data.displayType || data.label || 'social';
+    console.log('[Social] @' + uid + ' → ' + label);
+    send(ws, { type: 'social', user: uid, nickname: nick, avatar: avatar, label: label });
   });
 
-  // Follow event (custom event from library)
-  tiktokConnection.on('follow', data => {
-    const user = data.user || {};
-    const effectiveUser = user.uniqueId || data.uniqueId || user.nickname || data.nickname || '';
-    broadcast({
-      type: 'follow',
-      user: effectiveUser,
-      nickname: user.nickname || data.nickname || effectiveUser,
-      avatar: user.profilePictureUrl || ''
-    });
+  // ── Room user count ──
+  tiktok.on('roomUser', function(data) {
+    send(ws, { type: 'roomUser', viewerCount: data.viewerCount || 0 });
   });
 
-  // Share event (custom event from library)
-  tiktokConnection.on('share', data => {
-    const user = data.user || {};
-    const effectiveUser = user.uniqueId || data.uniqueId || user.nickname || data.nickname || '';
-    broadcast({
-      type: 'share',
-      user: effectiveUser,
-      nickname: user.nickname || data.nickname || effectiveUser,
-      avatar: user.profilePictureUrl || ''
-    });
+  // ── Stream end ──
+  tiktok.on('streamEnd', function(actionId) {
+    console.log('[TikTok] Stream ended for @' + username);
+    var s = sessions.get(ws);
+    if (s) s.isConnected = false;
+    send(ws, { type: 'streamEnd', actionId: actionId });
   });
 
-  // Viewer count
-  tiktokConnection.on('roomUser', data => {
-    broadcast({
-      type: 'roomUser',
-      viewerCount: data.viewerCount
-    });
+  // ── Disconnected ──
+  tiktok.on('disconnected', function() {
+    console.log('[TikTok] Disconnected from @' + username);
+    var s = sessions.get(ws);
+    if (s) s.isConnected = false;
+    send(ws, { type: 'disconnected' });
   });
 
-  // Stream ended
-  tiktokConnection.on('streamEnd', () => {
-    isConnected = false;
-    broadcast({ type: 'streamEnd' });
-    console.log('TikTok stream ended');
+  // ── Error ──
+  tiktok.on('error', function(err) {
+    console.error('[TikTok] Error for @' + username + ':', err.message);
+    send(ws, { type: 'error', message: err.message });
   });
 
-  // Disconnected
-  tiktokConnection.on('disconnected', () => {
-    isConnected = false;
-    broadcast({ type: 'disconnected' });
-    console.log('Disconnected from TikTok');
-  });
-
-  tiktokConnection.on('error', err => {
-    console.error('TikTok error:', err.info || err.message || err);
-    broadcast({ type: 'error', message: err.message || String(err) });
-  });
-
-  // Debug: log all raw decoded events to see what TikTok is actually sending
-  tiktokConnection.on('rawData', (msgType, data) => {
-    if (!['WebcastResponseMessage', 'WebcastControlMessage'].includes(msgType)) {
-      console.log(`📦 Raw event: ${msgType}`);
+  // ── Raw data (debug) ──
+  tiktok.on('rawData', function(messageTypeName) {
+    // Only log uncommon events
+    if (!['WebcastChatMessage','WebcastMemberMessage','WebcastGiftMessage','WebcastLikeMessage','WebcastSocialMessage'].includes(messageTypeName)) {
+      console.log('[Raw] @' + username + ':', messageTypeName);
     }
   });
 }
 
-// Handle browser WebSocket connections
-wss.on('connection', ws => {
-  console.log('Browser client connected. Total clients:', wss.clients.size);
+// ── WebSocket connection handler ─────────────────────────────────────────────
+wss.on('connection', function(ws) {
+  console.log('[WS] New client connected. Total:', wss.clients.size);
 
-  // Send current status
-  ws.send(JSON.stringify({
-    type: 'status',
-    connected: isConnected,
-    username: currentUsername
-  }));
-
-  ws.on('message', raw => {
+  ws.on('message', function(raw) {
     try {
-      const msg = JSON.parse(raw);
+      var msg = JSON.parse(raw);
+
       if (msg.action === 'connect' && msg.username) {
-        connectTikTok(msg.username.replace('@', ''));
-      } else if (msg.action === 'disconnect') {
-        if (tiktokConnection) {
-          try { tiktokConnection.disconnect(); } catch (e) {}
-          tiktokConnection = null;
-          isConnected = false;
-          broadcast({ type: 'disconnected' });
+        var uname = msg.username.replace(/^@/, '').trim();
+        if (!uname) {
+          send(ws, { type: 'error', message: 'Username is required.' });
+          return;
         }
+        console.log('[WS] Client wants to connect to @' + uname);
+        connectTikTok(ws, uname);
       }
-    } catch (e) {}
+
+      else if (msg.action === 'disconnect') {
+        var session = sessions.get(ws);
+        if (session && session.tiktokConnection) {
+          try { session.tiktokConnection.disconnect(); } catch (e) {}
+          session.isConnected = false;
+          console.log('[WS] Client disconnected from TikTok @' + session.username);
+        }
+        send(ws, { type: 'disconnected' });
+      }
+
+      else if (msg.action === 'status') {
+        var session = sessions.get(ws);
+        send(ws, {
+          type: 'status',
+          connected: !!(session && session.isConnected),
+          username: session ? session.username : null
+        });
+      }
+
+    } catch (e) {
+      console.error('[WS] Bad message:', e.message);
+    }
   });
 
-  ws.on('close', () => {
-    console.log('Browser client disconnected. Total clients:', wss.clients.size);
+  ws.on('close', function() {
+    var session = sessions.get(ws);
+    if (session) {
+      if (session.tiktokConnection) {
+        try { session.tiktokConnection.disconnect(); } catch (e) {}
+      }
+      console.log('[WS] Client disconnected. Was connected to @' + (session.username || '?'));
+      sessions.delete(ws);
+    }
+    console.log('[WS] Clients remaining:', wss.clients.size);
+  });
+
+  ws.on('error', function(err) {
+    console.error('[WS] Client error:', err.message);
   });
 });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Pickaxe Drop server running at http://localhost:${PORT}`);
+// ── Start server ─────────────────────────────────────────────────────────────
+server.listen(PORT, function() {
+  console.log('=== Pickaxe Drop TikTok Server ===');
+  console.log('Game:   http://localhost:' + PORT);
+  console.log('Multi-session: each browser gets its own TikTok connection');
+  console.log('==================================');
 });
