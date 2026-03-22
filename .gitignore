@@ -14,3 +14,6 @@ config.txt
 head.txt
 tail.txt
 middle_rich.js
+
+# Node.js
+node_modules/
