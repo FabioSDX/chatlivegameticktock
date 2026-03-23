@@ -3323,12 +3323,13 @@
           }
 
           if (dirGap) {
-            if (_gapLanding(z.dir)) {
+            // Prefer dropping down to seek lower ground
+            if (_gapDrop(z.dir)) {
+              z.vx = z.dir * z.speed * 1.5;
+            } else if (_gapLanding(z.dir)) {
               z.vy = -6; z.vx = z.dir * z.speed * 3;
               z.grounded = false; z.state = 'jump'; z.animTimer = 0; z.fallFrames = 0;
               continue;
-            } else if (_gapDrop(z.dir)) {
-              z.vx = z.dir * z.speed * 1.5;
             } else {
               var otherBlocked2 = z.dir > 0 ? blockedLeft : blockedRight;
               var otherGap2 = z.dir > 0 ? gapLeft : gapRight;
@@ -3360,12 +3361,21 @@
             z.state = 'attack'; z.animTimer = 0;
             continue;
           }
-          // After idling, start walking
+          // After idling, start walking — prefer direction toward lower ground
           if (z.idleTimer > 60 + Math.random() * 90) {
             z.state = 'walk'; z.animTimer = 0; z.idleTimer = 0;
-            if (!blockedRight && !gapRight) z.dir = 1;
-            else if (!blockedLeft && !gapLeft) z.dir = -1;
-            else if (Math.random() < 0.3) z.dir *= -1;
+            var canLeft = !blockedLeft && !gapLeft;
+            var canRight = !blockedRight && !gapRight;
+            var dropLeft = gapLeft && _gapDrop(-1);
+            var dropRight = gapRight && _gapDrop(1);
+            // Prefer dropping into gaps (seeking lower ground)
+            if (dropLeft && !dropRight) { z.dir = -1; }
+            else if (dropRight && !dropLeft) { z.dir = 1; }
+            else if (canLeft && canRight) { z.dir = Math.random() < 0.5 ? -1 : 1; }
+            else if (canLeft) { z.dir = -1; }
+            else if (canRight) { z.dir = 1; }
+            else if (dropLeft && dropRight) { z.dir = Math.random() < 0.5 ? -1 : 1; }
+            else if (Math.random() < 0.3) { z.dir *= -1; }
           }
         } else if (z.state === 'walk') {
           z.vx = z.dir * z.speed;
