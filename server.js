@@ -250,10 +250,24 @@ wss.on('connection', function(ws) {
   });
 });
 
+// ── Health check endpoint (keeps Render awake) ──────────────────────────────
+app.get('/health', function(req, res) {
+  res.json({ status: 'ok', sessions: sessions.size, uptime: process.uptime() });
+});
+
 // ── Start server ─────────────────────────────────────────────────────────────
 server.listen(PORT, function() {
   console.log('=== Pickaxe Drop TikTok Server ===');
   console.log('Game:   http://localhost:' + PORT);
   console.log('Multi-session: each browser gets its own TikTok connection');
   console.log('==================================');
+
+  // Keep Render free tier awake by self-pinging every 14 min
+  if (process.env.RENDER_EXTERNAL_URL) {
+    setInterval(function() {
+      var url = process.env.RENDER_EXTERNAL_URL + '/health';
+      require('http').get(url.replace('https:', 'http:'), function() {}).on('error', function() {});
+      console.log('[Keep-alive] Pinged ' + url);
+    }, 14 * 60 * 1000);
+  }
 });
