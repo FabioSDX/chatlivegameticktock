@@ -40,12 +40,19 @@ function connectTikTok(ws, username) {
     try { session.tiktokConnection.disconnect(); } catch (e) {}
   }
 
-  var opts = { processInitialData: true, enableExtendedGiftInfo: true };
+  var opts = {
+    processInitialData: true,
+    enableExtendedGiftInfo: true,
+    enableWebsocketUpgrade: true,
+    requestPollingIntervalMs: 2000,  // 2s instead of default 1s to reduce rate-limit risk
+    requestOptions: { timeout: 15000 },
+    websocketOptions: { timeout: 15000 }
+  };
   if (process.env.TIKTOK_SESSION_ID) opts.sessionId = process.env.TIKTOK_SESSION_ID;
 
   var tiktok = new WebcastPushConnection(username, opts);
 
-  sessions.set(ws, { tiktokConnection: tiktok, username: username, isConnected: false });
+  sessions.set(ws, { tiktokConnection: tiktok, username: username, isConnected: false, lastConnectAttempt: Date.now() });
 
   console.log('[TikTok] Connecting to @' + username + '...');
 
@@ -188,6 +195,14 @@ wss.on('connection', function(ws) {
         var uname = msg.username.replace(/^@/, '').trim();
         if (!uname) {
           send(ws, { type: 'error', message: 'Username is required.' });
+          return;
+        }
+        // Rate-limit: prevent reconnecting too fast (min 10s between attempts)
+        var existing = sessions.get(ws);
+        if (existing && existing.lastConnectAttempt && (Date.now() - existing.lastConnectAttempt < 10000)) {
+          var wait = Math.ceil((10000 - (Date.now() - existing.lastConnectAttempt)) / 1000);
+          console.log('[WS] Rate-limited reconnect for @' + uname + ', wait ' + wait + 's');
+          send(ws, { type: 'error', message: 'Please wait ' + wait + 's before reconnecting.' });
           return;
         }
         console.log('[WS] Client wants to connect to @' + uname);

@@ -3764,6 +3764,7 @@
 
       _ws.onopen = function() {
         console.log('WebSocket connected to server');
+        window._wsReconnectCount = 0; // Reset reconnect counter on success
         if (callback) { callback(true); callback = null; }
       };
 
@@ -3787,10 +3788,19 @@
         var txtApi = document.getElementById('statusTextApi');
         if (dotApi) dotApi.classList.remove('online');
         if (txtApi) { txtApi.textContent = 'TikTok: Offline'; txtApi.style.color = '#ff4444'; }
-        // Auto-reconnect after 5s
-        setTimeout(function() {
-          if (_tiktokUsername && _gameStarted) connectWebSocket();
-        }, 5000);
+        // Auto-reconnect with backoff (15s, 30s, 60s, max 5 attempts)
+        if (!window._wsReconnectCount) window._wsReconnectCount = 0;
+        window._wsReconnectCount++;
+        if (window._wsReconnectCount <= 5 && _tiktokUsername && _gameStarted) {
+          var delay = Math.min(15000 * window._wsReconnectCount, 60000);
+          console.log('[WS] Reconnecting in ' + (delay/1000) + 's (attempt ' + window._wsReconnectCount + '/5)');
+          setTimeout(function() {
+            if (_tiktokUsername && _gameStarted) connectWebSocket();
+          }, delay);
+        } else if (window._wsReconnectCount > 5) {
+          console.log('[WS] Max reconnect attempts reached. Use the Connect button to retry.');
+          if (txtApi) { txtApi.textContent = 'TikTok: Disconnected'; txtApi.style.color = '#ff4444'; }
+        }
       };
 
       _ws.onerror = function(err) {
