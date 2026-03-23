@@ -1684,33 +1684,45 @@
         updateZombies();
         checkPickZombieCollisions();
         updateBats();
-        // ── Mega-clearing: spawn flyers when pick enters the zone ──
+        // ── Mega-clearing: PRE-spawn flyers BEFORE pick enters the zone ──
         if (pick) {
           var pickRow = Math.floor(pick.y / TILE);
-          if (isMegaClearingRow(pickRow)) {
-            var mz = getMegaZone(pickRow);
-            var mStart = getMegaStart(mz >= 0 ? mz : 0);
-            if (mz >= 0 && !megaClearedZones[mz]) {
-              megaClearedZones[mz] = true;
-              megaClearedZones[mz + '_tick'] = 0;
-              var megaNum = Math.min(MAX_BATS_MEGA, 100 + Math.floor(mz * 10));
-              for (var mi = 0; mi < megaNum; mi++) {
-                var mx = (1 + Math.floor(seededRand(mz * 500 + mi * 11) * (COLS - 2))) * TILE + TILE / 2;
-                var myRow = mStart + 5 + Math.floor(seededRand(mz * 600 + mi * 19) * (MEGA_CLEARING_HEIGHT - 10));
-                var my = myRow * TILE + TILE / 2;
-                spawnBat(mx, my, mz, mi % 4 === 0);
-              }
-              spawnText(pick.x, pick.y - 60, '⚠️ MEGA ZONE!', '#ff4444');
+          // Check if pick is approaching a mega zone (50 rows before it starts)
+          var PRE_SPAWN_DIST = 50;
+          var checkRow = pickRow + PRE_SPAWN_DIST;
+          var mzAhead = -1;
+          if (isMegaClearingRow(checkRow)) {
+            mzAhead = getMegaZone(checkRow);
+          } else if (isMegaClearingRow(pickRow)) {
+            mzAhead = getMegaZone(pickRow);
+          }
+          if (mzAhead >= 0 && !megaClearedZones[mzAhead]) {
+            megaClearedZones[mzAhead] = true;
+            megaClearedZones[mzAhead + '_tick'] = 0;
+            var mStart = getMegaStart(mzAhead);
+            var megaNum = Math.min(MAX_BATS_MEGA, 100 + Math.floor(mzAhead * 10));
+            for (var mi = 0; mi < megaNum; mi++) {
+              var mx = (1 + Math.floor(seededRand(mzAhead * 500 + mi * 11) * (COLS - 2))) * TILE + TILE / 2;
+              var myRow = mStart + 5 + Math.floor(seededRand(mzAhead * 600 + mi * 19) * (MEGA_CLEARING_HEIGHT - 10));
+              var my = myRow * TILE + TILE / 2;
+              // Mothers only in initial spawn, spread evenly
+              spawnBat(mx, my, mzAhead, mi % 4 === 0);
             }
-            if (mz >= 0 && megaClearedZones[mz]) {
-              megaClearedZones[mz + '_tick'] = (megaClearedZones[mz + '_tick'] || 0) + 1;
-              if (megaClearedZones[mz + '_tick'] % 90 === 0 && bats.length < MAX_BATS_MEGA) {
-                var rx = (1 + Math.floor(Math.random() * (COLS - 2))) * TILE + TILE / 2;
-                var ry = pick.y + 200 + Math.random() * 400;
-                var ryRow = Math.floor(ry / TILE);
-                if (isMegaClearingRow(ryRow)) {
-                  spawnBat(rx, ry, mz, Math.random() < 0.2);
-                }
+            spawnText(pick.x, pick.y - 60, '⚠️ MEGA ZONE!', '#ff4444');
+          }
+          // Continuous reinforcement (NO mothers — only normal bats)
+          if (isMegaClearingRow(pickRow)) {
+            var mzCur = getMegaZone(pickRow);
+            if (mzCur >= 0 && megaClearedZones[mzCur]) {
+              megaClearedZones[mzCur + '_tick'] = (megaClearedZones[mzCur + '_tick'] || 0) + 1;
+              if (megaClearedZones[mzCur + '_tick'] % 90 === 0 && bats.length < MAX_BATS_MEGA) {
+                var mStartR = getMegaStart(mzCur);
+                // Spawn at edges of the zone (left or right wall) so they fly in from the side
+                var fromLeft = Math.random() < 0.5;
+                var rx = fromLeft ? (TILE * 1.5) : ((COLS - 1.5) * TILE);
+                var ryRow = mStartR + 5 + Math.floor(Math.random() * (MEGA_CLEARING_HEIGHT - 10));
+                var ry = ryRow * TILE + TILE / 2;
+                spawnBat(rx, ry, mzCur, false);
               }
             }
           }
@@ -2330,8 +2342,8 @@
       var ptsVal = motherFlag ? (100 + Math.floor(zone * 15)) : (30 + Math.floor(zone * 5));
       bats.push({
         x: wx, y: wy,
-        vx: (Math.random() - 0.5) * 2,
-        vy: (Math.random() - 0.5) * 1.5,
+        vx: (Math.random() < 0.5 ? -1 : 1) * (1 + Math.random() * 1.5),
+        vy: (Math.random() - 0.5) * 0.4,
         state: 'fly',
         anim: Math.random() * 18,
         dir: Math.random() < 0.5 ? -1 : 1,
@@ -2409,23 +2421,27 @@
         b.flyPhase += b.flyFreq;
         b.retargetTimer--;
         if (b.retargetTimer <= 0) {
-          // Pick new target within bounds, avoiding solid blocks
+          // Pick new target: mostly lateral movement (keep Y close, vary X widely)
           for (var rt = 0; rt < 5; rt++) {
             var tx = b.boundsMinX + Math.random() * (b.boundsMaxX - b.boundsMinX);
-            var ty = b.boundsMinY + Math.random() * (b.boundsMaxY - b.boundsMinY);
+            // Keep Y within a small band around current position (±3 tiles)
+            var yBand = TILE * 3;
+            var tyMin = Math.max(b.boundsMinY, b.y - yBand);
+            var tyMax = Math.min(b.boundsMaxY, b.y + yBand);
+            var ty = tyMin + Math.random() * (tyMax - tyMin);
             var tc = getCell(Math.floor(ty / TILE), Math.floor(tx / TILE));
             if (!tc || tc.t === E) { b.targetX = tx; b.targetY = ty; break; }
           }
           b.retargetTimer = 60 + Math.floor(Math.random() * 120);
         }
 
-        // Steer toward target
+        // Steer toward target (lateral bias)
         var dx = b.targetX - b.x;
         var dy = b.targetY - b.y;
         var dist = Math.sqrt(dx * dx + dy * dy) || 1;
         var accel = 0.12;
         b.vx += (dx / dist) * accel;
-        b.vy += (dy / dist) * accel + Math.sin(b.flyPhase) * 0.08;
+        b.vy += (dy / dist) * accel * 0.3 + Math.sin(b.flyPhase) * 0.03;
 
         // Speed limit
         var spd = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
