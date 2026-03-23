@@ -3765,6 +3765,11 @@
       _ws.onopen = function() {
         console.log('WebSocket connected to server');
         window._wsReconnectCount = 0; // Reset reconnect counter on success
+        // Auto-resend connect command on reconnect
+        if (!callback && _tiktokUsername && _gameStarted) {
+          console.log('[WS] Reconnected — resending connect for @' + _tiktokUsername);
+          _ws.send(JSON.stringify({ action: 'connect', username: _tiktokUsername }));
+        }
         if (callback) { callback(true); callback = null; }
       };
 
