@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <title>Pickaxe Drop</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:,">
   <style>
     * {
       box-sizing: border-box;
@@ -2588,7 +2589,8 @@
     // Bat sound effects (high-pitched squeaks)
     function sfxBatHurt() {
       if (!_audioStarted) return;
-      var ac = getAC(), t = ac.currentTime;
+      var ac = getAC(); if (!ac) return;
+      var t = ac.currentTime;
       var o = ac.createOscillator(), g = ac.createGain();
       o.type = 'square';
       o.frequency.setValueAtTime(900, t);
@@ -2602,7 +2604,8 @@
 
     function sfxBatDeath() {
       if (!_audioStarted) return;
-      var ac = getAC(), t = ac.currentTime;
+      var ac = getAC(); if (!ac) return;
+      var t = ac.currentTime;
       var freqs = [1200, 900, 600, 400];
       for (var i = 0; i < freqs.length; i++) {
         var o = ac.createOscillator(), g = ac.createGain();
@@ -3294,6 +3297,7 @@
     // ── Áudio ─────────────────────────────────────────────────────────────────
     var AC = null;
     function getAC() {
+      if (!_audioStarted) return null;
       if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
       if (AC.state === 'suspended') AC.resume();
       return AC;
@@ -3302,6 +3306,7 @@
     var _reverbNode = null;
     function getReverbNode() {
       var ac = getAC();
+      if (!ac) return null;
       if (_reverbNode && _reverbNode.context === ac) return _reverbNode;
       var len = ac.sampleRate * 2.2;
       var buf = ac.createBuffer(2, len, ac.sampleRate);
@@ -3317,6 +3322,7 @@
 
     function playNote(freq, type, vol, attack, decay, when) {
       var ac = getAC();
+      if (!ac) return;
       var osc = ac.createOscillator();
       var gain = ac.createGain();
       var rev = getReverbNode();
@@ -3330,7 +3336,8 @@
     }
 
     function sfxHit(blockType) {
-      var ac = getAC(), t = ac.currentTime;
+      var ac = getAC(); if (!ac) return;
+      var t = ac.currentTime;
       var len = Math.ceil(ac.sampleRate * 0.045);
       var buf = ac.createBuffer(1, len, ac.sampleRate);
       var d = buf.getChannelData(0);
@@ -3345,7 +3352,8 @@
     }
 
     function sfxBreak(blockType) {
-      var ac = getAC(), t = ac.currentTime;
+      var ac = getAC(); if (!ac) return;
+      var t = ac.currentTime;
       var osc = ac.createOscillator(), og = ac.createGain();
       var baseFreq = [55, 60, 58, 52, 48, 50, 44, 42, 40][Math.min(blockType, 8)];
       osc.type = 'sine';
@@ -3366,7 +3374,8 @@
     }
 
     function sfxFuse(duration) {
-      var ac = getAC(), t = ac.currentTime;
+      var ac = getAC(); if (!ac) return;
+      var t = ac.currentTime;
       var len = Math.ceil(ac.sampleRate * duration);
       var buf = ac.createBuffer(1, len, ac.sampleRate);
       var d = buf.getChannelData(0);
@@ -3386,7 +3395,8 @@
     }
 
     function sfxTNT() {
-      var ac = getAC(), t = ac.currentTime;
+      var ac = getAC(); if (!ac) return;
+      var t = ac.currentTime;
       var sub = ac.createOscillator(), subG = ac.createGain();
       sub.type = 'sine'; sub.frequency.setValueAtTime(38, t);
       sub.frequency.exponentialRampToValueAtTime(14, t + 0.55);
@@ -3415,7 +3425,8 @@
     }
 
     function sfxMegaTNT() {
-      var ac = getAC(), t = ac.currentTime;
+      var ac = getAC(); if (!ac) return;
+      var t = ac.currentTime;
       var sub = ac.createOscillator(), subG = ac.createGain();
       sub.type = 'sine'; sub.frequency.setValueAtTime(32, t);
       sub.frequency.exponentialRampToValueAtTime(8, t + 1.1);
@@ -3444,7 +3455,8 @@
     }
 
     function sfxPickaxeChange() {
-      var ac = getAC(), t = ac.currentTime;
+      var ac = getAC(); if (!ac) return;
+      var t = ac.currentTime;
       playNote(880, 'sine', 0.1, 0.01, 0.18, t);
       playNote(1320, 'sine', 0.08, 0.01, 0.14, t + 0.06);
     }
@@ -3456,7 +3468,8 @@
       if (now - _lastZombieSfx < 2500) return;
       _lastZombieSfx = now;
       if (!_audioStarted) return;
-      var ac = getAC(), t = ac.currentTime;
+      var ac = getAC(); if (!ac) return;
+      var t = ac.currentTime;
       // Zelda-style zombie moan: short descending square wave warble
       var o1 = ac.createOscillator(), g1 = ac.createGain();
       o1.type = 'square';
@@ -3484,7 +3497,8 @@
 
     function sfxZombieHurt() {
       if (!_audioStarted) return;
-      var ac = getAC(), t = ac.currentTime;
+      var ac = getAC(); if (!ac) return;
+      var t = ac.currentTime;
       // Organic groan: two detuned low oscillators with vibrato + breathy noise
       var base = 90 + Math.random() * 30;
       // Voice 1: main groan with pitch drop and vibrato
@@ -3533,7 +3547,8 @@
 
     function sfxZombieDeath() {
       if (!_audioStarted) return;
-      var ac = getAC(), t = ac.currentTime;
+      var ac = getAC(); if (!ac) return;
+      var t = ac.currentTime;
       // Zelda-style enemy death: descending cascade of square tones
       var freqs = [300, 250, 200, 150, 100];
       for (var i = 0; i < freqs.length; i++) {
@@ -3559,7 +3574,8 @@
     }
 
     function sfxSkillActivate() {
-      var ac = getAC(), t = ac.currentTime;
+      var ac = getAC(); if (!ac) return;
+      var t = ac.currentTime;
       playNote(440, 'sine', 0.1, 0.01, 0.12, t);
       playNote(660, 'sine', 0.1, 0.01, 0.12, t + 0.07);
       playNote(880, 'sine', 0.1, 0.01, 0.18, t + 0.14);
@@ -3594,7 +3610,8 @@
 
     function scheduleBossBeat() {
       if (!bossMusic.playing) return;
-      var ac = getAC(), t = ac.currentTime;
+      var ac = getAC(); if (!ac) return;
+      var t = ac.currentTime;
       var bn = BOSS_BASS[bossMusic.step % BOSS_BASS.length];
       var bf = bossScaleFreq(bn.d, bn.oct);
       var osc = ac.createOscillator(), g = ac.createGain(), filt = ac.createBiquadFilter();
@@ -3670,6 +3687,7 @@
     function scheduleMusicBeat() {
       if (!musicPlaying) return;
       var ac = getAC();
+      if (!ac) { musicTimeout = setTimeout(scheduleMusicBeat, BEAT * 1000); return; }
       var t = ac.currentTime;
 
       // ── baixo ──
