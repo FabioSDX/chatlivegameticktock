@@ -1116,9 +1116,44 @@
       return MEGA_CLEARING_FIRST + megaZone * MEGA_CLEARING_INTERVAL;
     }
 
+    // Per-cell check for organic mega-clearing (replaces flat wall)
     function isMegaClearingCell(r, c) {
       if (c === 0 || c === COLS - 1) return false;
-      return isMegaClearingRow(r);
+      if (r < MEGA_CLEARING_FIRST) return false;
+      var offset = r - MEGA_CLEARING_FIRST;
+      var megaZone = Math.floor(offset / MEGA_CLEARING_INTERVAL);
+      var localRow = offset - megaZone * MEGA_CLEARING_INTERVAL;
+      if (localRow < 0 || localRow >= MEGA_CLEARING_HEIGHT) return false;
+
+      var seed = megaZone * 9973 + 1237;
+      var EDGE_DEPTH = 8;
+
+      // Top organic edge
+      if (localRow < EDGE_DEPTH) {
+        var topFactor = localRow / EDGE_DEPTH;
+        var noise = seededRand(seed + localRow * 31 + c * 17);
+        var noise2 = seededRand(seed + localRow * 47 + c * 23 + 500);
+        var threshold = (1 - topFactor) * 0.65 + noise2 * 0.15;
+        var wallDist = Math.min(c - 1, COLS - 2 - c) / (COLS / 2);
+        threshold += (1 - wallDist) * 0.25;
+        if (noise < threshold) return false; // stays solid
+        return true;
+      }
+
+      // Bottom organic edge
+      if (localRow >= MEGA_CLEARING_HEIGHT - EDGE_DEPTH) {
+        var botFactor = (MEGA_CLEARING_HEIGHT - 1 - localRow) / EDGE_DEPTH;
+        var noise3 = seededRand(seed + localRow * 41 + c * 29 + 1000);
+        var noise4 = seededRand(seed + localRow * 53 + c * 37 + 1500);
+        var threshold2 = (1 - botFactor) * 0.65 + noise4 * 0.15;
+        var wallDist2 = Math.min(c - 1, COLS - 2 - c) / (COLS / 2);
+        threshold2 += (1 - wallDist2) * 0.25;
+        if (noise3 < threshold2) return false; // stays solid
+        return true;
+      }
+
+      // Middle: fully open
+      return true;
     }
 
     function genRow(r) {
@@ -1709,6 +1744,17 @@
               spawnBat(mx, my, mzAhead, mi % 4 === 0);
             }
             spawnText(pick.x, pick.y - 60, '⚠️ MEGA ZONE!', '#ff4444');
+            // Spawn zombie horde on the floor of the mega-clearing to cushion pickaxe landings
+            var megaFloorRow = mStart + MEGA_CLEARING_HEIGHT - 2;
+            var hordeSize = Math.min(MAX_ZOMBIES, 10 + Math.floor(mzAhead * 2));
+            for (var zi = 0; zi < hordeSize; zi++) {
+              var zCol = 2 + Math.floor(seededRand(mzAhead * 777 + zi * 13) * (COLS - 4));
+              var zx = zCol * TILE + TILE / 2;
+              // Spread zombies across the bottom portion of the clearing
+              var zRowOffset = Math.floor(seededRand(mzAhead * 888 + zi * 31) * 12);
+              var zy = (megaFloorRow - zRowOffset) * TILE;
+              spawnZombie(zx, zy);
+            }
           }
           // Continuous reinforcement (NO mothers — only normal bats)
           if (isMegaClearingRow(pickRow)) {
@@ -2239,7 +2285,7 @@
 
     // ── ZOMBIES ────────────────────────────────────────────────────────────────
     var zombies = [];
-    var MAX_ZOMBIES = 8;
+    var MAX_ZOMBIES = 20;
     var ZOMBIE_SIZE = TILE;
 
     // Preload zombie sprites
