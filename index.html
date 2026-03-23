@@ -265,6 +265,23 @@
       100% { opacity: 0; transform: scale(0.7) translateY(-20px); }
     }
 
+    @keyframes comboPopIn {
+      0%   { opacity: 0; transform: scale(0.3) rotate(-10deg); }
+      50%  { opacity: 1; transform: scale(1.3) rotate(3deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+    @keyframes comboPopOut {
+      0%   { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.8) translateY(-30px); }
+    }
+    @keyframes comboShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-4px) rotate(-1deg); }
+      40% { transform: translateX(4px) rotate(1deg); }
+      60% { transform: translateX(-3px) rotate(-0.5deg); }
+      80% { transform: translateX(3px) rotate(0.5deg); }
+    }
+
     #leaderboard h3 {
       font-size: 12px;
       margin-bottom: 4px;
@@ -1409,7 +1426,7 @@
     ];
 
     var ownerName = ''; // loaded from config
-    var pick = { x: 540, y: 100, vx: 0, vy: 0, ang: 0, spin: 0, stuck: false, stuckTimer: 0, userName: '', userAvatarUrl: '' };
+    var pick = { x: 540, y: 100, vx: 0, vy: 0, ang: 0, spin: 0, stuck: false, stuckTimer: 0, userName: '', userAvatarUrl: '', combo: 0 };
     if (ownerName) pick.userName = ownerName;
 
     function spawnPick() {
@@ -1423,6 +1440,7 @@
       pick.spin = (Math.random() - 0.5) * 0.4;
       pick.stuck = false;
       pick.stuckTimer = 0;
+      pick.combo = 0;
       pick.userName = savedUser;
       pick.userAvatarUrl = savedAvatar;
     }
@@ -1547,6 +1565,7 @@
         if (p.y - r < 0) { p.y = r; p.vy = Math.abs(p.vy) * BOUNCE; }
         p.ang += p.spin;
         if (hitAny) p.spin = p.spin * 0.9 + (Math.random() - 0.5) * 0.12; else p.spin *= 0.995;
+        if (hitAny) resetCombo(p);
         return hitAny;
       }
 
@@ -1650,6 +1669,104 @@
       function spawnText(x, y, txt, color) {
         if (texts.length > MAX_TEXTS) return;
         texts.push({ x: x, y: y, txt: txt, c: color, life: 1, vy: -1.4 });
+      }
+
+      // ── Combo System ──────────────────────────────────────────────────────────
+      var COMBO_LABELS = [
+        '', '', '', '', '',
+        '🔥 COMBO x5!',
+        '', '', '', '',
+        '⚡ COMBO x10!',
+        '', '', '', '',
+        '💀 COMBO x15!',
+        '', '', '', '',
+        '🌟 COMBO x20!',
+        '', '', '', '',
+        '☠️ COMBO x25!'
+      ];
+      var COMBO_COLORS = {
+        5:  '#ff8800',
+        10: '#ff00ff',
+        15: '#ff2222',
+        20: '#ffdd00',
+        25: '#00ffff'
+      };
+
+      function getComboLabel(count) {
+        if (count >= 25 && count % 5 === 0) return '☠️ COMBO x' + count + '!';
+        if (count < COMBO_LABELS.length) return COMBO_LABELS[count];
+        if (count % 5 === 0) return '☠️ COMBO x' + count + '!';
+        return '';
+      }
+
+      function getComboColor(count) {
+        if (count >= 25) return '#00ffff';
+        var tier = Math.floor(count / 5) * 5;
+        return COMBO_COLORS[tier] || '#ff8800';
+      }
+
+      function getComboBonus(count) {
+        // Bonus points every 5 hits: 50, 150, 300, 500, ...
+        var tier = Math.floor(count / 5);
+        return tier * tier * 50;
+      }
+
+      function registerComboHit(p, enemyX, enemyY) {
+        if (!p) return;
+        p.combo = (p.combo || 0) + 1;
+        var c = p.combo;
+        if (c % 5 === 0 && c >= 5) {
+          var label = getComboLabel(c);
+          var color = getComboColor(c);
+          var bonus = getComboBonus(c);
+          score += bonus;
+          if (p.userName) {
+            if (!persistentScores[p.userName]) persistentScores[p.userName] = { score: 0, avatar: p.userAvatarUrl || '' };
+            persistentScores[p.userName].score += bonus;
+          }
+          // Big floating text at enemy position
+          spawnText(enemyX, enemyY - 40, label, color);
+          spawnText(enemyX, enemyY - 70, '+' + bonus, '#ffffff');
+          // Screen-space combo popup
+          showComboPopup(label, color, p.userName || '');
+          sfxCombo(c);
+        }
+      }
+
+      function resetCombo(p) {
+        if (p && p.combo > 0) p.combo = 0;
+      }
+
+      function showComboPopup(label, color, userName) {
+        var el = document.createElement('div');
+        el.style.cssText = 'position:fixed;top:38%;left:50%;transform:translate(-50%,-50%);z-index:9998;' +
+          'font-size:48px;font-weight:900;color:' + color + ';text-shadow:0 0 20px ' + color + ',0 0 40px ' + color + ',0 2px 4px #000;' +
+          'pointer-events:none;animation:comboPopIn 0.35s ease-out forwards;font-family:Arial,sans-serif;text-align:center;white-space:nowrap;';
+        el.textContent = label;
+        if (userName) {
+          var sub = document.createElement('div');
+          sub.style.cssText = 'font-size:18px;color:#fff;opacity:0.8;margin-top:4px;animation:comboShake 0.4s ease;';
+          sub.textContent = userName;
+          el.appendChild(sub);
+        }
+        document.body.appendChild(el);
+        setTimeout(function() {
+          el.style.animation = 'comboPopOut 0.5s ease-in forwards';
+          setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 500);
+        }, 1200);
+      }
+
+      function sfxCombo(count) {
+        var ac = getAC(); if (!ac) return;
+        var t = ac.currentTime;
+        var tier = Math.min(Math.floor(count / 5), 5);
+        // Rising arpeggio — higher tiers = more notes + higher pitch
+        var baseFreq = 440 + tier * 110;
+        for (var i = 0; i <= tier; i++) {
+          playNote(baseFreq * Math.pow(1.25, i), 'sine', 0.12 - i * 0.01, 0.01, 0.15, t + i * 0.06);
+        }
+        // Impact hit
+        playNote(baseFreq * 0.5, 'triangle', 0.15, 0.005, 0.1, t);
       }
 
       function hitBlock(col, row, force, source) {
@@ -2581,6 +2698,7 @@
             b.vy -= 1;
             sfxBatHurt();
             spawnText(b.x, b.y - BAT_SIZE * 0.4, '-1', '#ff88cc');
+            registerComboHit(p, b.x, b.y);
             if (b.hp <= 0) {
               b.state = 'dead'; b.anim = 0; b.deadTimer = 0;
               score += b.pts;
@@ -2752,6 +2870,7 @@
             z.vy -= 1;
             sfxZombieHurt();
             spawnText(z.x, z.y - ZOMBIE_SIZE * 0.5, '-1', '#ff8844');
+            registerComboHit(p, z.x, z.y);
             if (z.hp <= 0) {
               z.state = 'dead'; z.animTimer = 0; z.deadTimer = 0;
               score += z.pts;
@@ -4392,6 +4511,7 @@
         halfSize: PICK_HALF,
         stuck: false,
         stuckTimer: 0,
+        combo: 0,
         userName: userName,
         userAvatarUrl: avatarUrl,
         joinTime: Date.now(),
