@@ -71,8 +71,31 @@ function connectTikTok(ws, username) {
     send(ws, { type: 'connected', platform: 'tiktok', username: username, roomId: state.roomId });
   }).catch(function(err) {
     console.error('[TikTok] Failed:', err.message);
+    // Retry without websocket upgrade if that was the issue
+    if (err.message && err.message.includes('websocket upgrade')) {
+      console.log('[TikTok] Retrying with polling only...');
+      opts.enableWebsocketUpgrade = false;
+      var tiktok2 = new WebcastPushConnection(username, opts);
+      session.tiktok = { conn: tiktok2, username: username, connected: false };
+      // Re-attach all events
+      attachTikTokEvents(ws, tiktok2, username, session);
+      tiktok2.connect().then(function(state) {
+        console.log('[TikTok] Connected (polling) to @' + username + ' | roomId:', state.roomId);
+        if (session.tiktok) session.tiktok.connected = true;
+        send(ws, { type: 'connected', platform: 'tiktok', username: username, roomId: state.roomId });
+      }).catch(function(err2) {
+        console.error('[TikTok] Polling also failed:', err2.message);
+        send(ws, { type: 'error', platform: 'tiktok', message: 'TikTok: ' + err2.message });
+      });
+      return;
+    }
     send(ws, { type: 'error', platform: 'tiktok', message: 'TikTok: ' + err.message });
   });
+
+  attachTikTokEvents(ws, tiktok, username, session);
+}
+
+function attachTikTokEvents(ws, tiktok, username, session) {
 
   tiktok.on('chat', function(data) {
     var u = data.user || {}, uid = getUser(u, data, username), nick = getNick(u, data, uid), av = getAvatar(u, data);
