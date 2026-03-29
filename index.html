@@ -360,41 +360,45 @@
 <body>
   <!-- Live Setup Modal -->
   <div id="apiSetupOverlay" style="display:flex; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.92); align-items:center; justify-content:center; font-family:Arial,sans-serif;">
-    <div id="apiSetupBox" style="background:#1a1a2e; border:2px solid #00ff88; border-radius:16px; padding:28px 32px; max-width:460px; width:90%; color:#fff; box-shadow:0 0 40px rgba(0,255,136,0.2);">
+    <div id="apiSetupBox" style="background:#1a1a2e; border:2px solid #00ff88; border-radius:16px; padding:28px 32px; max-width:480px; width:90%; color:#fff; box-shadow:0 0 40px rgba(0,255,136,0.2);">
       <div style="text-align:center; margin-bottom:18px;">
         <div style="font-size:36px;">⛏️</div>
         <h2 style="margin:8px 0 4px; color:#00ff88; font-size:20px;">Pickaxe Drop — Live</h2>
-        <p id="apiSetupMsg" style="font-size:13px; color:#aaa; margin:0;">Choose your platform and connect to a live stream.</p>
+        <p id="apiSetupMsg" style="font-size:13px; color:#aaa; margin:0;">Connect one or both platforms. Fill in what you need.</p>
       </div>
       <div id="apiSetupError" style="display:none; background:rgba(255,68,68,0.15); border:1px solid #ff4444; border-radius:8px; padding:8px 12px; margin-bottom:12px; font-size:12px; color:#ff8888;"></div>
       <div id="apiSetupSuccess" style="display:none; background:rgba(0,255,136,0.1); border:1px solid #00ff88; border-radius:8px; padding:8px 12px; margin-bottom:12px; font-size:12px; color:#00ff88;"></div>
-      <!-- Platform tabs -->
-      <div style="display:flex; gap:0; margin-bottom:16px; border-radius:8px; overflow:hidden; border:1px solid #333;">
-        <button id="tabTikTok" onclick="switchPlatformTab('tiktok')" style="flex:1; padding:8px; border:none; background:#00f2ea; color:#000; font-weight:bold; font-size:13px; cursor:pointer;">TikTok</button>
-        <button id="tabYouTube" onclick="switchPlatformTab('youtube')" style="flex:1; padding:8px; border:none; background:#222; color:#888; font-size:13px; cursor:pointer;">YouTube</button>
+      <!-- TikTok -->
+      <div style="border:1px solid #00f2ea33; border-radius:10px; padding:10px 12px; margin-bottom:12px;">
+        <div style="font-size:12px; color:#00f2ea; font-weight:bold; margin-bottom:6px;">🎵 TikTok</div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <input id="tiktokUsernameInput" type="text" placeholder="@username" style="flex:1; padding:8px 10px; border-radius:8px; border:1px solid #333; background:#0d0d1a; color:#fff; font-size:13px; box-sizing:border-box; outline:none;" />
+          <button id="btnConnectTT" onclick="tiktokConnect()" style="padding:8px 14px; border:none; border-radius:8px; background:#00f2ea; color:#000; font-weight:bold; font-size:12px; cursor:pointer; white-space:nowrap;">Connect</button>
+        </div>
       </div>
-      <!-- TikTok fields -->
-      <div id="fieldsTikTok">
-        <label style="font-size:12px; color:#888; display:block; margin-bottom:4px;">TikTok Username</label>
-        <input id="tiktokUsernameInput" type="text" placeholder="@username" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid #333; background:#0d0d1a; color:#fff; font-size:14px; margin-bottom:16px; box-sizing:border-box; outline:none;" />
-      </div>
-      <!-- YouTube fields -->
-      <div id="fieldsYouTube" style="display:none;">
-        <label style="font-size:12px; color:#888; display:block; margin-bottom:4px;">Channel ID or Live Video ID</label>
-        <input id="youtubeIdInput" type="text" placeholder="UC... or video ID or live URL" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid #333; background:#0d0d1a; color:#fff; font-size:14px; margin-bottom:4px; box-sizing:border-box; outline:none;" />
-        <div style="font-size:10px; color:#666; margin-bottom:16px;">No API key needed. Just the channel ID or live video URL/ID.</div>
+      <!-- YouTube -->
+      <div style="border:1px solid #ff000033; border-radius:10px; padding:10px 12px; margin-bottom:16px;">
+        <div style="font-size:12px; color:#ff4444; font-weight:bold; margin-bottom:6px;">▶ YouTube</div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <input id="youtubeIdInput" type="text" placeholder="Channel ID, video ID or live URL" style="flex:1; padding:8px 10px; border-radius:8px; border:1px solid #333; background:#0d0d1a; color:#fff; font-size:13px; box-sizing:border-box; outline:none;" />
+          <button id="btnConnectYT" onclick="youtubeConnect()" style="padding:8px 14px; border:none; border-radius:8px; background:#ff0000; color:#fff; font-weight:bold; font-size:12px; cursor:pointer; white-space:nowrap;">Connect</button>
+        </div>
+        <div style="font-size:10px; color:#666; margin-top:4px;">No API key needed.</div>
       </div>
       <div style="display:flex; gap:8px;">
-        <button id="apiTestBtn" onclick="platformConnect()" style="flex:1; padding:10px; border:none; border-radius:8px; background:#00ff88; color:#000; font-weight:bold; font-size:14px; cursor:pointer;">Connect</button>
-        <button id="apiSkipBtn" onclick="platformSkip()" style="padding:10px 16px; border:1px solid #555; border-radius:8px; background:transparent; color:#888; font-size:13px; cursor:pointer;">Play Offline</button>
+        <button onclick="platformConnectBoth()" style="flex:1; padding:10px; border:none; border-radius:8px; background:#00ff88; color:#000; font-weight:bold; font-size:14px; cursor:pointer;">Connect All</button>
+        <button onclick="platformSkip()" style="padding:10px 16px; border:1px solid #555; border-radius:8px; background:transparent; color:#888; font-size:13px; cursor:pointer;">Play Offline</button>
       </div>
     </div>
   </div>
 
   <div id="ui">
     <div id="apiStatus">
-      <div class="status-dot" id="statusDotApi"></div>
-      <span id="statusTextApi" style="font-size:11px;">Live: —</span>
+      <div class="status-dot" id="statusDotTT"></div>
+      <span id="statusTextTT" style="font-size:11px;">TT: —</span>
+      <div style="width:1px;height:14px;background:rgba(255,255,255,0.15);margin:0 3px;"></div>
+      <div class="status-dot" id="statusDotYT"></div>
+      <span id="statusTextYT" style="font-size:11px;">YT: —</span>
     </div>
     <div class="depth" id="depthDisplay">Depth: 0m</div>
     <div class="score-display" id="scoreDisplay">⛏ 0</div>
@@ -4234,25 +4238,24 @@
     }
     setInterval(savePersistentScores, 15000); // Salva a cada 15s
 
-    // ── API Key Management System ──────────────────────────────────────────────
+    // ── Connection System (TikTok + YouTube simultaneous) ────────────────────
     var _tiktokUsername = localStorage.getItem('pd_tiktok_username') || '';
-    var _apiConnected = false;
-    var _apiCheckInterval = null;
+    var _youtubeId = localStorage.getItem('pd_youtube_id') || '';
+    var _ttConnected = false;
+    var _ytConnected = false;
     var _apiSetupShown = false;
     var _gameStarted = false;
     var _ws = null;
 
     function showApiSetup(msg) {
       if (_gameStarted) { showApiBanner(msg); return; }
-      var overlay = document.getElementById('apiSetupOverlay');
-      overlay.style.display = 'flex';
+      document.getElementById('apiSetupOverlay').style.display = 'flex';
       _apiSetupShown = true;
-      var errEl = document.getElementById('apiSetupError');
-      var sucEl = document.getElementById('apiSetupSuccess');
-      errEl.style.display = 'none';
-      sucEl.style.display = 'none';
-      if (msg) { errEl.style.display = 'block'; errEl.textContent = msg; }
+      document.getElementById('apiSetupError').style.display = 'none';
+      document.getElementById('apiSetupSuccess').style.display = 'none';
+      if (msg) { var e = document.getElementById('apiSetupError'); e.style.display = 'block'; e.textContent = msg; }
       if (_tiktokUsername) document.getElementById('tiktokUsernameInput').value = _tiktokUsername;
+      if (_youtubeId) document.getElementById('youtubeIdInput').value = _youtubeId;
     }
 
     function hideApiSetup() {
@@ -4268,8 +4271,8 @@
       banner.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:99998;background:rgba(0,0,0,0.85);border:1px solid #ff4444;border-radius:12px;padding:16px 24px;color:#fff;font-family:Arial,sans-serif;text-align:center;max-width:360px;width:90%;box-shadow:0 0 30px rgba(255,0,0,0.2);';
       banner.innerHTML =
         '<div style="font-size:24px;margin-bottom:8px;">⚠️</div>' +
-        '<div style="font-size:14px;margin-bottom:12px;color:#ffaa00;">TikTok connection lost</div>' +
-        '<div style="font-size:12px;color:#aaa;margin-bottom:14px;">' + (msg || 'The game continues offline.') + '</div>' +
+        '<div style="font-size:14px;margin-bottom:12px;color:#ffaa00;">Connection lost</div>' +
+        '<div style="font-size:12px;color:#aaa;margin-bottom:14px;">' + (msg || 'Game continues offline.') + '</div>' +
         '<div style="display:flex;gap:8px;justify-content:center;">' +
           '<button onclick="openApiPopup()" style="padding:8px 16px;border:none;border-radius:8px;background:#00ff88;color:#000;font-weight:bold;font-size:13px;cursor:pointer;">Reconnect</button>' +
           '<button onclick="dismissApiBanner()" style="padding:8px 16px;border:1px solid #555;border-radius:8px;background:transparent;color:#888;font-size:13px;cursor:pointer;">Dismiss</button>' +
@@ -4285,372 +4288,223 @@
     function openApiPopup() {
       dismissApiBanner();
       _gameStarted = false;
-      showApiSetup('Enter a TikTok username to reconnect.');
+      showApiSetup('Reconnect to your platforms.');
     }
 
-    function tiktokConnect() {
-      var btn = document.getElementById('apiTestBtn');
-      var errEl = document.getElementById('apiSetupError');
-      var sucEl = document.getElementById('apiSetupSuccess');
-      var username = document.getElementById('tiktokUsernameInput').value.trim().replace(/^@/, '');
-      errEl.style.display = 'none';
-      sucEl.style.display = 'none';
+    function updateStatusDots() {
+      var dTT = document.getElementById('statusDotTT'), tTT = document.getElementById('statusTextTT');
+      var dYT = document.getElementById('statusDotYT'), tYT = document.getElementById('statusTextYT');
+      if (dTT) { if (_ttConnected) dTT.classList.add('online'); else dTT.classList.remove('online'); }
+      if (tTT) { tTT.textContent = 'TT: ' + (_ttConnected ? 'ON' : 'OFF'); tTT.style.color = _ttConnected ? '#00ff88' : '#888'; }
+      if (dYT) { if (_ytConnected) dYT.classList.add('online'); else dYT.classList.remove('online'); }
+      if (tYT) { tYT.textContent = 'YT: ' + (_ytConnected ? 'ON' : 'OFF'); tYT.style.color = _ytConnected ? '#00ff88' : '#888'; }
+    }
 
-      if (!username) { errEl.style.display = 'block'; errEl.textContent = 'Username is required.'; return; }
+    function platformSkip() {
+      hideApiSetup();
+      _gameStarted = true;
+      updateStatusDots();
+    }
 
-      btn.textContent = 'Connecting...';
-      btn.disabled = true;
-
-      _tiktokUsername = username;
-      localStorage.setItem('pd_tiktok_username', username);
-
-      ownerName = '@' + username;
-      ownerName = ownerName.toLowerCase();
-      pick.userName = ownerName;
-      var cfg = JSON.parse(localStorage.getItem('pd_config') || '{}');
-      cfg.owner_name = ownerName;
-      localStorage.setItem('pd_config', JSON.stringify(cfg));
-      if (!persistentScores[ownerName]) persistentScores[ownerName] = { score: 0, avatar: '', color: '#ffdd44' };
-
-      // Connect via WebSocket to our server
-      connectWebSocket(function(success) {
-        btn.textContent = 'Connect';
-        btn.disabled = false;
-        if (success) {
-          // Send connect command to server
-          if (_ws && _ws.readyState === 1) {
-            _ws.send(JSON.stringify({ action: 'connect', username: username }));
-          }
-          sucEl.style.display = 'block';
-          sucEl.textContent = 'Connecting to @' + username + '...';
-        } else {
-          errEl.style.display = 'block';
-          errEl.textContent = 'Could not connect to server. Make sure the server is running (npm start).';
-        }
+    function platformConnectBoth() {
+      var tt = document.getElementById('tiktokUsernameInput').value.trim().replace(/^@/, '');
+      var yt = document.getElementById('youtubeIdInput').value.trim();
+      if (!tt && !yt) { var e = document.getElementById('apiSetupError'); e.style.display = 'block'; e.textContent = 'Fill in at least one platform.'; return; }
+      connectWebSocket(function(ok) {
+        if (!ok) { var e = document.getElementById('apiSetupError'); e.style.display = 'block'; e.textContent = 'Server not reachable.'; return; }
+        if (tt) sendTikTokConnect(tt);
+        if (yt) sendYouTubeConnect(yt);
+        _gameStarted = true;
+        var s = document.getElementById('apiSetupSuccess'); s.style.display = 'block'; s.textContent = 'Connecting...';
       });
     }
 
+    function tiktokConnect() {
+      var btn = document.getElementById('btnConnectTT');
+      var username = document.getElementById('tiktokUsernameInput').value.trim().replace(/^@/, '');
+      if (!username) return;
+      if (btn) { btn.textContent = '...'; btn.disabled = true; }
+      connectWebSocket(function(ok) {
+        if (btn) { btn.textContent = 'Connect'; btn.disabled = false; }
+        if (!ok) return;
+        sendTikTokConnect(username);
+        _gameStarted = true;
+      });
+    }
+
+    function youtubeConnect() {
+      var btn = document.getElementById('btnConnectYT');
+      var rawId = document.getElementById('youtubeIdInput').value.trim();
+      if (!rawId) return;
+      if (btn) { btn.textContent = '...'; btn.disabled = true; }
+      connectWebSocket(function(ok) {
+        if (btn) { btn.textContent = 'Connect'; btn.disabled = false; }
+        if (!ok) return;
+        sendYouTubeConnect(rawId);
+        _gameStarted = true;
+      });
+    }
+
+    function sendTikTokConnect(username) {
+      _tiktokUsername = username;
+      localStorage.setItem('pd_tiktok_username', username);
+      ownerName = '@' + username.toLowerCase();
+      pick.userName = ownerName;
+      if (!persistentScores[ownerName]) persistentScores[ownerName] = { score: 0, avatar: '', color: '#ffdd44' };
+      if (_ws && _ws.readyState === 1) _ws.send(JSON.stringify({ action: 'connect', username: username }));
+    }
+
+    function sendYouTubeConnect(rawId) {
+      _youtubeId = rawId;
+      localStorage.setItem('pd_youtube_id', rawId);
+      var channelId = '', liveId = '';
+      var m = rawId.match(/[?&]v=([a-zA-Z0-9_-]{11})/) || rawId.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/) || rawId.match(/\/live\/([a-zA-Z0-9_-]{11})/);
+      if (m) liveId = m[1];
+      else if (rawId.startsWith('UC') && rawId.length > 20) channelId = rawId;
+      else if (rawId.length >= 8 && rawId.length <= 12) liveId = rawId;
+      else channelId = rawId;
+      if (_ws && _ws.readyState === 1) _ws.send(JSON.stringify({ action: 'connectYouTube', channelId: channelId, liveId: liveId }));
+    }
+
     function tiktokSkip() {
-      hideApiSetup();
-      _apiConnected = false;
-      _gameStarted = true;
-      var dotApi = document.getElementById('statusDotApi');
-      var txtApi = document.getElementById('statusTextApi');
-      if (dotApi) dotApi.classList.remove('online');
-      if (txtApi) { txtApi.textContent = 'TikTok: Off'; txtApi.style.color = '#ffaa00'; }
+      platformSkip();
     }
 
     function connectWebSocket(callback) {
+      if (_ws && _ws.readyState === 1) { if (callback) callback(true); return; }
       if (_ws) { try { _ws.close(); } catch(e) {} }
-      // Always connect to the server origin; fallback to localhost:3000
       var wsHost = location.host || 'localhost:3000';
       var protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
       var wsUrl = protocol + '//' + wsHost;
-      console.log('[WS] Connecting to', wsUrl);
-      try {
-        _ws = new WebSocket(wsUrl);
-      } catch(e) {
-        console.error('[WS] Failed to create WebSocket:', e);
-        if (callback) callback(false);
-        return;
-      }
+      try { _ws = new WebSocket(wsUrl); } catch(e) { if (callback) callback(false); return; }
 
       _ws.onopen = function() {
-        console.log('WebSocket connected to server');
-        window._wsReconnectCount = 0; // Reset reconnect counter on success
-        // Auto-resend connect command on reconnect
-        if (!callback && _tiktokUsername && _gameStarted) {
-          console.log('[WS] Reconnected — resending connect for @' + _tiktokUsername);
-          _ws.send(JSON.stringify({ action: 'connect', username: _tiktokUsername }));
+        window._wsReconnectCount = 0;
+        if (!callback && _gameStarted) {
+          if (_tiktokUsername) sendTikTokConnect(_tiktokUsername);
+          if (_youtubeId) sendYouTubeConnect(_youtubeId);
         }
         if (callback) { callback(true); callback = null; }
       };
-
       _ws.onmessage = function(evt) {
-        console.log('[WS RAW] Received message from server, length:', evt.data.length);
-        try {
-          var data = JSON.parse(evt.data);
-          if (data.type === 'chat' || data.type === 'like' || data.type === 'member') {
-            console.log('[TikTok]', data.type, data.user || data.nickname, data.comment || '');
-          }
-          handleTikTokEvent(data);
-        } catch(e) {
-          console.error('[WebSocket] Error processing message:', e);
-        }
+        try { handleLiveEvent(JSON.parse(evt.data)); } catch(e) {}
       };
-
-      _ws.onclose = function(evt) {
-        console.log('[WS] Connection closed. Code:', evt.code, 'Reason:', evt.reason, 'Clean:', evt.wasClean);
-        _apiConnected = false;
-        var dotApi = document.getElementById('statusDotApi');
-        var txtApi = document.getElementById('statusTextApi');
-        if (dotApi) dotApi.classList.remove('online');
-        if (txtApi) { txtApi.textContent = 'TikTok: Offline'; txtApi.style.color = '#ff4444'; }
-        // Auto-reconnect with backoff (15s, 30s, 60s, max 5 attempts)
+      _ws.onclose = function() {
+        _ttConnected = false; _ytConnected = false; updateStatusDots();
         if (!window._wsReconnectCount) window._wsReconnectCount = 0;
         window._wsReconnectCount++;
-        if (window._wsReconnectCount <= 5 && _tiktokUsername && _gameStarted) {
-          var delay = Math.min(15000 * window._wsReconnectCount, 60000);
-          console.log('[WS] Reconnecting in ' + (delay/1000) + 's (attempt ' + window._wsReconnectCount + '/5)');
-          setTimeout(function() {
-            if (_tiktokUsername && _gameStarted) connectWebSocket();
-          }, delay);
-        } else if (window._wsReconnectCount > 5) {
-          console.log('[WS] Max reconnect attempts reached. Use the Connect button to retry.');
-          if (txtApi) { txtApi.textContent = 'TikTok: Disconnected'; txtApi.style.color = '#ff4444'; }
+        if (window._wsReconnectCount <= 5 && _gameStarted) {
+          setTimeout(function() { if (_gameStarted) connectWebSocket(); }, Math.min(15000 * window._wsReconnectCount, 60000));
         }
       };
-
-      _ws.onerror = function(err) {
-        console.error('[WS] WebSocket error:', err);
-        if (callback) { callback(false); callback = null; }
-      };
+      _ws.onerror = function() { if (callback) { callback(false); callback = null; } };
     }
 
-    function handleTikTokEvent(data) {
-      console.log('[handleTikTokEvent] Received:', data.type, JSON.stringify(data).substring(0, 200));
-      var dotApi = document.getElementById('statusDotApi');
-      var txtApi = document.getElementById('statusTextApi');
+    function handleLiveEvent(data) {
+      var plat = data.platform || 'tiktok';
 
       if (data.type === 'connected') {
-        _apiConnected = true;
-        _gameStarted = true;
-        hideApiSetup();
-        dismissApiBanner();
-        if (dotApi) dotApi.classList.add('online');
-        if (txtApi) { txtApi.textContent = 'TikTok: ON'; txtApi.style.color = '#00ff88'; }
-        console.log('Connected to TikTok @' + data.username);
+        if (plat === 'tiktok') _ttConnected = true;
+        if (plat === 'youtube') _ytConnected = true;
+        _gameStarted = true; hideApiSetup(); dismissApiBanner(); updateStatusDots();
       }
-
-      else if (data.type === 'status') {
-        if (data.connected) {
-          _apiConnected = true;
-          _gameStarted = true;
-          hideApiSetup();
-          if (dotApi) dotApi.classList.add('online');
-          if (txtApi) { txtApi.textContent = 'TikTok: ON'; txtApi.style.color = '#00ff88'; }
-        }
-      }
-
       else if (data.type === 'error') {
         var errEl = document.getElementById('apiSetupError');
         if (errEl && _apiSetupShown) { errEl.style.display = 'block'; errEl.textContent = data.message; }
-        var btn = document.getElementById('apiTestBtn');
-        if (btn) { btn.textContent = 'Connect'; btn.disabled = false; }
+        var bTT = document.getElementById('btnConnectTT'), bYT = document.getElementById('btnConnectYT');
+        if (bTT) { bTT.textContent = 'Connect'; bTT.disabled = false; }
+        if (bYT) { bYT.textContent = 'Connect'; bYT.disabled = false; }
         if (!_apiSetupShown && _gameStarted) showApiBanner(data.message);
       }
-
       else if (data.type === 'disconnected' || data.type === 'streamEnd') {
-        _apiConnected = false;
-        if (dotApi) dotApi.classList.remove('online');
-        if (txtApi) { txtApi.textContent = 'TikTok: OFF'; txtApi.style.color = '#ffaa00'; }
-        if (data.type === 'streamEnd') {
-          spawnText(canvas.width / 2, camY + canvas.height / 2, 'STREAM ENDED', '#ff4444');
-        }
+        if (plat === 'tiktok') _ttConnected = false;
+        if (plat === 'youtube') _ytConnected = false;
+        updateStatusDots();
+        if (data.type === 'streamEnd') spawnText(canvas.width / 2, camY + canvas.height / 2, plat.toUpperCase() + ' ENDED', '#ff4444');
       }
-
       else if (data.type === 'chat') {
-        var cUser = '@' + (data.user || data.nickname || '').toLowerCase();
-        if (cUser === '@') return; // skip truly anonymous chat
-        var cAvatar = data.avatar || '';
-        var cText = data.comment || '';
-        console.log('[Chat Handler] user:', cUser, '| comment:', cText);
+        var cUser = (data.user || data.nickname || '').toLowerCase();
+        if (cUser && cUser.charAt(0) !== '@') cUser = '@' + cUser;
+        if (!cUser || cUser === '@') return;
+        var cAvatar = data.avatar || '', cText = data.comment || '';
         lastActivity[cUser] = Date.now();
-
-        // Preload avatar
-        if (cAvatar && !avatarCache[cAvatar]) {
-          var img = new Image(); img.crossOrigin = 'anonymous'; img.src = cAvatar;
-          avatarCache[cAvatar] = img;
-        }
-
-        // Check if owner
+        if (cAvatar && !avatarCache[cAvatar]) { var img = new Image(); img.crossOrigin = 'anonymous'; img.src = cAvatar; avatarCache[cAvatar] = img; }
         var isOwner = ownerName && cUser === ownerName;
-        if (isOwner && cAvatar) {
-          pick.userAvatarUrl = cAvatar;
-          if (!persistentScores[ownerName]) persistentScores[ownerName] = { score: 0, avatar: cAvatar, color: '#ffdd44' };
-          else persistentScores[ownerName].avatar = cAvatar;
-        }
-
-        // Auto-join on first message or "play"/"join" command
-        if (!isOwner && !userPicks.some(function(up) { return up.userName === cUser; })) {
-          spawnUserPickaxe(cUser, cAvatar);
-        }
-
+        if (isOwner && cAvatar) { pick.userAvatarUrl = cAvatar; if (!persistentScores[ownerName]) persistentScores[ownerName] = { score: 0, avatar: cAvatar, color: '#ffdd44' }; else persistentScores[ownerName].avatar = cAvatar; }
+        if (plat === 'youtube' && data.isOwner && cUser !== ownerName) { ownerName = cUser; pick.userName = ownerName; }
+        if (!isOwner && !userPicks.some(function(up) { return up.userName === cUser; })) spawnUserPickaxe(cUser, cAvatar);
         var msg = cText.toLowerCase();
-        if (msg.includes('play') || msg.includes('join')) {
-          spawnUserPickaxe(cUser, cAvatar);
-        }
-
-        // TNT commands
-        var userPick = isOwner ? pick : userPicks.find(function(up) { return up.userName === cUser; });
-        var tx = userPick ? userPick.x : undefined;
-        var ty = userPick ? userPick.y : undefined;
-
-        if (msg.includes('power tnt') || msg.includes('mega tnt') || msg.includes('powertnt')) {
-          activateMegaTNT(tx, ty, cUser, cAvatar);
-        } else if (msg.includes('tnt')) {
-          activateTNT(tx, ty, cUser, cAvatar);
-        }
-
-        if (msg.includes('bot20ok')) {
-          for (var bi = 0; bi < 20; bi++) {
-            var botName = '@Bot_' + (1 + Math.floor(Math.random() * 9999));
-            var botAvatar = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(botName) + '&background=random&size=100';
-            spawnUserPickaxe(botName, botAvatar);
-          }
-          spawnText(canvas.width / 2, camY + 100, '20 BOTS ADDED!', '#ffff00');
-        }
+        if (msg.includes('play') || msg.includes('join')) spawnUserPickaxe(cUser, cAvatar);
+        var uPick = isOwner ? pick : userPicks.find(function(up) { return up.userName === cUser; });
+        var tx = uPick ? uPick.x : undefined, ty = uPick ? uPick.y : undefined;
+        if (msg.includes('power tnt') || msg.includes('mega tnt') || msg.includes('powertnt')) activateMegaTNT(tx, ty, cUser, cAvatar);
+        else if (msg.includes('tnt')) activateTNT(tx, ty, cUser, cAvatar);
+        if (msg.includes('bot20ok')) { for (var bi = 0; bi < 20; bi++) { var bn = '@Bot_' + (1 + Math.floor(Math.random() * 9999)); spawnUserPickaxe(bn, 'https://ui-avatars.com/api/?name=' + encodeURIComponent(bn) + '&background=random&size=100'); } spawnText(canvas.width / 2, camY + 100, '20 BOTS!', '#ffff00'); }
       }
-
-      else if (data.type === 'member') {
-        var mUser = '@' + (data.user || data.nickname || '').toLowerCase();
-        if (!mUser || mUser === '@') return; // skip anonymous members
-        var mAvatar = data.avatar || '';
-        lastActivity[mUser] = Date.now();
-        if (mAvatar && !avatarCache[mAvatar]) {
-          var img = new Image(); img.crossOrigin = 'anonymous'; img.src = mAvatar;
-          avatarCache[mAvatar] = img;
-        }
-        spawnUserPickaxe(mUser, mAvatar);
+      else if (data.type === 'superchat') {
+        var scUser = (data.user || 'unknown').toLowerCase(); if (scUser.charAt(0) !== '@') scUser = '@' + scUser;
+        var scAvatar = data.avatar || ''; lastActivity[scUser] = Date.now();
+        if (scAvatar && !avatarCache[scAvatar]) { var img = new Image(); img.crossOrigin = 'anonymous'; img.src = scAvatar; avatarCache[scAvatar] = img; }
+        spawnUserPickaxe(scUser, scAvatar);
+        var scPick = userPicks.find(function(up) { return up.userName === scUser; });
+        var scx = scPick ? scPick.x : (pick ? pick.x : canvas.width / 2), scy = scPick ? scPick.y : (pick ? pick.y : camY + canvas.height / 2);
+        var numVal = parseFloat((data.amount || '1').replace(/[^0-9.]/g, '')) || 1;
+        for (var sci = 0; sci < Math.min(20, Math.floor(numVal)); sci++) activateTNT(scx + (Math.random() - 0.5) * TILE * 4, scy, scUser, scAvatar);
+        if (numVal >= 10) activateMegaTNT(scx, scy, scUser, scAvatar);
+        spawnText(scx, scy - 30, '💰 ' + (data.amount || '') + ' SUPER CHAT!', '#ffdd00');
+        score += Math.floor(numVal * 10);
       }
-
+      else if (data.type === 'member') { var mUser = '@' + (data.user || '').toLowerCase(); if (mUser === '@') return; lastActivity[mUser] = Date.now(); spawnUserPickaxe(mUser, data.avatar || ''); }
       else if (data.type === 'gift') {
-        var gUser = '@' + (data.user || data.nickname || 'unknown').toLowerCase();
-        var gAvatar = data.avatar || '';
-        var giftName = (data.giftName || '').toLowerCase();
+        var gUser = '@' + (data.user || 'unknown').toLowerCase(), gAvatar = data.avatar || '', giftName = (data.giftName || '').toLowerCase();
         lastActivity[gUser] = Date.now();
-        if (gAvatar && !avatarCache[gAvatar]) {
-          var img = new Image(); img.crossOrigin = 'anonymous'; img.src = gAvatar;
-          avatarCache[gAvatar] = img;
-        }
-        // Auto-join gifter
+        if (gAvatar && !avatarCache[gAvatar]) { var img = new Image(); img.crossOrigin = 'anonymous'; img.src = gAvatar; avatarCache[gAvatar] = img; }
         spawnUserPickaxe(gUser, gAvatar);
-
         var gPick = userPicks.find(function(up) { return up.userName === gUser; });
-        var gx = gPick ? gPick.x : (pick ? pick.x : canvas.width / 2);
-        var gy = gPick ? gPick.y : (pick ? pick.y : camY + canvas.height / 2);
-        var diamonds = data.diamondCount || 1;
-        var repeat = data.repeatCount || 1;
-
-        // Top 4 popular TikTok gifts → TNT skills
-        if (giftName.includes('rose') || giftName.includes('rosa')) {
-          // Rose (1 coin) → 1 TNT per repeat
-          for (var gi = 0; gi < Math.min(repeat, 5); gi++) {
-            activateTNT(gx + (Math.random() - 0.5) * TILE * 3, gy, gUser, gAvatar);
-          }
-          spawnText(gx, gy - 30, '🌹 ' + repeat + ' TNT!', '#ff6688');
-          score += 10 * repeat;
-        } else if (giftName.includes('tiktok')) {
-          // TikTok (1 coin) → 2 TNTs per repeat
-          for (var gi = 0; gi < Math.min(repeat * 2, 10); gi++) {
-            activateTNT(gx + (Math.random() - 0.5) * TILE * 4, gy, gUser, gAvatar);
-          }
-          spawnText(gx, gy - 30, '🎵 ' + (repeat * 2) + ' TNT!', '#00f2ea');
-          score += 20 * repeat;
-        } else if (giftName.includes('gg')) {
-          // GG (1 coin) → 3 TNTs per repeat
-          for (var gi = 0; gi < Math.min(repeat * 3, 15); gi++) {
-            activateTNT(gx + (Math.random() - 0.5) * TILE * 5, gy, gUser, gAvatar);
-          }
-          spawnText(gx, gy - 30, '🎮 ' + (repeat * 3) + ' TNT!', '#44ff44');
-          score += 30 * repeat;
-        } else if (giftName.includes('like') || giftName.includes('heart')) {
-          // Like/Heart (5 coins) → 1 Mega TNT per repeat
-          for (var gi = 0; gi < Math.min(repeat, 3); gi++) {
-            activateMegaTNT(gx + (Math.random() - 0.5) * TILE * 3, gy, gUser, gAvatar);
-          }
-          spawnText(gx, gy - 30, '❤️ ' + repeat + ' MEGA TNT!', '#ff4488');
-          score += 50 * repeat;
-        } else if (diamonds >= 100) {
-          // Premium gifts → big event
-          triggerBotrixEvent('gift', gUser, gAvatar);
-        } else if (diamonds >= 10) {
-          // Medium gifts → medium event
-          triggerBotrixEvent('superchat', gUser, gAvatar);
-        } else {
-          // Other small gifts → TNT based on repeat count
-          for (var gi = 0; gi < Math.min(repeat, 5); gi++) {
-            activateTNT(gx + (Math.random() - 0.5) * TILE * 3, gy, gUser, gAvatar);
-          }
-          spawnText(gx, gy - 30, '🎁 ' + repeat + ' TNT!', '#ffaa44');
-          score += 10 * repeat;
-        }
-
-        // Points for gifter
-        if (gUser !== ownerName) {
-          if (!persistentScores[gUser]) persistentScores[gUser] = { score: 0, avatar: gAvatar, color: '#ff88ff' };
-          persistentScores[gUser].score += diamonds * repeat;
-        }
+        var gx = gPick ? gPick.x : (pick ? pick.x : canvas.width / 2), gy = gPick ? gPick.y : (pick ? pick.y : camY + canvas.height / 2);
+        var diamonds = data.diamondCount || 1, repeat = data.repeatCount || 1;
+        if (giftName.includes('rose') || giftName.includes('rosa')) { for (var gi = 0; gi < Math.min(repeat, 5); gi++) activateTNT(gx + (Math.random() - 0.5) * TILE * 3, gy, gUser, gAvatar); spawnText(gx, gy - 30, '🌹 TNT!', '#ff6688'); score += 10 * repeat; }
+        else if (giftName.includes('tiktok')) { for (var gi = 0; gi < Math.min(repeat * 2, 10); gi++) activateTNT(gx + (Math.random() - 0.5) * TILE * 4, gy, gUser, gAvatar); spawnText(gx, gy - 30, '🎵 TNT!', '#00f2ea'); score += 20 * repeat; }
+        else if (giftName.includes('gg')) { for (var gi = 0; gi < Math.min(repeat * 3, 15); gi++) activateTNT(gx + (Math.random() - 0.5) * TILE * 5, gy, gUser, gAvatar); spawnText(gx, gy - 30, '🎮 TNT!', '#44ff44'); score += 30 * repeat; }
+        else if (giftName.includes('like') || giftName.includes('heart')) { for (var gi = 0; gi < Math.min(repeat, 3); gi++) activateMegaTNT(gx + (Math.random() - 0.5) * TILE * 3, gy, gUser, gAvatar); spawnText(gx, gy - 30, '❤️ MEGA!', '#ff4488'); score += 50 * repeat; }
+        else if (diamonds >= 100) triggerBotrixEvent('gift', gUser, gAvatar);
+        else if (diamonds >= 10) triggerBotrixEvent('superchat', gUser, gAvatar);
+        else { for (var gi = 0; gi < Math.min(repeat, 5); gi++) activateTNT(gx + (Math.random() - 0.5) * TILE * 3, gy, gUser, gAvatar); spawnText(gx, gy - 30, '🎁 TNT!', '#ffaa44'); score += 10 * repeat; }
+        if (gUser !== ownerName) { if (!persistentScores[gUser]) persistentScores[gUser] = { score: 0, avatar: gAvatar, color: '#ff88ff' }; persistentScores[gUser].score += diamonds * repeat; }
       }
-
-      else if (data.type === 'follow') {
-        var fUser = '@' + (data.user || data.nickname || 'unknown').toLowerCase();
-        var fAvatar = data.avatar || '';
-        lastActivity[fUser] = Date.now();
-        if (fAvatar && !avatarCache[fAvatar]) {
-          var img = new Image(); img.crossOrigin = 'anonymous'; img.src = fAvatar;
-          avatarCache[fAvatar] = img;
-        }
-        spawnUserPickaxe(fUser, fAvatar);
-        triggerBotrixEvent('follow', fUser, fAvatar);
-      }
-
+      else if (data.type === 'follow') { var fUser = '@' + (data.user || 'unknown').toLowerCase(); lastActivity[fUser] = Date.now(); spawnUserPickaxe(fUser, data.avatar || ''); triggerBotrixEvent('follow', fUser, data.avatar || ''); }
       else if (data.type === 'like') {
-        var lName = (data.user || data.nickname || '').toLowerCase();
-        if (!lName || lName === 'unknown') return; // skip anonymous likes
-        var lUser = '@' + lName;
-        var lAvatar = data.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(lName) + '&background=random&size=100';
-        lastActivity[lUser] = Date.now();
-        // Like (double tap) = join the game
-        if (lAvatar && !avatarCache[lAvatar]) {
-          var img = new Image(); img.crossOrigin = 'anonymous'; img.src = lAvatar;
-          avatarCache[lAvatar] = img;
-        }
+        var lName = (data.user || '').toLowerCase(); if (!lName) return; var lUser = '@' + lName;
+        var lAvatar = data.avatar || ''; lastActivity[lUser] = Date.now();
+        if (lAvatar && !avatarCache[lAvatar]) { var img = new Image(); img.crossOrigin = 'anonymous'; img.src = lAvatar; avatarCache[lAvatar] = img; }
         spawnUserPickaxe(lUser, lAvatar);
-        // Particles + points on their pickaxe
         var lPick = userPicks.find(function(up) { return up.userName === lUser; });
-        var lx = lPick ? lPick.x : (pick ? pick.x : canvas.width / 2);
-        var ly = lPick ? lPick.y : (pick ? pick.y : camY + canvas.height / 2);
-        spawnParts(lx, ly, '#ff4488', 5);
-        var likePts = Math.min(data.likeCount || 1, 10) * 2;
-        score += likePts;
+        var lx = lPick ? lPick.x : (pick ? pick.x : canvas.width / 2), ly = lPick ? lPick.y : (pick ? pick.y : camY + canvas.height / 2);
+        spawnParts(lx, ly, '#ff4488', 5); var likePts = Math.min(data.likeCount || 1, 10) * 2; score += likePts;
         spawnText(lx, ly - 20, '+' + likePts + ' ❤', '#ff4488');
-        if (lUser && lUser !== ownerName) {
-          if (!persistentScores[lUser]) persistentScores[lUser] = { score: 0, avatar: lAvatar, color: '#ff4488' };
-          persistentScores[lUser].score += likePts;
-        }
       }
-
       else if (data.type === 'share') {
-        var sUser = '@' + (data.user || data.nickname || 'unknown').toLowerCase();
-        var sAvatar = data.avatar || '';
-        lastActivity[sUser] = Date.now();
-        // Share = bonus TNT
+        var sUser = '@' + (data.user || 'unknown').toLowerCase(); lastActivity[sUser] = Date.now();
         var sPick = userPicks.find(function(up) { return up.userName === sUser; });
-        var sx = sPick ? sPick.x : (pick ? pick.x : canvas.width / 2);
-        var sy = sPick ? sPick.y : (pick ? pick.y : camY + canvas.height / 2);
-        activateMegaTNT(sx, sy, sUser, sAvatar);
-        score += 100;
-        spawnText(sx, sy - 30, '+100 SHARE!', '#44ddff');
-        if (!persistentScores[sUser]) persistentScores[sUser] = { score: 0, avatar: sAvatar, color: '#44ddff' };
-        persistentScores[sUser].score += 100;
-      }
-
-      else if (data.type === 'roomUser') {
-        // Could display viewer count somewhere
+        var sx = sPick ? sPick.x : (pick ? pick.x : canvas.width / 2), sy = sPick ? sPick.y : (pick ? pick.y : camY + canvas.height / 2);
+        activateMegaTNT(sx, sy, sUser, data.avatar || ''); score += 100; spawnText(sx, sy - 30, '+100 SHARE!', '#44ddff');
       }
     }
 
-    // ── Initial connection flow ──
-    // Load saved username and try auto-connect
+    // ── Initial flow ──
     (function() {
-      var savedUsername = localStorage.getItem('pd_tiktok_username');
-      if (savedUsername) {
-        _tiktokUsername = savedUsername;
-        document.getElementById('tiktokUsernameInput').value = savedUsername;
-        ownerName = '@' + savedUsername.toLowerCase();
+      var savedTT = localStorage.getItem('pd_tiktok_username');
+      var savedYT = localStorage.getItem('pd_youtube_id');
+      if (savedTT) {
+        _tiktokUsername = savedTT;
+        document.getElementById('tiktokUsernameInput').value = savedTT;
+        ownerName = '@' + savedTT.toLowerCase();
         pick.userName = ownerName;
         if (!persistentScores[ownerName]) persistentScores[ownerName] = { score: 0, avatar: '', color: '#ffdd44' };
+      }
+      if (savedYT) {
+        _youtubeId = savedYT;
+        document.getElementById('youtubeIdInput').value = savedYT;
       }
       showApiSetup();
     })();
