@@ -17,7 +17,7 @@ app.use(express.static('.'));
 const sessions = new Map();
 
 function getSession(ws) {
-  if (!sessions.has(ws)) sessions.set(ws, { tiktok: null, youtube: null, lastConnectAttempt: 0 });
+  if (!sessions.has(ws)) sessions.set(ws, { tiktok: null, youtube: null, lastTTConnect: 0, lastYTConnect: 0 });
   return sessions.get(ws);
 }
 
@@ -61,7 +61,7 @@ function connectTikTok(ws, username) {
 
   var tiktok = new WebcastPushConnection(username, opts);
   session.tiktok = { conn: tiktok, username: username, connected: false };
-  session.lastConnectAttempt = Date.now();
+  session.lastTTConnect = Date.now();
 
   console.log('[TikTok] Connecting to @' + username + '...');
 
@@ -141,7 +141,7 @@ function connectYouTube(ws, channelId, liveId) {
   }
 
   session.youtube = { conn: yt, identifier: identifier, connected: false };
-  session.lastConnectAttempt = Date.now();
+  session.lastYTConnect = Date.now();
 
   yt.on('start', function(liveIdResolved) {
     console.log('[YouTube] Connected! liveId:', liveIdResolved);
@@ -191,10 +191,15 @@ wss.on('connection', function(ws) {
       var msg = JSON.parse(raw);
       var session = getSession(ws);
 
-      // Rate-limit
-      if ((msg.action === 'connect' || msg.action === 'connectYouTube') && session.lastConnectAttempt && (Date.now() - session.lastConnectAttempt < 10000)) {
-        var wait = Math.ceil((10000 - (Date.now() - session.lastConnectAttempt)) / 1000);
-        send(ws, { type: 'error', platform: msg.action === 'connect' ? 'tiktok' : 'youtube', message: 'Wait ' + wait + 's before reconnecting.' });
+      // Rate-limit per platform
+      if (msg.action === 'connect' && session.lastTTConnect && (Date.now() - session.lastTTConnect < 10000)) {
+        var wait = Math.ceil((10000 - (Date.now() - session.lastTTConnect)) / 1000);
+        send(ws, { type: 'error', platform: 'tiktok', message: 'Wait ' + wait + 's before reconnecting.' });
+        return;
+      }
+      if (msg.action === 'connectYouTube' && session.lastYTConnect && (Date.now() - session.lastYTConnect < 10000)) {
+        var wait = Math.ceil((10000 - (Date.now() - session.lastYTConnect)) / 1000);
+        send(ws, { type: 'error', platform: 'youtube', message: 'Wait ' + wait + 's before reconnecting.' });
         return;
       }
 

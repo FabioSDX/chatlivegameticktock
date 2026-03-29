@@ -7447,6 +7447,7 @@
             var cId = '', lId = '';
             var m = rawId.match(/[?&]v=([a-zA-Z0-9_-]{11})/) || rawId.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/) || rawId.match(/\/live\/([a-zA-Z0-9_-]{11})/);
             if (m) lId = m[1]; else if (rawId.startsWith('UC') && rawId.length > 20) cId = rawId; else if (rawId.length >= 8 && rawId.length <= 12) lId = rawId; else cId = rawId;
+            console.log('[YT] Sending connectYouTube cId=' + cId + ' lId=' + lId);
             if (_ws && _ws.readyState === 1) _ws.send(JSON.stringify({ action: 'connectYouTube', channelId: cId, liveId: lId }));
         }
 
@@ -7472,6 +7473,7 @@
 
         function handleLiveEvent(data) {
             var plat = data.platform || 'tiktok';
+            console.log('[Live]', plat, data.type, data.message || data.username || '');
             if (data.type === 'connected') {
                 if (plat === 'tiktok') _ttConnected = true; if (plat === 'youtube') _ytConnected = true;
                 _gameStarted = true; hideApiSetup(); dismissApiBanner(); updateStatusDots();
