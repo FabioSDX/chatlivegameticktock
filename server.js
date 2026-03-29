@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const { WebSocketServer } = require('ws');
 const { WebcastPushConnection } = require('tiktok-live-connector');
+const { LiveChat } = require('youtube-chat');
 
 const app = express();
 const server = http.createServer(app);
@@ -11,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static('.'));
 
 // ── Per-client sessions ──────────────────────────────────────────────────────
-// Map<ws, { tiktokConnection, username, isConnected }>
+// Map<ws, { tiktokConnection?, youtubeConnection?, platform, username, isConnected }>
 const sessions = new Map();
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -32,19 +33,34 @@ function send(ws, obj) {
   } catch (e) { /* ignore closed sockets */ }
 }
 
+function cleanupSession(ws) {
+  var session = sessions.get(ws);
+  if (!session) return;
+  if (session.tiktokConnection) {
+    try { session.tiktokConnection.disconnect(); } catch (e) {}
+  }
+  if (session.youtubeConnection) {
+    try { session.youtubeConnection.stop(); } catch (e) {}
+  }
+  sessions.delete(ws);
+}
+
 // ── Connect a single client to TikTok ────────────────────────────────────────
 function connectTikTok(ws, username) {
   var session = sessions.get(ws);
-  // Disconnect previous connection if any
+  // Disconnect previous connections
   if (session && session.tiktokConnection) {
     try { session.tiktokConnection.disconnect(); } catch (e) {}
+  }
+  if (session && session.youtubeConnection) {
+    try { session.youtubeConnection.stop(); } catch (e) {}
   }
 
   var opts = {
     processInitialData: true,
     enableExtendedGiftInfo: true,
     enableWebsocketUpgrade: true,
-    requestPollingIntervalMs: 2000,  // 2s instead of default 1s to reduce rate-limit risk
+    requestPollingIntervalMs: 2000,
     requestOptions: { timeout: 15000 },
     websocketOptions: { timeout: 15000 }
   };
@@ -52,7 +68,11 @@ function connectTikTok(ws, username) {
 
   var tiktok = new WebcastPushConnection(username, opts);
 
-  sessions.set(ws, { tiktokConnection: tiktok, username: username, isConnected: false, lastConnectAttempt: Date.now() });
+  sessions.set(ws, {
+    tiktokConnection: tiktok, youtubeConnection: null,
+    platform: 'tiktok', username: username,
+    isConnected: false, lastConnectAttempt: Date.now()
+  });
 
   console.log('[TikTok] Connecting to @' + username + '...');
 
@@ -60,34 +80,29 @@ function connectTikTok(ws, username) {
     console.log('[TikTok] Connected to @' + username + ' | roomId:', state.roomId);
     var s = sessions.get(ws);
     if (s) s.isConnected = true;
-    send(ws, { type: 'connected', username: username, roomId: state.roomId });
+    send(ws, { type: 'connected', platform: 'tiktok', username: username, roomId: state.roomId });
   }).catch(function(err) {
     console.error('[TikTok] Connection failed for @' + username + ':', err.message);
-    send(ws, { type: 'error', message: 'TikTok connection failed: ' + err.message });
+    send(ws, { type: 'error', platform: 'tiktok', message: 'TikTok connection failed: ' + err.message });
   });
 
-  // ── Chat ──
   tiktok.on('chat', function(data) {
     var user = data.user || {};
     var uid = getUser(user, data, username);
     var nick = getNick(user, data, uid);
     var avatar = getAvatar(user, data);
-    console.log('[Chat] @' + uid + ': ' + (data.comment || ''));
-    send(ws, { type: 'chat', user: uid, nickname: nick, avatar: avatar, comment: data.comment || '' });
+    send(ws, { type: 'chat', platform: 'tiktok', user: uid, nickname: nick, avatar: avatar, comment: data.comment || '' });
   });
 
-  // ── Member join ──
   tiktok.on('member', function(data) {
     var user = data.user || {};
     var uid = getUser(user, data, '');
     var nick = getNick(user, data, uid);
     var avatar = getAvatar(user, data);
     if (!uid) return;
-    console.log('[Member] @' + uid + ' joined');
-    send(ws, { type: 'member', user: uid, nickname: nick, avatar: avatar });
+    send(ws, { type: 'member', platform: 'tiktok', user: uid, nickname: nick, avatar: avatar });
   });
 
-  // ── Gift ──
   tiktok.on('gift', function(data) {
     var user = data.user || {};
     var uid = getUser(user, data, 'unknown');
@@ -96,46 +111,37 @@ function connectTikTok(ws, username) {
     var giftName = (data.giftName || data.describe || '').toLowerCase();
     var diamonds = data.diamondCount || 1;
     var repeat = data.repeatCount || 1;
-    console.log('[Gift] @' + uid + ' sent ' + giftName + ' x' + repeat + ' (' + diamonds + ' diamonds)');
     send(ws, {
-      type: 'gift', user: uid, nickname: nick, avatar: avatar,
-      giftName: giftName, diamondCount: diamonds, repeatCount: repeat,
-      giftId: data.giftId || 0
+      type: 'gift', platform: 'tiktok', user: uid, nickname: nick, avatar: avatar,
+      giftName: giftName, diamondCount: diamonds, repeatCount: repeat, giftId: data.giftId || 0
     });
   });
 
-  // ── Like ──
   tiktok.on('like', function(data) {
     var user = data.user || {};
     var uid = getUser(user, data, '');
     var nick = getNick(user, data, uid);
     var avatar = getAvatar(user, data);
     if (!uid) return;
-    console.log('[Like] @' + uid + ' x' + (data.likeCount || 1));
-    send(ws, { type: 'like', user: uid, nickname: nick, avatar: avatar, likeCount: data.likeCount || 1 });
+    send(ws, { type: 'like', platform: 'tiktok', user: uid, nickname: nick, avatar: avatar, likeCount: data.likeCount || 1 });
   });
 
-  // ── Follow ──
   tiktok.on('follow', function(data) {
     var user = data.user || {};
     var uid = getUser(user, data, 'unknown');
     var nick = getNick(user, data, uid);
     var avatar = getAvatar(user, data);
-    console.log('[Follow] @' + uid);
-    send(ws, { type: 'follow', user: uid, nickname: nick, avatar: avatar });
+    send(ws, { type: 'follow', platform: 'tiktok', user: uid, nickname: nick, avatar: avatar });
   });
 
-  // ── Share ──
   tiktok.on('share', function(data) {
     var user = data.user || {};
     var uid = getUser(user, data, 'unknown');
     var nick = getNick(user, data, uid);
     var avatar = getAvatar(user, data);
-    console.log('[Share] @' + uid);
-    send(ws, { type: 'share', user: uid, nickname: nick, avatar: avatar });
+    send(ws, { type: 'share', platform: 'tiktok', user: uid, nickname: nick, avatar: avatar });
   });
 
-  // ── Social ──
   tiktok.on('social', function(data) {
     var user = data.user || {};
     var uid = getUser(user, data, '');
@@ -143,43 +149,134 @@ function connectTikTok(ws, username) {
     var avatar = getAvatar(user, data);
     if (!uid) return;
     var label = data.displayType || data.label || 'social';
-    console.log('[Social] @' + uid + ' → ' + label);
-    send(ws, { type: 'social', user: uid, nickname: nick, avatar: avatar, label: label });
+    send(ws, { type: 'social', platform: 'tiktok', user: uid, nickname: nick, avatar: avatar, label: label });
   });
 
-  // ── Room user count ──
   tiktok.on('roomUser', function(data) {
-    send(ws, { type: 'roomUser', viewerCount: data.viewerCount || 0 });
+    send(ws, { type: 'roomUser', platform: 'tiktok', viewerCount: data.viewerCount || 0 });
   });
 
-  // ── Stream end ──
   tiktok.on('streamEnd', function(actionId) {
     console.log('[TikTok] Stream ended for @' + username);
     var s = sessions.get(ws);
     if (s) s.isConnected = false;
-    send(ws, { type: 'streamEnd', actionId: actionId });
+    send(ws, { type: 'streamEnd', platform: 'tiktok', actionId: actionId });
   });
 
-  // ── Disconnected ──
   tiktok.on('disconnected', function() {
     console.log('[TikTok] Disconnected from @' + username);
     var s = sessions.get(ws);
     if (s) s.isConnected = false;
-    send(ws, { type: 'disconnected' });
+    send(ws, { type: 'disconnected', platform: 'tiktok' });
   });
 
-  // ── Error ──
   tiktok.on('error', function(err) {
     console.error('[TikTok] Error for @' + username + ':', err.message);
-    send(ws, { type: 'error', message: err.message });
+    send(ws, { type: 'error', platform: 'tiktok', message: err.message });
+  });
+}
+
+// ── Connect a single client to YouTube ───────────────────────────────────────
+function connectYouTube(ws, channelId, liveId) {
+  var session = sessions.get(ws);
+  // Disconnect previous connections
+  if (session && session.tiktokConnection) {
+    try { session.tiktokConnection.disconnect(); } catch (e) {}
+  }
+  if (session && session.youtubeConnection) {
+    try { session.youtubeConnection.stop(); } catch (e) {}
+  }
+
+  var opts = {};
+  if (liveId) {
+    opts.liveId = liveId;
+  } else if (channelId) {
+    opts.channelId = channelId;
+  } else {
+    send(ws, { type: 'error', platform: 'youtube', message: 'Channel ID or Live ID is required.' });
+    return;
+  }
+
+  var identifier = liveId || channelId;
+  console.log('[YouTube] Connecting to ' + identifier + '...');
+
+  var yt;
+  try {
+    yt = new LiveChat(opts);
+  } catch (err) {
+    console.error('[YouTube] Failed to create LiveChat:', err.message);
+    send(ws, { type: 'error', platform: 'youtube', message: 'Failed to create YouTube connection: ' + err.message });
+    return;
+  }
+
+  sessions.set(ws, {
+    tiktokConnection: null, youtubeConnection: yt,
+    platform: 'youtube', username: identifier,
+    isConnected: false, lastConnectAttempt: Date.now()
   });
 
-  // ── Raw data (debug) ──
-  tiktok.on('rawData', function(messageTypeName) {
-    // Only log uncommon events
-    if (!['WebcastChatMessage','WebcastMemberMessage','WebcastGiftMessage','WebcastLikeMessage','WebcastSocialMessage'].includes(messageTypeName)) {
-      console.log('[Raw] @' + username + ':', messageTypeName);
+  yt.on('start', function(liveIdResolved) {
+    console.log('[YouTube] Connected! liveId:', liveIdResolved);
+    var s = sessions.get(ws);
+    if (s) s.isConnected = true;
+    send(ws, { type: 'connected', platform: 'youtube', username: identifier, liveId: liveIdResolved });
+  });
+
+  yt.on('end', function(reason) {
+    console.log('[YouTube] Stream ended:', reason);
+    var s = sessions.get(ws);
+    if (s) s.isConnected = false;
+    send(ws, { type: 'streamEnd', platform: 'youtube', reason: reason || 'Stream ended' });
+  });
+
+  yt.on('error', function(err) {
+    console.error('[YouTube] Error:', err.message || err);
+    send(ws, { type: 'error', platform: 'youtube', message: String(err.message || err) });
+  });
+
+  yt.on('chat', function(chatItem) {
+    var author = chatItem.author || {};
+    var uid = (author.name || 'unknown').toLowerCase();
+    var nick = author.name || uid;
+    var avatar = (author.thumbnail && author.thumbnail.url) || '';
+    var channelUrl = author.channelId ? ('https://youtube.com/channel/' + author.channelId) : '';
+
+    // Extract text from message array
+    var text = '';
+    if (chatItem.message && Array.isArray(chatItem.message)) {
+      text = chatItem.message.map(function(m) {
+        return m.text || m.emojiText || '';
+      }).join('');
     }
+
+    var msg = {
+      type: 'chat', platform: 'youtube',
+      user: '@' + uid, nickname: nick, avatar: avatar,
+      comment: text, channelId: author.channelId || '',
+      isOwner: !!chatItem.isOwner,
+      isModerator: !!chatItem.isModerator,
+      isMembership: !!chatItem.isMembership
+    };
+
+    // Super Chat
+    if (chatItem.superchat) {
+      msg.type = 'superchat';
+      msg.amount = chatItem.superchat.amount || '';
+      msg.color = chatItem.superchat.color || '';
+    }
+
+    send(ws, msg);
+  });
+
+  // Start the connection
+  yt.start().then(function(ok) {
+    if (!ok) {
+      console.error('[YouTube] Failed to start for ' + identifier);
+      send(ws, { type: 'error', platform: 'youtube', message: 'Failed to connect. Check if the channel is live.' });
+    }
+  }).catch(function(err) {
+    console.error('[YouTube] Start error:', err.message);
+    send(ws, { type: 'error', platform: 'youtube', message: 'YouTube connection failed: ' + err.message });
   });
 }
 
@@ -191,39 +288,66 @@ wss.on('connection', function(ws) {
     try {
       var msg = JSON.parse(raw);
 
+      // ── TikTok connect ──
       if (msg.action === 'connect' && msg.username) {
         var uname = msg.username.replace(/^@/, '').trim();
         if (!uname) {
           send(ws, { type: 'error', message: 'Username is required.' });
           return;
         }
-        // Rate-limit: prevent reconnecting too fast (min 10s between attempts)
         var existing = sessions.get(ws);
         if (existing && existing.lastConnectAttempt && (Date.now() - existing.lastConnectAttempt < 10000)) {
           var wait = Math.ceil((10000 - (Date.now() - existing.lastConnectAttempt)) / 1000);
-          console.log('[WS] Rate-limited reconnect for @' + uname + ', wait ' + wait + 's');
-          send(ws, { type: 'error', message: 'Please wait ' + wait + 's before reconnecting.' });
+          send(ws, { type: 'error', platform: 'tiktok', message: 'Please wait ' + wait + 's before reconnecting.' });
           return;
         }
-        console.log('[WS] Client wants to connect to @' + uname);
+        console.log('[WS] Client wants TikTok @' + uname);
         connectTikTok(ws, uname);
       }
 
-      else if (msg.action === 'disconnect') {
-        var session = sessions.get(ws);
-        if (session && session.tiktokConnection) {
-          try { session.tiktokConnection.disconnect(); } catch (e) {}
-          session.isConnected = false;
-          console.log('[WS] Client disconnected from TikTok @' + session.username);
+      // ── YouTube connect ──
+      else if (msg.action === 'connectYouTube') {
+        var channelId = (msg.channelId || '').trim();
+        var liveId = (msg.liveId || '').trim();
+        if (!channelId && !liveId) {
+          send(ws, { type: 'error', platform: 'youtube', message: 'Channel ID or Live ID is required.' });
+          return;
         }
-        send(ws, { type: 'disconnected' });
+        var existing = sessions.get(ws);
+        if (existing && existing.lastConnectAttempt && (Date.now() - existing.lastConnectAttempt < 10000)) {
+          var wait = Math.ceil((10000 - (Date.now() - existing.lastConnectAttempt)) / 1000);
+          send(ws, { type: 'error', platform: 'youtube', message: 'Please wait ' + wait + 's before reconnecting.' });
+          return;
+        }
+        console.log('[WS] Client wants YouTube ' + (liveId || channelId));
+        connectYouTube(ws, channelId, liveId);
       }
 
+      // ── Disconnect ──
+      else if (msg.action === 'disconnect') {
+        var platform = msg.platform || 'all';
+        var session = sessions.get(ws);
+        if (session) {
+          if ((platform === 'all' || platform === 'tiktok') && session.tiktokConnection) {
+            try { session.tiktokConnection.disconnect(); } catch (e) {}
+            session.tiktokConnection = null;
+          }
+          if ((platform === 'all' || platform === 'youtube') && session.youtubeConnection) {
+            try { session.youtubeConnection.stop(); } catch (e) {}
+            session.youtubeConnection = null;
+          }
+          session.isConnected = false;
+        }
+        send(ws, { type: 'disconnected', platform: platform });
+      }
+
+      // ── Status ──
       else if (msg.action === 'status') {
         var session = sessions.get(ws);
         send(ws, {
           type: 'status',
           connected: !!(session && session.isConnected),
+          platform: session ? session.platform : null,
           username: session ? session.username : null
         });
       }
@@ -236,12 +360,9 @@ wss.on('connection', function(ws) {
   ws.on('close', function() {
     var session = sessions.get(ws);
     if (session) {
-      if (session.tiktokConnection) {
-        try { session.tiktokConnection.disconnect(); } catch (e) {}
-      }
-      console.log('[WS] Client disconnected. Was connected to @' + (session.username || '?'));
-      sessions.delete(ws);
+      console.log('[WS] Client disconnected. Was on ' + (session.platform || '?') + ' @' + (session.username || '?'));
     }
+    cleanupSession(ws);
     console.log('[WS] Clients remaining:', wss.clients.size);
   });
 
@@ -250,24 +371,22 @@ wss.on('connection', function(ws) {
   });
 });
 
-// ── Health check endpoint (keeps Render awake) ──────────────────────────────
-app.get('/health', function(req, res) {
+// ── Health check ─────────────────────────────────────────────────────────────
+app.get('/health', function(_req, res) {
   res.json({ status: 'ok', sessions: sessions.size, uptime: process.uptime() });
 });
 
 // ── Start server ─────────────────────────────────────────────────────────────
 server.listen(PORT, function() {
-  console.log('=== Pickaxe Drop TikTok Server ===');
-  console.log('Game:   http://localhost:' + PORT);
-  console.log('Multi-session: each browser gets its own TikTok connection');
-  console.log('==================================');
+  console.log('=== Pickaxe Drop Server ===');
+  console.log('Game:      http://localhost:' + PORT);
+  console.log('Platforms: TikTok + YouTube (no API key needed)');
+  console.log('===========================');
 
-  // Keep Render free tier awake by self-pinging every 14 min
   if (process.env.RENDER_EXTERNAL_URL) {
     setInterval(function() {
       var url = process.env.RENDER_EXTERNAL_URL + '/health';
       require('http').get(url.replace('https:', 'http:'), function() {}).on('error', function() {});
-      console.log('[Keep-alive] Pinged ' + url);
     }, 14 * 60 * 1000);
   }
 });
