@@ -358,21 +358,35 @@
 </head>
 
 <body>
-  <!-- TikTok Setup Modal -->
+  <!-- Live Setup Modal -->
   <div id="apiSetupOverlay" style="display:flex; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.92); align-items:center; justify-content:center; font-family:Arial,sans-serif;">
     <div id="apiSetupBox" style="background:#1a1a2e; border:2px solid #00ff88; border-radius:16px; padding:28px 32px; max-width:460px; width:90%; color:#fff; box-shadow:0 0 40px rgba(0,255,136,0.2);">
       <div style="text-align:center; margin-bottom:18px;">
         <div style="font-size:36px;">⛏️</div>
-        <h2 style="margin:8px 0 4px; color:#00ff88; font-size:20px;">Pickaxe Drop — TikTok Live</h2>
-        <p id="apiSetupMsg" style="font-size:13px; color:#aaa; margin:0;">Enter the TikTok username of the live streamer to connect.</p>
+        <h2 style="margin:8px 0 4px; color:#00ff88; font-size:20px;">Pickaxe Drop — Live</h2>
+        <p id="apiSetupMsg" style="font-size:13px; color:#aaa; margin:0;">Choose your platform and connect to a live stream.</p>
       </div>
       <div id="apiSetupError" style="display:none; background:rgba(255,68,68,0.15); border:1px solid #ff4444; border-radius:8px; padding:8px 12px; margin-bottom:12px; font-size:12px; color:#ff8888;"></div>
       <div id="apiSetupSuccess" style="display:none; background:rgba(0,255,136,0.1); border:1px solid #00ff88; border-radius:8px; padding:8px 12px; margin-bottom:12px; font-size:12px; color:#00ff88;"></div>
-      <label style="font-size:12px; color:#888; display:block; margin-bottom:4px;">TikTok Username</label>
-      <input id="tiktokUsernameInput" type="text" placeholder="@username" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid #333; background:#0d0d1a; color:#fff; font-size:14px; margin-bottom:16px; box-sizing:border-box; outline:none;" />
+      <!-- Platform tabs -->
+      <div style="display:flex; gap:0; margin-bottom:16px; border-radius:8px; overflow:hidden; border:1px solid #333;">
+        <button id="tabTikTok" onclick="switchPlatformTab('tiktok')" style="flex:1; padding:8px; border:none; background:#00f2ea; color:#000; font-weight:bold; font-size:13px; cursor:pointer;">TikTok</button>
+        <button id="tabYouTube" onclick="switchPlatformTab('youtube')" style="flex:1; padding:8px; border:none; background:#222; color:#888; font-size:13px; cursor:pointer;">YouTube</button>
+      </div>
+      <!-- TikTok fields -->
+      <div id="fieldsTikTok">
+        <label style="font-size:12px; color:#888; display:block; margin-bottom:4px;">TikTok Username</label>
+        <input id="tiktokUsernameInput" type="text" placeholder="@username" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid #333; background:#0d0d1a; color:#fff; font-size:14px; margin-bottom:16px; box-sizing:border-box; outline:none;" />
+      </div>
+      <!-- YouTube fields -->
+      <div id="fieldsYouTube" style="display:none;">
+        <label style="font-size:12px; color:#888; display:block; margin-bottom:4px;">Channel ID or Live Video ID</label>
+        <input id="youtubeIdInput" type="text" placeholder="UC... or video ID or live URL" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid #333; background:#0d0d1a; color:#fff; font-size:14px; margin-bottom:4px; box-sizing:border-box; outline:none;" />
+        <div style="font-size:10px; color:#666; margin-bottom:16px;">No API key needed. Just the channel ID or live video URL/ID.</div>
+      </div>
       <div style="display:flex; gap:8px;">
-        <button id="apiTestBtn" onclick="tiktokConnect()" style="flex:1; padding:10px; border:none; border-radius:8px; background:#00ff88; color:#000; font-weight:bold; font-size:14px; cursor:pointer;">Connect</button>
-        <button id="apiSkipBtn" onclick="tiktokSkip()" style="padding:10px 16px; border:1px solid #555; border-radius:8px; background:transparent; color:#888; font-size:13px; cursor:pointer;">Play Offline</button>
+        <button id="apiTestBtn" onclick="platformConnect()" style="flex:1; padding:10px; border:none; border-radius:8px; background:#00ff88; color:#000; font-weight:bold; font-size:14px; cursor:pointer;">Connect</button>
+        <button id="apiSkipBtn" onclick="platformSkip()" style="padding:10px 16px; border:1px solid #555; border-radius:8px; background:transparent; color:#888; font-size:13px; cursor:pointer;">Play Offline</button>
       </div>
     </div>
   </div>
@@ -380,7 +394,7 @@
   <div id="ui">
     <div id="apiStatus">
       <div class="status-dot" id="statusDotApi"></div>
-      <span id="statusTextApi" style="font-size:11px;">TikTok: —</span>
+      <span id="statusTextApi" style="font-size:11px;">Live: —</span>
     </div>
     <div class="depth" id="depthDisplay">Depth: 0m</div>
     <div class="score-display" id="scoreDisplay">⛏ 0</div>
@@ -392,11 +406,12 @@
       <div class="cmd-section">💬 Chat TNT</div>
       <div class="cmd-item">💣 <span class="cmd-highlight">tnt</span> — 1 TNT</div>
       <div class="cmd-item">💥 <span class="cmd-highlight">mega tnt</span> — Mega TNT</div>
-      <div class="cmd-section">🎁 Presentes</div>
+      <div class="cmd-section">🎁 Presentes / Super Chat</div>
       <div class="cmd-item">🌹 Rose — 1 TNT</div>
       <div class="cmd-item">🎵 TikTok — 2 TNTs</div>
       <div class="cmd-item">🎮 GG — 3 TNTs</div>
       <div class="cmd-item">❤️ Like — Mega TNT</div>
+      <div class="cmd-item">💰 Super Chat — TNTs</div>
     </div>
 
     <!-- Status ocultos ou simplificados -->
