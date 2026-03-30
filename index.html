@@ -761,6 +761,7 @@
 
     <div id="ui">
         <div id="fpsCounter">FPS: 0</div>
+        <button id="mobileToggle" onclick="toggleMobileMode()" style="position:fixed;top:12px;left:80px;z-index:101;padding:4px 10px;border:1px solid #555;border-radius:12px;background:rgba(0,0,0,0.4);color:#aaa;font-size:11px;cursor:pointer;backdrop-filter:blur(4px);">📱 Mobile</button>
         <div id="apiStatus">
             <div class="status-dot" id="statusDotTT"></div>
             <span id="statusTextTT" style="font-size:11px;">TT: —</span>
@@ -854,6 +855,22 @@
 
         // ── Mobile detection & performance scaling ──
         var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+        function toggleMobileMode() {
+            isMobile = !isMobile;
+            MAX_PARTS = isMobile ? 15 : 150;
+            MAX_DEBRIS = isMobile ? 10 : 60;
+            MAX_TEXTS = isMobile ? 4 : 20;
+            SHADOW_ENABLED = !isMobile;
+            SHIMMER_ENABLED = !isMobile;
+            BG_DETAIL = isMobile ? 0 : 1;
+            var btn = document.getElementById('mobileToggle');
+            if (btn) {
+                btn.textContent = isMobile ? '🖥 Desktop' : '📱 Mobile';
+                btn.style.color = isMobile ? '#00ff88' : '#aaa';
+                btn.style.borderColor = isMobile ? '#00ff88' : '#555';
+            }
+        }
 
         var COLS = 15, TILE = 72;
         var VIS = 27;
