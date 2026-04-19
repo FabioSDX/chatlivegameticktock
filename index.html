@@ -26,36 +26,67 @@
             font-family: Arial, sans-serif;
         }
 
-        #ui {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 10;
-            color: #fff;
-            text-align: center;
-            padding: 4px 0 8px;
-            text-shadow: 0 1px 3px #000, 0 0 10px rgba(0, 200, 255, 0.8);
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent);
-        }
+         #ui {
+             position: fixed;
+             top: 0;
+             left: 0;
+             right: 0;
+             z-index: 10;
+             color: #ffffff;
+             text-align: center;
+             padding: 4px 0 8px;
+             background: transparent;
+         }
 
-        #ui .depth {
-            font-size: 26px;
-            opacity: 1;
-            margin-top: -2px;
-            color: #ddd;
-            text-shadow: 0 1px 4px #000, 0 0 6px rgba(0,0,0,0.8);
-        }
+#ui .depth {
+              font-size: 26px;
+              opacity: 1;
+              margin-top: -2px;
+              color: #ffffff;
+              text-shadow:
+                  -1px -1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px 1px 0 #000,
+                  1px 1px 0 #000;
+          }
 
-        .score-display {
-            font-size: 30px;
-            font-weight: bold;
-            color: #ffdd44;
-            text-shadow: 0 1px 3px #000, 0 0 10px rgba(255, 221, 68, 0.6);
-            margin-top: 18px;
-        }
+.score-display {
+              font-size: 30px;
+              font-weight: bold;
+              color: #ffee00;
+              margin-top: 18px;
+              text-shadow:
+                  -1px -1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px 1px 0 #000,
+                  1px 1px 0 #000;
+          }
 
-        canvas {
+#ui .depth {
+              font-size: 26px;
+              opacity: 1;
+              margin-top: -2px;
+              color: #ffffff;
+              text-shadow:
+                  -1px -1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px 1px 0 #000,
+                  1px 1px 0 #000;
+          }
+
+.score-display {
+              font-size: 30px;
+              font-weight: bold;
+              color: #ffee00;
+              margin-top: 18px;
+              text-shadow:
+                  -1px -1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px 1px 0 #000,
+                  1px 1px 0 #000;
+          }
+
+         canvas {
             display: block;
             touch-action: manipulation;
             -webkit-user-select: none;
@@ -89,39 +120,34 @@
             pointer-events: auto;
         }
 
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #ff4444;
-            box-shadow: 0 0 4px #ff4444;
-            transition: all 0.3s ease;
-        }
+         .status-dot {
+             width: 8px;
+             height: 8px;
+             border-radius: 50%;
+             background: #ff4444;
+         }
 
-        .status-dot.online {
-            background: #00ff88;
-            box-shadow: 0 0 12px #00ff88;
-            animation: statusPulse 2s infinite;
-        }
+         .status-dot.online {
+             background: #00ff88;
+         }
 
-        .status-dot.warning {
-            background: #ffaa00;
-            box-shadow: 0 0 8px #ffaa00;
-        }
+         .status-dot.warning {
+             background: #ffaa00;
+         }
 
-        #fpsCounter {
-            position: fixed;
-            top: 4px;
-            left: 6px;
-            z-index: 100;
-            background: transparent;
-            padding: 0;
-            color: rgba(255, 255, 255, 0.4);
-            font-family: 'Inter', Arial, sans-serif;
-            font-size: 10px;
-            font-weight: bold;
-            pointer-events: none;
-        }
+         #fpsCounter {
+             position: fixed;
+             top: 4px;
+             left: 6px;
+             z-index: 100;
+             background: transparent;
+             padding: 0;
+             color: #ffffff;
+             font-family: 'Inter', Arial, sans-serif;
+             font-size: 10px;
+             font-weight: bold;
+             pointer-events: none;
+         }
 
         @keyframes statusPulse {
             0% {
@@ -325,6 +351,11 @@
             font-weight: bold;
             color: #aaa;
             font-size: 12px;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
         }
 
         .lb-avatar {
@@ -343,6 +374,12 @@
             text-overflow: ellipsis;
             font-weight: 500;
             font-size: 13px;
+            color: #ffffff;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
         }
 
         .lb-pickaxe {
@@ -355,7 +392,11 @@
             flex: 0 0 auto;
             font-weight: bold;
             color: #ffdd44;
-            text-shadow: 0 0 3px rgba(255, 221, 68, 0.3);
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
             font-size: 13px;
             white-space: nowrap;
         }
@@ -363,120 +404,201 @@
 
         /* ── Commands Panel ── */
 
-        #commandBox {
-            position: fixed;
-            top: 60px;
-            right: 4px;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.25);
-            backdrop-filter: blur(4px);
-            padding: 3px 3px;
-            width: fit-content;
-            min-width: 60px;
-            max-width: 200px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            box-shadow: none;
-        }
+         #commandBox {
+             position: fixed;
+             top: 60px;
+             right: 4px;
+             z-index: 100;
+             background: transparent;
+             padding: 0;
+             width: fit-content;
+             min-width: 60px;
+             max-width: 200px;
+             border: none;
+             border-radius: 0;
+             box-shadow: none;
+         }
 
-        #commandBox .panel-title {
-            font-family: 'Inter', Arial, sans-serif;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.45);
-            margin-bottom: 4px;
-            padding-bottom: 3px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+         #commandBox .panel-title {
+             font-family: 'Inter', Arial, sans-serif;
+             font-size: 12px;
+             font-weight: 900;
+             letter-spacing: 1px;
+             text-transform: uppercase;
+             color: #ffffff;
+             margin-bottom: 6px;
+             padding-bottom: 0;
+             border-bottom: none;
+             text-shadow:
+                 -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px 1px 0 #000,
+                 1px 1px 0 #000;
+         }
 
-        .cmd-row {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            padding: 2px 3px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background 0.15s;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
+         .cmd-row {
+             display: flex;
+             align-items: center;
+             gap: 8px;
+             padding: 0;
+             margin-bottom: 0;
+             cursor: pointer;
+             border-radius: 0;
+             transition: none;
+             user-select: none;
+             -webkit-tap-highlight-color: transparent;
+         }
 
-        .cmd-row:hover {
-            background: rgba(255, 255, 255, 0.08);
-        }
+         .cmd-row:hover {
+             background: transparent;
+         }
 
-        .cmd-row:active {
-            background: rgba(255, 255, 255, 0.18);
-            transform: scale(0.95);
-        }
+         .cmd-row:active {
+             background: transparent;
+             transform: none;
+         }
 
-        .cmd-icon {
-            font-size: 12px;
-            flex: 0 0 14px;
-            text-align: center;
-            line-height: 1;
-        }
+          .cmd-icon {
+              font-size: 18px;
+              flex: 0 0 24px;
+              text-align: center;
+              line-height: 1;
+              text-shadow:
+                 -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px 1px 0 #000,
+                 1px 1px 0 #000;
+          }
 
-        .cmd-badge {
-            font-family: 'Inter', Arial, sans-serif;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 1px 4px;
-            border-radius: 4px;
-            letter-spacing: 0.2px;
-            flex: 0 0 auto;
-            white-space: nowrap;
-        }
+          .cmd-badge {
+              font-family: 'Inter', Arial, sans-serif;
+              font-size: 14px;
+              font-weight: 800;
+              padding: 2px 6px;
+              border-radius: 0;
+              letter-spacing: 0.2px;
+              flex: 0 0 auto;
+              white-space: nowrap;
+              background: transparent;
+              text-shadow:
+                 -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px 1px 0 #000,
+                 1px 1px 0 #000;
+          }
 
-        .badge-green {
-            background: rgba(0, 255, 136, 0.18);
-            color: #00ff88;
-            border: 1px solid rgba(0, 255, 136, 0.3);
-        }
+         .badge-green {
+             color: #00ff88;
+         }
 
-        .badge-cyan {
-            background: rgba(0, 220, 255, 0.15);
-            color: #00ddff;
-            border: 1px solid rgba(0, 220, 255, 0.3);
-        }
+         .badge-cyan {
+             color: #00f2ea;
+         }
 
-        .badge-red {
-            background: rgba(255, 60, 60, 0.18);
-            color: #ff6060;
-            border: 1px solid rgba(255, 60, 60, 0.3);
-        }
+         .badge-red {
+             color: #ff4444;
+         }
 
-        .badge-orange {
-            background: rgba(255, 150, 0, 0.18);
-            color: #ffaa00;
-            border: 1px solid rgba(255, 150, 0, 0.3);
-        }
+         .badge-gold {
+             color: #ffd700;
+         }
 
-        .badge-purple {
-            background: rgba(180, 80, 255, 0.18);
-            color: #cc88ff;
-            border: 1px solid rgba(180, 80, 255, 0.3);
-        }
+         .cmd-desc {
+             font-family: 'Inter', Arial, sans-serif;
+             font-size: 11px;
+             color: #cccccc;
+             text-shadow:
+                 -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px 1px 0 #000,
+                 1px 1px 0 #000;
+             flex: 1;
+             white-space: nowrap;
+             overflow: hidden;
+             text-overflow: ellipsis;
+         }
 
-        .badge-pink {
-            background: rgba(255, 100, 200, 0.18);
-            color: #ff88dd;
-            border: 1px solid rgba(255, 100, 200, 0.3);
-        }
+          .cmd-row:hover {
+              background: transparent;
+          }
 
-        .badge-yellow {
-            background: rgba(255, 220, 50, 0.18);
-            color: #ffdd44;
-            border: 1px solid rgba(255, 220, 50, 0.3);
-        }
+          .cmd-row:active {
+              background: transparent;
+              transform: none;
+          }
 
-        .badge-fire {
-            background: rgba(255, 80, 0, 0.18);
-            color: #ff8844;
-            border: 1px solid rgba(255, 80, 0, 0.3);
-        }
+         .cmd-icon {
+             font-size: 14px;
+             flex: 0 0 18px;
+             text-align: center;
+             line-height: 1;
+         }
+
+         .cmd-badge {
+             font-family: 'Inter', Arial, sans-serif;
+             font-size: 14px;
+             font-weight: 800;
+             padding: 2px 6px;
+             border-radius: 0;
+             letter-spacing: 0.2px;
+             flex: 0 0 auto;
+             white-space: nowrap;
+         }
+
+.badge-green {
+              color: #00ff88;
+          }
+
+          .badge-cyan {
+              color: #00f2ea;
+          }
+
+          .badge-red {
+              color: #ff4444;
+          }
+
+          .badge-gold {
+              color: #ffd700;
+          }
+
+          .badge-green {
+              background: transparent;
+              color: #00ff88;
+              border: none;
+          }
+
+          .badge-cyan {
+              background: transparent;
+              color: #00f2ea;
+              border: none;
+          }
+
+          .badge-red {
+              background: transparent;
+              color: #ff4444;
+              border: none;
+          }
+
+.badge-gold {
+              background: transparent;
+              color: #ffd700;
+              border: none;
+          }
+
+          .badge-orange {
+              background: transparent;
+              color: #ffaa00;
+          }
+
+          .badge-purple {
+              background: transparent;
+              color: #cc88ff;
+          }
+
+          .badge-pink {
+              background: transparent;
+              color: #ff88dd;
+          }
 
         .cmd-desc {
             font-family: 'Inter', Arial, sans-serif;
@@ -500,207 +622,544 @@
             font-weight: 700;
             padding: 0px 3px;
             border-radius: 3px;
-            background: rgba(0, 220, 255, 0.1);
+            background: transparent;
             color: #00ddff;
-            border: 1px solid rgba(0, 220, 255, 0.2);
+            border: none;
             line-height: 1.2;
         }
 
-        .cmd-sep {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.06);
-            margin: 4px 0;
-        }
+         .spin-dir {
+             font-family: 'Inter', Arial, sans-serif;
+             font-size: 9px;
+             font-weight: 700;
+             padding: 0;
+             border-radius: 0;
+             background: transparent;
+             color: #00ddff;
+             text-shadow:
+                 -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px 1px 0 #000,
+                 1px 1px 0 #000;
+             line-height: 1.2;
+         }
 
-        #commandBox .join-row {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            background: rgba(0, 255, 136, 0.08);
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            border-radius: 6px;
-            padding: 3px 5px;
-            margin-bottom: 4px;
-        }
+         .cmd-sep {
+             height: 0;
+             background: transparent;
+             margin: 0;
+         }
 
-        #commandBox .join-text {
-            font-family: 'Inter', Arial, sans-serif;
-            font-size: 10px;
-            font-weight: 600;
-            color: #00ff88;
-        }
+         #commandBox .join-row {
+             display: flex;
+             align-items: center;
+             gap: 4px;
+             background: transparent;
+             border: none;
+             border-radius: 0;
+             padding: 0;
+             margin-bottom: 0;
+         }
 
-        #commandBox .join-cmd {
-            font-family: 'Inter', Arial, sans-serif;
-            font-size: 10px;
-            font-weight: 800;
-            color: #fff;
-            background: rgba(0, 255, 136, 0.25);
-            border-radius: 4px;
-            padding: 1px 5px;
-        }
+         #commandBox .join-text {
+             font-family: 'Inter', Arial, sans-serif;
+             font-size: 10px;
+             font-weight: 600;
+             color: #00ff88;
+             text-shadow:
+                 -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px 1px 0 #000,
+                 1px 1px 0 #000;
+         }
+
+         #commandBox .join-cmd {
+             font-family: 'Inter', Arial, sans-serif;
+             font-size: 10px;
+             font-weight: 800;
+             color: #fff;
+             background: transparent;
+             border-radius: 0;
+             padding: 0;
+             text-shadow:
+                 -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px 1px 0 #000,
+                 1px 1px 0 #000;
+         }
 
         /* ── Leaderboard ── */
-        #leaderboard {
-            position: fixed;
-            top: 60px;
-            left: 4px;
-            right: auto;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.25);
-            backdrop-filter: blur(4px);
-            padding: 3px 3px;
-            color: #fff;
-            width: fit-content;
-            min-width: 60px;
-            max-width: 200px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            box-shadow: none;
-            font-size: 12px;
-        }
+         #leaderboard {
+             position: fixed;
+             top: 60px;
+             left: 4px;
+             right: auto;
+             z-index: 100;
+             background: transparent;
+             padding: 0;
+             color: #fff;
+             width: fit-content;
+             min-width: 60px;
+             max-width: 240px;
+             border: none;
+             border-radius: 0;
+             box-shadow: none;
+             font-size: 12px;
+         }
 
-        #leaderboard h3 {
-            font-family: 'Inter', Arial, sans-serif;
-            font-size: 10px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            color: rgba(255, 255, 255, 0.35);
-            text-align: left;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-            padding-bottom: 3px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
+         #leaderboard h3 {
+             font-family: 'Inter', Arial, sans-serif;
+             font-size: 12px;
+             font-weight: 900;
+             margin-bottom: 6px;
+             color: #ffffff;
+             text-align: left;
+             text-transform: uppercase;
+             letter-spacing: 1px;
+             border-bottom: none;
+             padding-bottom: 0;
+             display: flex;
+             align-items: center;
+             gap: 4px;
+             text-shadow:
+                 -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px 1px 0 #000,
+                 1px 1px 0 #000;
+         }
 
-        .lb-item {
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            gap: 3px;
-            margin-bottom: 1px;
-            padding: 1px 0;
-        }
+         .lb-item {
+             display: flex;
+             flex-wrap: nowrap;
+             align-items: center;
+             gap: 6px;
+             margin-bottom: 0;
+             padding: 0;
+             border-radius: 0;
+             background: transparent;
+         }
 
-        .lb-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
+         .lb-item:hover {
+             background: transparent;
+         }
 
-        .lb-rank {
-            flex: 0 0 14px;
-            font-family: 'Inter', Arial, sans-serif;
-            font-weight: 700;
-            font-size: 10px;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.3);
-        }
+         .lb-rank {
+             flex: 0 0 22px;
+             font-family: 'Inter', Arial, sans-serif;
+             font-weight: 900;
+             font-size: 14px;
+             text-align: center;
+             color: #ffffff;
+             text-shadow:
+                 -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px 1px 0 #000,
+                 1px 1px 0 #000;
+         }
 
-        .lb-rank.gold {
-            color: #ffd700;
-            text-shadow: 0 0 6px #ffd70088;
-        }
+         .lb-rank.gold {
+             color: #ffd700;
+         }
 
-        .lb-rank.silver {
-            color: #c0c0c0;
-        }
+         .lb-rank.silver {
+             color: #ffffff;
+         }
 
-        .lb-rank.bronze {
-            color: #cd7f32;
-        }
+         .lb-rank.bronze {
+             color: #cd7f32;
+         }
 
-        .lb-avatar {
-            flex: 0 0 16px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            object-fit: cover;
-        }
+         .lb-avatar {
+             flex: 0 0 32px;
+             width: 32px;
+             height: 32px;
+             border-radius: 0;
+             border: none;
+             object-fit: cover;
+         }
 
-        .lb-name {
-            flex: 1 1 0;
-            min-width: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-family: 'Inter', Arial, sans-serif;
-            font-weight: 500;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.85);
-        }
+         .lb-name {
+             flex: 1 1 auto;
+             min-width: 0;
+             white-space: nowrap;
+             overflow: hidden;
+             text-overflow: ellipsis;
+             font-family: 'Inter', Arial, sans-serif;
+             font-weight: 800;
+             font-size: 16px;
+             color: #ffffff;
+             text-shadow:
+                 -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px 1px 0 #000,
+                 1px 1px 0 #000;
+         }
 
-        .lb-pickaxe {
-            flex: 0 0 14px;
-            width: 14px;
-            height: 14px;
-            opacity: 0.8;
-        }
+         .lb-stats {
+             display: flex;
+             gap: 8px;
+             flex: 0 0 auto;
+             margin-right: 4px;
+         }
 
-        .lb-score {
-            flex: 0 0 auto;
-            font-family: 'Inter', Arial, sans-serif;
-            font-weight: 700;
-            font-size: 11px;
-            color: #ffdd44;
-            white-space: nowrap;
-        }
+         .lb-stat {
+             font-size: 16px;
+             font-weight: 800;
+             color: #ffffff;
+             text-shadow:
+                 -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px 1px 0 #000,
+                 1px 1px 0 #000;
+             white-space: nowrap;
+         }
 
-        @media (max-width: 480px) {
+         .lb-stat.lb-like {
+             color: #ff2288;
+         }
 
-            #commandBox {
-                max-width: 250px;
-                width: fit-content;
-                top: 60px !important;
-                right: 6px !important;
-                left: auto !important;
-            }
+         .lb-stat.lb-gift {
+             color: #00ffff;
+         }
 
-            #leaderboard {
-                max-width: 250px;
-                width: fit-content;
-                top: 60px !important;
-                left: 6px !important;
-                right: auto !important;
-            }
+         .lb-score {
+             flex: 0 0 auto;
+             font-family: 'Inter', Arial, sans-serif;
+             font-weight: 900;
+             font-size: 18px;
+             color: #ffee00;
+             text-shadow:
+                 -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px 1px 0 #000,
+                 1px 1px 0 #000;
+             white-space: nowrap;
+         }
 
-            #commandBox .panel-title,
-            #leaderboard h3 {
-                font-size: 14px;
-            }
 
-            .cmd-desc {
-                display: none;
-            }
+.lb-rank {
+              flex: 0 0 20px;
+              font-family: 'Inter', Arial, sans-serif;
+              font-weight: 700;
+              font-size: 12px;
+              text-align: center;
+              color: #ffffff;
+              text-shadow:
+                  -1px -1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px 1px 0 #000,
+                  1px 1px 0 #000;
+          }
 
-            .cmd-badge {
-                font-size: 14px;
-            }
+          .lb-rank.gold {
+             color: #ffd700;
+         }
 
-            .lb-name,
-            .lb-score {
-                font-size: 15px;
-            }
+         .lb-rank.silver {
+             color: #ffffff;
+         }
 
-            #apiStatus {
-                font-size: 14px;
-                padding: 4px 10px;
-                top: 5px;
-            }
+         .lb-rank.bronze {
+             color: #cd7f32;
+         }
 
-            #ui .depth {
-                font-size: 30px;
-            }
+         .lb-avatar {
+             flex: 0 0 30px;
+             width: 30px;
+             height: 30px;
+             border-radius: 50%;
+             border: 2px solid rgba(255, 255, 255, 0.4);
+             object-fit: cover;
+         }
 
-            .score-display {
-                font-size: 34px;
-            }
+.lb-name {
+              flex: 1 1 auto;
+              min-width: 0;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              font-family: 'Inter', Arial, sans-serif;
+              font-weight: 600;
+              font-size: 14px;
+              color: #ffffff;
+              text-shadow:
+                  -1px -1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px 1px 0 #000,
+                  1px 1px 0 #000;
+          }
 
-            #commandBox {
-                padding: 8px 6px 6px;
-            }
+          .lb-stats {
+             display: flex;
+             gap: 8px;
+             flex: 0 0 auto;
+             margin-right: 2px;
+         }
+
+.lb-stat {
+              font-size: 14px;
+              color: #ffffff;
+              white-space: nowrap;
+              text-shadow:
+                  -1px -1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px 1px 0 #000,
+                  1px 1px 0 #000;
+          }
+
+         .lb-stat.lb-like {
+             color: #ff4488;
+         }
+
+         .lb-stat.lb-gift {
+             color: #44ddff;
+         }
+
+.lb-score {
+               flex: 0 0 auto;
+               font-family: 'Inter', Arial, sans-serif;
+               font-weight: 800;
+               font-size: 16px;
+               color: #ffee00;
+               text-shadow:
+                   -1px -1px 0 #000,
+                   1px -1px 0 #000,
+                   -1px 1px 0 #000,
+                   1px 1px 0 #000;
+               white-space: nowrap;
+           }
+
+          .lb-item:hover {
+              background: rgba(255, 255, 255, 0.04);
+          }
+
+.lb-rank {
+              flex: 0 0 20px;
+              font-family: 'Inter', Arial, sans-serif;
+              font-weight: 700;
+              font-size: 12px;
+              text-align: center;
+              color: #ffffff;
+              text-shadow:
+                  -1px -1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px 1px 0 #000,
+                  1px 1px 0 #000;
+          }
+
+          .lb-rank.gold {
+             color: #ffd700;
+             font-weight: 800;
+         }
+
+         .lb-rank.silver {
+             color: #ffffff;
+             font-weight: 700;
+         }
+
+         .lb-rank.bronze {
+             color: #cd7f32;
+             font-weight: 700;
+         }
+
+         .lb-avatar {
+             flex: 0 0 30px;
+             width: 30px;
+             height: 30px;
+             border-radius: 50%;
+             border: none;
+             object-fit: cover;
+         }
+
+.lb-name {
+              flex: 1 1 auto;
+              min-width: 0;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              font-family: 'Inter', Arial, sans-serif;
+              font-weight: 700;
+              font-size: 15px;
+              color: #ffffff;
+              text-shadow:
+                  -1px -1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px 1px 0 #000,
+                  1px 1px 0 #000;
+          }
+
+          .lb-stats {
+              display: flex;
+             gap: 8px;
+             flex: 0 0 auto;
+             margin-right: 4px;
+         }
+
+.lb-stat {
+              font-size: 15px;
+              font-weight: 700;
+              color: #ffffff;
+              white-space: nowrap;
+              text-shadow:
+                  -1px -1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px 1px 0 #000,
+                  1px 1px 0 #000;
+          }
+
+         .lb-stat.lb-like {
+             color: #ff2288;
+         }
+
+         .lb-stat.lb-gift {
+             color: #00ffff;
+         }
+
+.lb-score {
+              flex: 0 0 auto;
+              font-family: 'Inter', Arial, sans-serif;
+              font-weight: 800;
+              font-size: 16px;
+              color: #ffee00;
+              text-shadow:
+                  -1px -1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px 1px 0 #000,
+                  1px 1px 0 #000;
+              white-space: nowrap;
+          }
+
+         .lb-rank.gold {
+             color: #ffd700;
+             text-shadow: 0 0 10px #ffd700aa;
+         }
+
+          .lb-rank.silver {
+              color: #ffffff;
+              font-weight: 700;
+          }
+
+          .lb-rank.bronze {
+              color: #cd7f32;
+              font-weight: 700;
+          }
+
+          .lb-avatar {
+              flex: 0 0 30px;
+              width: 30px;
+              height: 30px;
+              border-radius: 50%;
+              border: none;
+              object-fit: cover;
+          }
+
+.lb-name {
+              flex: 1 1 0;
+              min-width: 0;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              font-family: 'Inter', Arial, sans-serif;
+              font-weight: 500;
+              font-size: 13px;
+              color: rgba(255, 255, 255, 0.95);
+              text-shadow:
+                  -1px -1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px 1px 0 #000,
+                  1px 1px 0 #000;
+          }
+
+         .lb-stats {
+             display: flex;
+             gap: 6px;
+             margin-right: 2px;
+         }
+
+.lb-stat {
+              font-size: 13px;
+              color: rgba(255, 255, 255, 0.7);
+              text-shadow:
+                  -1px -1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px 1px 0 #000,
+                  1px 1px 0 #000;
+              white-space: nowrap;
+          }
+
+         .lb-stat.lb-like {
+             color: #ff4488;
+             text-shadow: 0 0 8px #ff448888;
+         }
+
+         .lb-stat.lb-gift {
+             color: #44ddff;
+             text-shadow: 0 0 8px #44ddff88;
+         }
+
+          .lb-score {
+              flex: 0 0 auto;
+              font-family: 'Inter', Arial, sans-serif;
+              font-weight: 900;
+              font-size: 18px;
+              color: #ffee00;
+              text-shadow:
+                 -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px 1px 0 #000,
+                 1px 1px 0 #000;
+              white-space: nowrap;
+          }
+
+         @media (max-width: 480px) {
+
+             #commandBox {
+                 max-width: 250px;
+                 width: fit-content;
+                 top: 60px !important;
+                 right: 6px !important;
+                 left: auto !important;
+             }
+
+             #leaderboard {
+                 max-width: 250px;
+                 width: fit-content;
+                 top: 60px !important;
+                 left: 6px !important;
+                 right: auto !important;
+             }
+
+             #commandBox .panel-title,
+             #leaderboard h3 {
+                 font-size: 14px;
+             }
+
+             .cmd-desc {
+                 display: none;
+             }
+
+             .cmd-badge {
+                 font-size: 14px;
+             }
+
+             .lb-name,
+             .lb-score {
+                 font-size: 15px;
+             }
+
+             #apiStatus {
+                 font-size: 14px;
+                 padding: 4px 10px;
+                 top: 5px;
+             }
+
+             #ui .depth {
+                 font-size: 30px;
+             }
+
+             .score-display {
+                 font-size: 34px;
+             }
         }
 
         @keyframes panelSlideIn {
@@ -761,7 +1220,6 @@
 
     <div id="ui">
         <div id="fpsCounter">FPS: 0</div>
-        <button id="mobileToggle" onclick="toggleMobileMode()" style="position:fixed;top:12px;left:80px;z-index:101;padding:4px 10px;border:1px solid #555;border-radius:12px;background:rgba(0,0,0,0.4);color:#aaa;font-size:11px;cursor:pointer;backdrop-filter:blur(4px);">📱 Mobile</button>
         <div id="apiStatus">
             <div class="status-dot" id="statusDotTT"></div>
             <span id="statusTextTT" style="font-size:11px;">TT: —</span>
@@ -818,13 +1276,17 @@
                     <span class="cmd-icon">🔷</span>
                     <span class="cmd-badge badge-cyan">big</span>
                 </div>
-                <div class="cmd-row" style="opacity:0.7;cursor:default">
-                    <span class="cmd-icon">👍</span>
-                    <span class="cmd-badge" style="background:rgba(68,136,255,0.2);color:#4488ff;">10💥</span>
+                <div class="cmd-row" onclick="ensureAudio();var m=pick.userName||'@Player';for(var i=0;i<10;i++)activateTNT(pick?pick.x+Math.random()*40-20:0,pick?pick.y:0,m)">
+                    <span class="cmd-icon">🌹</span>
+                    <span class="cmd-badge" style="background:transparent;color:#ff6688;">rose 10💥</span>
                 </div>
-                <div class="cmd-row" style="opacity:0.7;cursor:default">
-                    <span class="cmd-icon">🔔</span>
-                    <span class="cmd-badge" style="background:rgba(255,68,68,0.2);color:#ff4444;">10💥5🔥</span>
+                <div class="cmd-row" onclick="ensureAudio();var m=pick.userName||'@Player';for(var i=0;i<20;i++)activateTNT(pick?pick.x+Math.random()*60-30:0,pick?pick.y:0,m)">
+                    <span class="cmd-icon">🎮</span>
+                    <span class="cmd-badge" style="background:transparent;color:#44ff44;">gg 20💥</span>
+                </div>
+                <div class="cmd-row" onclick="ensureAudio();var m=pick.userName||'@Player';for(var i=0;i<30;i++)activateTNT(pick?pick.x+Math.random()*80-40:0,pick?pick.y:0,m)">
+                    <span class="cmd-icon">💣</span>
+                    <span class="cmd-badge" style="background:transparent;color:#ff8844;">creeper 30💥</span>
                 </div>
             </div>
         </div>
@@ -853,37 +1315,19 @@
         var canvas = document.getElementById('gameCanvas');
         var ctx = canvas.getContext('2d');
 
-        // ── Mobile detection & performance scaling ──
-        var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-
-        function toggleMobileMode() {
-            isMobile = !isMobile;
-            MAX_PARTS = isMobile ? 15 : 150;
-            MAX_DEBRIS = isMobile ? 10 : 60;
-            MAX_TEXTS = isMobile ? 4 : 20;
-            SHADOW_ENABLED = !isMobile;
-            SHIMMER_ENABLED = !isMobile;
-            BG_DETAIL = isMobile ? 0 : 1;
-            var btn = document.getElementById('mobileToggle');
-            if (btn) {
-                btn.textContent = isMobile ? '🖥 Desktop' : '📱 Mobile';
-                btn.style.color = isMobile ? '#00ff88' : '#aaa';
-                btn.style.borderColor = isMobile ? '#00ff88' : '#555';
-            }
-        }
-
-        var COLS = 15, TILE = 72;
-        var VIS = 27;
+        // Resolução Mobile Vertical 720x1280
+        var COLS = 12, TILE = 60;
+        var VIS = 21;
         canvas.width = COLS * TILE;
         canvas.height = VIS * TILE;
 
-        var MAX_PARTS = isMobile ? 15 : 150;
-        var MAX_DEBRIS = isMobile ? 10 : 60;
-        var MAX_TEXTS = isMobile ? 4 : 20;
-        var MAX_ITEMS = 30;
-        var SHADOW_ENABLED = !isMobile;
-        var SHIMMER_ENABLED = !isMobile;
-        var BG_DETAIL = isMobile ? 0 : 1; // 0=simple, 1=full crystals
+        var MAX_PARTS = 50;
+        var MAX_DEBRIS = 20;
+        var MAX_TEXTS = 10;
+        var MAX_ITEMS = 15;
+        var SHADOW_ENABLED = false;
+        var SHIMMER_ENABLED = false;
+        var BG_DETAIL = 0;
         // ── Tipos ──
         var E = 0, DIRT = 1, STONE = 2, COAL = 3, IRON = 4, GOLD = 5, REDSTONE = 6, DIAMOND = 7, EMERALD = 8, BEDROCK = 9,
             GRASS = 10, ANDESITE = 11, DIORITE = 12, GRANITE = 13, COBBLE = 14, MOSSY = 15, COPPER = 16, LAPIS = 17, OBSIDIAN = 18, BONUS_BOX = 19;
@@ -958,8 +1402,9 @@
         var TNT_TEX = new Image(); TNT_TEX.src = 'block/tnt.png';
         var MEGA_TNT_TEX = new Image(); MEGA_TNT_TEX.src = 'block/mega_tnt.png';
 
-        var TNT_RADIUS = 3;
-        var MEGA_TNT_RADIUS = 6;
+         var TNT_RADIUS = 3;
+         var MEGA_TNT_RADIUS = 6;
+         var HEART_TNT_RADIUS = 3; // igual à TNT normal
 
         var BOUNCE = 0.82;
         var FRICTION = 0.995;
@@ -1149,11 +1594,11 @@
             }
         }
 
-        function detonateTNTBlock(b) {
+         function detonateTNTBlock(b) {
 
-            var radius = b.nuke ? 18 : (b.mega ? MEGA_TNT_RADIUS : TNT_RADIUS);
-            var cx = Math.floor(b.x / TILE);
-            var cy = Math.floor(b.y / TILE);
+             var radius = b.nuke ? 18 : (b.mega ? MEGA_TNT_RADIUS : (b.heart ? HEART_TNT_RADIUS : TNT_RADIUS));
+             var cx = Math.floor(b.x / TILE);
+             var cy = Math.floor(b.y / TILE);
             var pts = 0;
             var destroyedBlocks = [];
             for (var r = cy - radius; r <= cy + radius; r++) {
@@ -1186,14 +1631,14 @@
                     persistentScores[b.userName].score += pts;
                 }
             }
-            var debrisPerBlock = isMobile ? (b.mega ? 1 : 1) : (b.mega ? 4 : 2);
-            var maxExplosionDebris = isMobile ? (b.mega ? 20 : 10) : (b.mega ? 120 : 60);
-            var spawned = 0;
+             var debrisPerBlock = b.mega ? 2 : (b.heart ? 0 : 1);
+             var maxExplosionDebris = b.mega ? 40 : (b.heart ? 0 : 20);
+             var spawned = 0;
             for (var i = 0; i < destroyedBlocks.length && spawned < maxExplosionDebris; i++) {
                 var blk = destroyedBlocks[i];
                 var n = Math.min(debrisPerBlock, maxExplosionDebris - spawned);
                 for (var k = 0; k < n; k++) {
-                    if (debris.length >= (isMobile ? 50 : 200)) break;
+                    if (debris.length >= 100) break;
                     var dx = blk.wx - b.x, dy = blk.wy - b.y;
                     var d = Math.sqrt(dx * dx + dy * dy) || 1;
                     var baseSpd = (b.mega ? 5 : 3.5) + Math.random() * 3;
@@ -1295,8 +1740,8 @@
                     }
                 }
             }
-            shakeAmt = Math.max(shakeAmt, b.nuke ? 40 : (b.mega ? 22 : 10));
-            if (b.nuke || b.mega) sfxMegaTNT(); else sfxTNT();
+             shakeAmt = Math.max(shakeAmt, b.nuke ? 40 : (b.mega ? 22 : (b.heart ? 12 : 10)));
+             if (b.nuke || b.mega) sfxMegaTNT(); else sfxTNT();
         }
 
         // encontra posição Y segura (espaço vazio) para spawnar TNT
@@ -1347,28 +1792,53 @@
             tntBlocks.push(b);
         }
 
-        function activateMegaTNT(tx, ty, userName, avatarUrl) {
-            if (tntBlocks.length > 20) return;
-            var sx = tx !== undefined ? tx : pick.x;
-            var sy = ty !== undefined ? ty : pick.y;
-            var bx = sx + (Math.random() - 0.5) * TILE * 2;
-            var hs = TILE * 0.9;
-            bx = Math.max(hs + 2, Math.min(COLS * TILE - hs - 2, bx));
-            var by = findSafeTNTSpawn(bx, sy, hs);
-            _tntSpawnCount++;
-            var b = {
-                x: bx,
-                y: by,
-                vx: tx !== undefined ? (Math.random() - 0.5) * 10 : (Math.random() - 0.5) * 5,
-                vy: -3 - Math.random() * 3,
-                ang: Math.random() * Math.PI * 2,
-                spin: (Math.random() - 0.5) * 0.2,
-                blinkTimer: -(_tntSpawnCount % 6) * 20 - Math.floor(Math.random() * 15),
-                fuse: 160, mega: true,
-                userName: userName, userAvatarUrl: avatarUrl
-            };
-            tntBlocks.push(b);
-        }
+         function activateMegaTNT(tx, ty, userName, avatarUrl) {
+             if (tntBlocks.length > 20) return;
+             var sx = tx !== undefined ? tx : pick.x;
+             var sy = ty !== undefined ? ty : pick.y;
+             var bx = sx + (Math.random() - 0.5) * TILE * 2;
+             var hs = TILE * 0.9;
+             bx = Math.max(hs + 2, Math.min(COLS * TILE - hs - 2, bx));
+             var by = findSafeTNTSpawn(bx, sy, hs);
+             _tntSpawnCount++;
+             var b = {
+                 x: bx,
+                 y: by,
+                 vx: tx !== undefined ? (Math.random() - 0.5) * 10 : (Math.random() - 0.5) * 5,
+                 vy: -3 - Math.random() * 3,
+                 ang: Math.random() * Math.PI * 2,
+                 spin: (Math.random() - 0.5) * 0.2,
+                 blinkTimer: -(_tntSpawnCount % 6) * 20 - Math.floor(Math.random() * 15),
+                 fuse: 160, mega: true,
+                 userName: userName, userAvatarUrl: avatarUrl
+             };
+             tntBlocks.push(b);
+         }
+
+         function activateHeartTNT(tx, ty, userName, avatarUrl) {
+             if (tntBlocks.length > 20) return;
+             var sx = tx !== undefined ? tx : pick.x;
+             var sy = ty !== undefined ? ty : pick.y;
+             var bx = sx; // sem spread horizontal para ser mais leve
+             var hs = TILE * 0.5;
+             bx = Math.max(hs + 2, Math.min(COLS * TILE - hs - 2, bx));
+             var by = findSafeTNTSpawn(bx, sy, hs);
+             _tntSpawnCount++;
+             var b = {
+                 x: bx,
+                 y: by,
+                 vx: 0, // sem velocidade horizontal
+                 vy: -2 - Math.random() * 2, // velocidade vertical menor
+                 ang: 0,
+                 spin: 0,
+                 blinkTimer: -(_tntSpawnCount % 8) * 15 - Math.floor(Math.random() * 10),
+                 fuse: 100,
+                 heart: true,
+                 userName: userName,
+                 userAvatarUrl: avatarUrl
+             };
+             tntBlocks.push(b);
+         }
 
         function safeUpdate(id, text, color) {
             var el = document.getElementById(id);
@@ -1505,7 +1975,7 @@
         var MEGA_CLEARING_HEIGHT = 200;
         var MEGA_CLEARING_FIRST = 200;    // first mega-clearing starts at row 200
         var megaClearedZones = {};
-        var MAX_BATS_MEGA = 120;
+        var MAX_BATS_MEGA = 40;
 
         // ── Water Table (underground water level) ──
         var WATER_DRAG = 0.91;
@@ -1517,7 +1987,7 @@
         var ZBOSS_SCALE = 3.5;
         var ZBOSS_HP = 40;
         var ZBOSS_COUNT = 4;
-        var MAX_ZOMBIES_MEGA = 40;
+        var MAX_ZOMBIES_MEGA = 15;
 
         // ── Crystal types for clearings ──
         var CRYSTAL_TYPES = [
@@ -1539,6 +2009,7 @@
         // Each: { x, y, variant, rotation, scale, type, zone }
         var crystalDecoList = [];
         var torchList = []; // { x, y, wallDir, zone }
+        var MAX_TORCHES = 50;
 
         // Seeded random for deterministic clearing shapes
         function seededRand(seed) {
@@ -1770,7 +2241,7 @@
                 if (tLocalRow >= 1 && tLocalRow < CLEARING_HEIGHT - 1 && tLocalRow % 3 === 1) {
                     var tShape = getClearingShape(zone);
                     var tb = tShape[tLocalRow];
-                    if (tb) {
+                    if (tb && torchList.length < MAX_TORCHES) {
                         torchList.push({ x: tb.left * TILE + TILE * 0.3, y: r * TILE + TILE * 0.3, wallDir: 'left', zone: zone, wallCol: tb.left - 1, wallRow: r });
                         torchList.push({ x: (tb.right + 1) * TILE - TILE * 0.3, y: r * TILE + TILE * 0.3, wallDir: 'right', zone: zone, wallCol: tb.right + 1, wallRow: r });
                     }
@@ -1989,32 +2460,43 @@
         function tipPos() { var pts = collPoints(); return pts[0]; }
         function tailPos() { var pts = collPoints(); return pts[4]; }
 
-        // ── Estado ───────────────────────────────────────────────────────────────────
-        var maxDepth = 0;
-        var parts = [], texts = [], debris = [];
-        var announcements = [];
-        var persistentScores = {};
+         // ── Estado ───────────────────────────────────────────────────────────────────
+         var maxDepth = 0;
+         var parts = [], texts = [], debris = [];
+         var announcements = [];
+         var persistentScores = {};
 
-        // ── Cycle Scoring (every 200m) ──
-        var _cycleScores = {}; // { userName: { score, kills, items } } — per cycle
-        var _currentCycle = 0;
-        var _cycleOverlay = null; // { timer, top3 }
-        var _cycleOverlayTimer = 0;
+         // ── Cycle Scoring (every 200m) ──
+         var _cycleScores = {}; // { userName: { score, kills, items, balls, likes } } — per cycle
+         var _currentCycle = 0;
+         var _cycleOverlay = null; // { timer, top3 }
+         var _cycleOverlayTimer = 0;
+
+         // ── Controle de geração de heartTNT no início ──
+         var _gameStartTime = Date.now();
+         var _ignoreLikesUntil = _gameStartTime + 3000; // ignora likes por 3s após iniciar
 
         function _saveCycleScores() {
             try { localStorage.setItem('pd_cycle_scores', JSON.stringify({ cycle: _currentCycle, scores: _cycleScores })); } catch(e) {}
         }
-        function _loadCycleScores() {
-            try {
-                var d = JSON.parse(localStorage.getItem('pd_cycle_scores') || '{}');
-                if (d.cycle !== undefined) { _currentCycle = d.cycle; _cycleScores = d.scores || {}; }
-            } catch(e) {}
-        }
+         function _loadCycleScores() {
+             try {
+                 var d = JSON.parse(localStorage.getItem('pd_cycle_scores') || '{}');
+                 if (d.cycle !== undefined) { _currentCycle = d.cycle; _cycleScores = d.scores || {}; }
+                 // Normaliza campos para upgrades
+                 Object.keys(_cycleScores).forEach(function(k) {
+                     if (_cycleScores[k].likes === undefined) _cycleScores[k].likes = 0;
+                     if (_cycleScores[k].kills === undefined) _cycleScores[k].kills = 0;
+                     if (_cycleScores[k].items === undefined) _cycleScores[k].items = 0;
+                     if (_cycleScores[k].balls === undefined) _cycleScores[k].balls = 0;
+                 });
+             } catch(e) {}
+         }
         _loadCycleScores();
 
         function addCycleScore(userName, pts, type) {
             if (!userName) return;
-            if (!_cycleScores[userName]) _cycleScores[userName] = { score: 0, kills: 0, items: 0, balls: 0, avatar: '' };
+            if (!_cycleScores[userName]) _cycleScores[userName] = { score: 0, kills: 0, items: 0, balls: 0, likes: 0, avatar: '' };
             _cycleScores[userName].score += pts;
             if (type === 'kill') _cycleScores[userName].kills++;
             if (type === 'item') _cycleScores[userName].items++;
@@ -2024,7 +2506,18 @@
 
         function triggerCycleEnd(cycle) {
             var players = Object.keys(_cycleScores).map(function(n) {
-                return { name: n, score: _cycleScores[n].score, kills: _cycleScores[n].kills, items: _cycleScores[n].items, balls: _cycleScores[n].balls || 0, avatar: _cycleScores[n].avatar };
+                var cs = _cycleScores[n];
+                var pTier = currentPickaxe;
+                if (ownerName && n === ownerName) {
+                    pTier = currentPickaxe;
+                } else {
+                    for (var j = 0; j < userPicks.length; j++) {
+                        if (userPicks[j].userName === n) { pTier = userPicks[j].pickaxe || PICKAXES[0]; break; }
+                    }
+                }
+                var av = cs.avatar || (persistentScores[n] ? persistentScores[n].avatar : '');
+                var giftsTotal = (persistentScores[n] && persistentScores[n].giftsValue !== undefined) ? persistentScores[n].giftsValue : 0;
+                return { name: n, score: cs.score || 0, kills: cs.kills || 0, items: cs.items || 0, balls: cs.balls || 0, likes: cs.likes || 0, giftsValue: giftsTotal, userAvatarUrl: av, pickaxe: pTier };
             }).sort(function(a, b) { return b.score - a.score; }).slice(0, 3);
             if (players.length === 0) return;
             _cycleOverlay = { timer: 600, top3: players, cycle: cycle, confetti: [] };
@@ -2035,6 +2528,8 @@
             _cycleScores = {};
             _currentCycle = cycle;
             _saveCycleScores();
+            // Reinicia período de ignoração de likes (não gera heartTNT nos primeiros 3s do novo ciclo)
+            _ignoreLikesUntil = Date.now() + 3000;
         }
 
         function drawCycleOverlay() {
@@ -2185,6 +2680,8 @@
                 ctx.fillStyle = '#fff';
                 var displayName = (p.name || '').replace('@', '');
                 if (displayName.length > 18) displayName = displayName.substring(0, 16) + '..';
+                ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.lineJoin = 'round';
+                ctx.strokeText(displayName, nameX, cardY + 12);
                 ctx.fillText(displayName, nameX, cardY + 12);
 
                 // Animated score count-up
@@ -2197,6 +2694,8 @@
                 ctx.font = 'bold ' + Math.min(40, Math.floor(cardH * 0.32)) + 'px Arial';
                 ctx.textBaseline = 'bottom';
                 ctx.fillStyle = medalColors[i];
+                ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.lineJoin = 'round';
+                ctx.strokeText(displayScore.toLocaleString() + ' pts', nameX, cardY + cardH - 10);
                 ctx.fillText(displayScore.toLocaleString() + ' pts', nameX, cardY + cardH - 10);
 
                 // Stats icons (right side)
@@ -2204,12 +2703,18 @@
                 ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
                 ctx.font = 'bold ' + Math.min(26, Math.floor(cardH * 0.2)) + 'px Arial';
                 ctx.fillStyle = '#aaa';
+                ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
                 var statsY = cardY + cardH / 2;
                 var statsStr = '';
                 if (p.kills > 0) statsStr += '💥' + p.kills + ' ';
                 if (p.items > 0) statsStr += '💎' + p.items + ' ';
-                if (p.balls > 0) statsStr += '🔮' + p.balls;
-                if (statsStr) ctx.fillText(statsStr, statsX, statsY);
+                if (p.balls > 0) statsStr += '🔮' + p.balls + ' ';
+                if (p.likes > 0) statsStr += '❤️' + p.likes + ' ';
+                if (p.giftsValue > 0) statsStr += '🎁' + p.giftsValue;
+                if (statsStr) {
+                    ctx.strokeText(statsStr, statsX, statsY);
+                    ctx.fillText(statsStr, statsX, statsY);
+                }
 
                 ctx.restore();
             }
@@ -2669,7 +3174,7 @@
         function spawnDebris(bx, by, blockType, source) {
             if (debris.length > MAX_DEBRIS) return;
             var target = source || pick;
-            var n = isMobile ? 1 : 1 + Math.floor(Math.random() * 2);
+            var n = 1 + Math.floor(Math.random() * 2);
             for (var i = 0; i < n; i++) {
                 var ox = (Math.random() - 0.5) * TILE * 0.6, oy = (Math.random() - 0.5) * TILE * 0.6;
                 var dx = (target ? target.x : bx) - (bx + ox), dy = (target ? target.y : by) - (by + oy);
@@ -3018,7 +3523,7 @@
             }
         }
         function drawTormentaAura(p) {
-            if (!tormentaActive || !p || isMobile) return;
+            if (!tormentaActive || !p) return;
             ctx.save();
             var pulse = 0.6 + Math.sin(tormentaTimer * 0.15) * 0.2;
             ctx.globalAlpha = 0.15 * pulse;
@@ -3032,6 +3537,7 @@
 
         // ── Falling Blocks System ──
         var fallingBlocks = [];
+        var MAX_FALLING_BLOCKS = 30;
 
         function _isAnchored(r, c) {
             // Edge columns are anchored (invisible wall)
@@ -3124,6 +3630,7 @@
                     var b = grp[j];
                     var fc = getCell(b.r, b.c);
                     if (!fc || fc.t === E) continue;
+                    if (fallingBlocks.length >= MAX_FALLING_BLOCKS) continue;
                     var bt = fc.t;
                     fallingBlocks.push({
                         x: b.c * TILE + TILE / 2,
@@ -3173,27 +3680,14 @@
                         var pts = def ? def.pts || 0 : 0;
                         var glow = def ? def.glow : '#888';
 
-                        // Burst of particles (ring explosion)
-                        var pCount = isMobile ? 2 : 4;
-                        for (var p = 0; p < pCount; p++) {
-                            var ang = (p / pCount) * Math.PI * 2;
-                            var spd = 2 + Math.random() * 3;
-                            if (parts.length < MAX_PARTS + 20) {
-                                parts.push({ x: fb.x, y: fb.y, vx: Math.cos(ang)*spd, vy: Math.sin(ang)*spd, life: 1, dec: 0.02 + Math.random()*0.02, r: 3+Math.random()*5, c: glow });
-                            }
-                        }
-                        // Debris chunks flying outward
-                        spawnDebris(fb.x, fb.y, fb.t, fb.owner);
-                        spawnDebris(fb.x, fb.y, fb.t, fb.owner);
-
-                        // Shockwave ring particles
-                        if (!isMobile) {
-                            for (var sw = 0; sw < 6; sw++) {
-                                var sAng = (sw / 6) * Math.PI * 2;
-                                var sSpd = 4 + Math.random() * 2;
-                                if (parts.length < MAX_PARTS + 30) {
-                                    parts.push({ x: fb.x, y: fb.y, vx: Math.cos(sAng)*sSpd, vy: Math.sin(sAng)*sSpd, life: 0.8, dec: 0.04, r: 1.5+Math.random()*2, c: '#fff' });
-                                }
+// Burst of particles (ring explosion)
+                        var pCount = 4;
+                        var part = { x: fb.x, y: fb.y, vx: (Math.random() - 0.5) * pCount, vy: (Math.random() - 0.5) * pCount - 2, life: 0.6, dec: 0.04, r: 4 + Math.random() * 4, c: '#aabbcc' };
+for (var sw = 0; sw < 6; sw++) {
+                            var sAng = (sw / 6) * Math.PI * 2;
+                            var sSpd = 4 + Math.random() * 2;
+                            if (parts.length < MAX_PARTS + 30) {
+                                parts.push({ x: fb.x, y: fb.y, vx: Math.cos(sAng)*sSpd, vy: Math.sin(sAng)*sSpd, life: 0.8, dec: 0.04, r: 1.5+Math.random()*2, c: '#fff' });
                             }
                         }
 
@@ -3746,7 +4240,7 @@
                             // ── ZOMBIE GATE: spawn bats (flying) + zombie bosses on brick floor ──
                             // Spawn flying enemies in upper portion of clearing (above the floor)
                             var zbRow = mStart + MEGA_CLEARING_HEIGHT - 10;
-                            var megaNum = Math.min(MAX_BATS_MEGA, 100 + Math.floor(mz * 10));
+                            var megaNum = Math.min(MAX_BATS_MEGA, 30 + Math.floor(mz * 5));
                             for (var mi = 0; mi < megaNum; mi++) {
                                 var mx = (1 + Math.floor(seededRand(mz * 500 + mi * 11) * (COLS - 2))) * TILE + TILE / 2;
                                 var myRow = mStart + 10 + Math.floor(seededRand(mz * 600 + mi * 19) * (MEGA_CLEARING_HEIGHT - 40));
@@ -3773,7 +4267,7 @@
                             spawnText(canvas.width / 2, pick.y - 60, '⚠️ JELLY ARENA!', '#44ff00');
                         } else {
                             // ── QUEEN GATE: spawn bats + queens (original) ──
-                            var megaNum = Math.min(MAX_BATS_MEGA, 100 + Math.floor(mz * 10));
+                            var megaNum = Math.min(MAX_BATS_MEGA, 30 + Math.floor(mz * 5));
                             for (var mi = 0; mi < megaNum; mi++) {
                                 var mx = (1 + Math.floor(seededRand(mz * 500 + mi * 11) * (COLS - 2))) * TILE + TILE / 2;
                                 var myRow = mStart + 10 + Math.floor(seededRand(mz * 600 + mi * 19) * (MEGA_CLEARING_HEIGHT - 30));
@@ -4058,15 +4552,15 @@
                 var types = w.decor;
                 for (var ti = 0; ti < types.length; ti++) {
                     var dt = types[ti];
-                    if (dt === 'clouds') { for (var i = 0; i < 8; i++) _bgElements.push({ type: 'cloud', x: Math.random() * W * 1.5 - W * 0.25, y: H * 0.02 + Math.random() * H * 0.35, w: 200 + Math.random() * 500, speed: 0.1 + Math.random() * 0.25, life: 600 + Math.random() * 400 }); }
-                    if (dt === 'birds') { for (var i = 0; i < 8; i++) _bgElements.push({ type: 'bird', x: -50 - Math.random() * 200, y: H * 0.03 + Math.random() * H * 0.3, speed: 0.3 + Math.random() * 0.5, phase: Math.random() * Math.PI * 2, life: 500 + Math.random() * 300 }); }
-                    if (dt === 'balloons') { for (var i = 0; i < 10; i++) _bgElements.push({ type: 'balloon', x: Math.random() * W, y: H + Math.random() * 200, r: 40 + Math.random() * 90, color: 'hsl(' + Math.floor(Math.random() * 360) + ',80%,60%)', speed: 0.05 + Math.random() * 0.15, life: 800 + Math.random() * 400 }); }
-                    if (dt === 'stars') { for (var i = 0; i < 40; i++) _bgElements.push({ type: 'star', x: Math.random() * W, y: Math.random() * H * 0.5, size: 2.5 + Math.random() * 12.5, twinkle: Math.random() * Math.PI * 2, life: 900 + Math.random() * 300 }); }
-                    if (dt === 'comets') { for (var i = 0; i < 2; i++) _bgElements.push({ type: 'comet', x: -50, y: Math.random() * H * 0.3, speed: 2 + Math.random() * 3, angle: 0.3 + Math.random() * 0.4, life: 200 + Math.random() * 100 }); }
+                    if (dt === 'clouds') { for (var i = 0; i < 4; i++) _bgElements.push({ type: 'cloud', x: Math.random() * W * 1.5 - W * 0.25, y: H * 0.02 + Math.random() * H * 0.35, w: 200 + Math.random() * 500, speed: 0.1 + Math.random() * 0.25, life: 600 + Math.random() * 400 }); }
+                    if (dt === 'birds') { for (var i = 0; i < 4; i++) _bgElements.push({ type: 'bird', x: -50 - Math.random() * 200, y: H * 0.03 + Math.random() * H * 0.3, speed: 0.3 + Math.random() * 0.5, phase: Math.random() * Math.PI * 2, life: 500 + Math.random() * 300 }); }
+                    if (dt === 'balloons') { for (var i = 0; i < 5; i++) _bgElements.push({ type: 'balloon', x: Math.random() * W, y: H + Math.random() * 200, r: 40 + Math.random() * 90, color: 'hsl(' + Math.floor(Math.random() * 360) + ',80%,60%)', speed: 0.05 + Math.random() * 0.15, life: 800 + Math.random() * 400 }); }
+                    if (dt === 'stars') { for (var i = 0; i < 20; i++) _bgElements.push({ type: 'star', x: Math.random() * W, y: Math.random() * H * 0.5, size: 2.5 + Math.random() * 12.5, twinkle: Math.random() * Math.PI * 2, life: 900 + Math.random() * 300 }); }
+                    if (dt === 'comets') { for (var i = 0; i < 1; i++) _bgElements.push({ type: 'comet', x: -50, y: Math.random() * H * 0.3, speed: 2 + Math.random() * 3, angle: 0.3 + Math.random() * 0.4, life: 200 + Math.random() * 100 }); }
                     if (dt === 'planets') { _bgElements.push({ type: 'planet', x: W * 0.2 + Math.random() * W * 0.6, y: H * 0.08 + Math.random() * H * 0.15, r: 75 + Math.random() * 125, color: 'hsl(' + Math.floor(Math.random() * 360) + ',40%,50%)', life: 900 }); }
-                    if (dt === 'snow') { for (var i = 0; i < 40; i++) _bgElements.push({ type: 'snow', x: Math.random() * W, y: -Math.random() * H, vx: (Math.random() - 0.5) * 0.8, vy: 0.4 + Math.random() * 1.2, size: 7.5 + Math.random() * 15, life: 500 + Math.random() * 300 }); }
+                    if (dt === 'snow') { for (var i = 0; i < 20; i++) _bgElements.push({ type: 'snow', x: Math.random() * W, y: -Math.random() * H, vx: (Math.random() - 0.5) * 0.8, vy: 0.4 + Math.random() * 1.2, size: 7.5 + Math.random() * 15, life: 500 + Math.random() * 300 }); }
                     if (dt === 'rainbow') { _bgElements.push({ type: 'rainbow', life: 800 }); }
-                    if (dt === 'aurora') { for (var i = 0; i < 4; i++) _bgElements.push({ type: 'aurora', idx: i, life: 900 }); }
+                    if (dt === 'aurora') { for (var i = 0; i < 2; i++) _bgElements.push({ type: 'aurora', idx: i, life: 900 }); }
                 }
             }
             if (_skyBlend < 1) _skyBlend = Math.min(1, _skyBlend + 0.008);
@@ -4077,13 +4571,13 @@
             for (var ci = 0; ci < _bgElements.length; ci++) counts[_bgElements[ci].type] = (counts[_bgElements[ci].type] || 0) + 1;
             for (var ti = 0; ti < types.length; ti++) {
                 var dt = types[ti];
-                if (dt === 'clouds' && (counts.cloud || 0) < 6) _bgElements.push({ type: 'cloud', x: -100 - Math.random() * 100, y: Math.random() * H * 0.4, w: 200 + Math.random() * 500, speed: 0.1 + Math.random() * 0.25, life: 600 + Math.random() * 400 });
-                if (dt === 'birds' && (counts.bird || 0) < 6) _bgElements.push({ type: 'bird', x: -50 - Math.random() * 100, y: Math.random() * H * 0.35, speed: 0.3 + Math.random() * 0.5, phase: Math.random() * Math.PI * 2, life: 500 + Math.random() * 300 });
-                if (dt === 'balloons' && (counts.balloon || 0) < 8) _bgElements.push({ type: 'balloon', x: Math.random() * W, y: H + 20, r: 40 + Math.random() * 90, color: 'hsl(' + Math.floor(Math.random() * 360) + ',80%,60%)', speed: 0.05 + Math.random() * 0.15, life: 800 + Math.random() * 400 });
-                if (dt === 'stars' && (counts.star || 0) < 30) _bgElements.push({ type: 'star', x: Math.random() * W, y: Math.random() * H * 0.6, size: 2.5 + Math.random() * 12.5, twinkle: Math.random() * Math.PI * 2, life: 900 + Math.random() * 300 });
-                if (dt === 'snow' && (counts.snow || 0) < 30) _bgElements.push({ type: 'snow', x: Math.random() * W, y: -5, vx: (Math.random() - 0.5) * 0.8, vy: 0.4 + Math.random() * 1.2, size: 7.5 + Math.random() * 15, life: 500 + Math.random() * 300 });
+                if (dt === 'clouds' && (counts.cloud || 0) < 3) _bgElements.push({ type: 'cloud', x: -100 - Math.random() * 100, y: Math.random() * H * 0.4, w: 200 + Math.random() * 500, speed: 0.1 + Math.random() * 0.25, life: 600 + Math.random() * 400 });
+                if (dt === 'birds' && (counts.bird || 0) < 3) _bgElements.push({ type: 'bird', x: -50 - Math.random() * 100, y: Math.random() * H * 0.35, speed: 0.3 + Math.random() * 0.5, phase: Math.random() * Math.PI * 2, life: 500 + Math.random() * 300 });
+                if (dt === 'balloons' && (counts.balloon || 0) < 4) _bgElements.push({ type: 'balloon', x: Math.random() * W, y: H + 20, r: 40 + Math.random() * 90, color: 'hsl(' + Math.floor(Math.random() * 360) + ',80%,60%)', speed: 0.05 + Math.random() * 0.15, life: 800 + Math.random() * 400 });
+                if (dt === 'stars' && (counts.star || 0) < 15) _bgElements.push({ type: 'star', x: Math.random() * W, y: Math.random() * H * 0.6, size: 2.5 + Math.random() * 12.5, twinkle: Math.random() * Math.PI * 2, life: 900 + Math.random() * 300 });
+                if (dt === 'snow' && (counts.snow || 0) < 15) _bgElements.push({ type: 'snow', x: Math.random() * W, y: -5, vx: (Math.random() - 0.5) * 0.8, vy: 0.4 + Math.random() * 1.2, size: 7.5 + Math.random() * 15, life: 500 + Math.random() * 300 });
                 if (dt === 'comets' && (counts.comet || 0) < 1 && Math.random() < 0.005) _bgElements.push({ type: 'comet', x: -50, y: Math.random() * H * 0.3, speed: 2 + Math.random() * 3, angle: 0.3 + Math.random() * 0.4, life: 200 + Math.random() * 100 });
-                if (dt === 'aurora' && (counts.aurora || 0) < 3) _bgElements.push({ type: 'aurora', idx: Math.floor(Math.random() * 4), life: 900 });
+                if (dt === 'aurora' && (counts.aurora || 0) < 2) _bgElements.push({ type: 'aurora', idx: Math.floor(Math.random() * 4), life: 900 });
                 if (dt === 'rainbow' && (counts.rainbow || 0) < 1) _bgElements.push({ type: 'rainbow', life: 800 });
             }
             for (var i = _bgElements.length - 1; i >= 0; i--) {
@@ -4767,75 +5261,95 @@
                 }
             }
 
-            // blocos TNT caindo (with culling)
-            for (var i = 0; i < tntBlocks.length; i++) {
-                var b = tntBlocks[i];
-                if (b.y < viewTop - TILE * 2 || b.y > viewBot + TILE * 2) continue;
-                var glowSpeed = b.fuse <= 1 ? 8 : b.fuse <= 3 ? 4 : 1.5;
-                var glow = (Math.sin(b.blinkTimer * 0.1 * glowSpeed) + 1) / 2;
-                var drawSize = b.nuke ? TILE * 0.5 : (b.mega ? TILE * 1.8 : TILE);
-                var tex = b.mega ? MEGA_TNT_TEX : TNT_TEX;
-                ctx.save();
-                ctx.translate(b.x, b.y);
-                ctx.rotate(b.ang || 0);
-                if (b.nuke) {
-                    if (SHADOW_ENABLED) { ctx.shadowBlur = 8 + glow * 30; ctx.shadowColor = 'rgba(0,255,80,1)'; }
-                    ctx.globalAlpha = 0.92;
-                    // draw small TNT with green radioactive tint
-                    if (tex && tex.complete && tex.naturalWidth > 0) {
-                        ctx.drawImage(tex, -drawSize / 2, -drawSize / 2, drawSize, drawSize);
-                    } else {
-                        ctx.fillStyle = '#00cc44';
-                        ctx.fillRect(-drawSize / 2, -drawSize / 2, drawSize, drawSize);
-                    }
-                    // radioactive symbol overlay
-                    ctx.globalAlpha = 0.7 + glow * 0.3;
-                    ctx.fillStyle = '#00ff66';
-                    ctx.font = 'bold ' + Math.floor(drawSize * 0.7) + 'px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText('☢️', 0, 0);
-                } else if (b.mega) {
-                    if (SHADOW_ENABLED) { ctx.shadowBlur = 15 + glow * 60; ctx.shadowColor = 'rgba(' + Math.floor(120 + glow * 80) + ',0,255,1)'; }
-                    if (tex && tex.complete && tex.naturalWidth > 0) {
-                        ctx.drawImage(tex, -drawSize / 2, -drawSize / 2, drawSize, drawSize);
-                    } else {
-                        ctx.fillStyle = '#880088';
-                        ctx.fillRect(-drawSize / 2, -drawSize / 2, drawSize, drawSize);
-                    }
-                } else {
-                    if (SHADOW_ENABLED) { ctx.shadowBlur = 10 + glow * 40; ctx.shadowColor = 'rgba(255,' + Math.floor(80 + glow * 100) + ',0,1)'; }
-                    if (tex && tex.complete && tex.naturalWidth > 0) {
-                        ctx.drawImage(tex, -drawSize / 2, -drawSize / 2, drawSize, drawSize);
-                    } else {
-                        ctx.fillStyle = '#cc0000';
-                        ctx.fillRect(-drawSize / 2, -drawSize / 2, drawSize, drawSize);
-                    }
-                }
-                ctx.restore();
+             // blocos TNT caindo (with culling)
+             for (var i = 0; i < tntBlocks.length; i++) {
+                 var b = tntBlocks[i];
+                 if (b.y < viewTop - TILE * 2 || b.y > viewBot + TILE * 2) continue;
+                 var glowSpeed = b.fuse <= 1 ? 8 : b.fuse <= 3 ? 4 : 1.5;
+                 var glow = (Math.sin(b.blinkTimer * 0.1 * glowSpeed) + 1) / 2;
+                 var drawSize, tntTexture;
+                 if (b.nuke) {
+                     drawSize = TILE * 0.5;
+                     tntTexture = null;
+                 } else if (b.mega) {
+                     drawSize = TILE * 1.8;
+                     tntTexture = MEGA_TNT_TEX;
+                 } else if (b.heart) {
+                     drawSize = TILE * 0.9;
+                     tntTexture = null;
+                 } else {
+                     drawSize = TILE;
+                     tntTexture = TNT_TEX;
+                 }
+                 ctx.save();
+                 ctx.translate(b.x, b.y);
+                 ctx.rotate(b.ang || 0);
 
-                // Nome e Avatar do mensageiro da TNT
-                if (b.userName) {
-                    ctx.save();
-                    var avImg = avatarCache[b.avatarUrl];
-                    var avSize = 32;
-                    var avY = b.y - drawSize / 2 - 28;
-                    if (avImg && avImg.complete && avImg.naturalWidth > 0) {
-                        ctx.save();
-                        ctx.beginPath(); ctx.arc(b.x - 5 - avSize / 2, avY, avSize / 2, 0, Math.PI * 2); ctx.clip();
-                        try { ctx.drawImage(avImg, b.x - 5 - avSize, avY - avSize / 2, avSize, avSize); } catch(e) {}
-                        ctx.restore();
-                        ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
-                        ctx.beginPath(); ctx.arc(b.x - 5 - avSize / 2, avY, avSize / 2, 0, Math.PI * 2); ctx.stroke();
-                    }
-                    ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-                    if (SHADOW_ENABLED) { ctx.shadowBlur = 4; ctx.shadowColor = '#000'; }
-                    ctx.fillText(b.userName, b.x + 5, avY);
-                    ctx.restore();
-                }
-            }
+                 if (b.nuke) {
+                     if (SHADOW_ENABLED) { ctx.shadowBlur = 8 + glow * 30; ctx.shadowColor = 'rgba(0,255,80,1)'; }
+                     ctx.globalAlpha = 0.92;
+                     if (tntTexture && tntTexture.complete && tntTexture.naturalWidth > 0) {
+                         ctx.drawImage(tntTexture, -drawSize / 2, -drawSize / 2, drawSize, drawSize);
+                     } else {
+                         ctx.fillStyle = '#00cc44';
+                         ctx.fillRect(-drawSize / 2, -drawSize / 2, drawSize, drawSize);
+                     }
+                     ctx.globalAlpha = 0.7 + glow * 0.3;
+                     ctx.fillStyle = '#00ff66';
+                     ctx.font = 'bold ' + Math.floor(drawSize * 0.7) + 'px Arial';
+                     ctx.textAlign = 'center';
+                     ctx.textBaseline = 'middle';
+                     ctx.fillText('☢️', 0, 0);
+                 } else if (b.mega) {
+                     if (SHADOW_ENABLED) { ctx.shadowBlur = 15 + glow * 60; ctx.shadowColor = 'rgba(' + Math.floor(120 + glow * 80) + ',0,255,1)'; }
+                     if (tntTexture && tntTexture.complete && tntTexture.naturalWidth > 0) {
+                         ctx.drawImage(tntTexture, -drawSize / 2, -drawSize / 2, drawSize, drawSize);
+                     } else {
+                         ctx.fillStyle = '#880088';
+                         ctx.fillRect(-drawSize / 2, -drawSize / 2, drawSize, drawSize);
+                     }
+                 } else if (b.heart) {
+                     ctx.fillStyle = '#ff0000';
+                     var fontSize = drawSize * 1.6;
+                     ctx.font = 'bold ' + fontSize + 'px Arial';
+                     ctx.textAlign = 'center';
+                     ctx.textBaseline = 'middle';
+                     ctx.fillText('♥', 0, 0);
+                 } else {
+                     if (SHADOW_ENABLED) { ctx.shadowBlur = 10 + glow * 40; ctx.shadowColor = 'rgba(255,' + Math.floor(80 + glow * 100) + ',0,1)'; }
+                     if (tntTexture && tntTexture.complete && tntTexture.naturalWidth > 0) {
+                         ctx.drawImage(tntTexture, -drawSize / 2, -drawSize / 2, drawSize, drawSize);
+                     } else {
+                         ctx.fillStyle = '#cc0000';
+                         ctx.fillRect(-drawSize / 2, -drawSize / 2, drawSize, drawSize);
+                     }
+                 }
+                 ctx.restore();
 
-            // explosões TNT
+                 // Nome e Avatar do mensageiro da TNT
+                 if (b.userName) {
+                     ctx.save();
+                     var avImg = avatarCache[b.avatarUrl];
+                     var avSize = 32;
+                     var avY = b.y - drawSize / 2 - 28;
+                     if (avImg && avImg.complete && avImg.naturalWidth > 0) {
+                         ctx.save();
+                         ctx.beginPath(); ctx.arc(b.x - 5 - avSize / 2, avY, avSize / 2, 0, Math.PI * 2); ctx.clip();
+                         try { ctx.drawImage(avImg, b.x - 5 - avSize, avY - avSize / 2, avSize, avSize); } catch(e) {}
+                         ctx.restore();
+                         ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+                         ctx.beginPath(); ctx.arc(b.x - 5 - avSize / 2, avY, avSize / 2, 0, Math.PI * 2); ctx.stroke();
+                     }
+ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+                      ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.lineJoin = 'round';
+                      ctx.strokeText(b.userName, b.x + 5, avY);
+                      if (SHADOW_ENABLED) { ctx.shadowBlur = 4; ctx.shadowColor = '#000'; }
+                      ctx.fillText(b.userName, b.x + 5, avY);
+                     ctx.restore();
+                  }
+              }
+
+             // explosões TNT
             for (var k = 0; k < explosions.length; k++) {
                 var ex = explosions[k];
                 var etex = EXPLOSION_TEX[ex.frame];
@@ -5000,8 +5514,8 @@
                         loadAvatar(pick.userAvatarUrl);
                     }
                     var ownerAvImg = (pick.userAvatarUrl && avatarCache[pick.userAvatarUrl]) || null;
-                    var oAvSize = isMobile ? 32 : 48;
-                    var oAvY = pick.y - PICK_HALF - (isMobile ? 30 : 44);
+                    var oAvSize = 48;
+                    var oAvY = pick.y - PICK_HALF - 44;
                     if (ownerAvImg && ownerAvImg.complete && ownerAvImg.naturalWidth > 0) {
                         ctx.save();
                         ctx.beginPath(); ctx.arc(pick.x - 10 - oAvSize / 2, oAvY, oAvSize / 2, 0, Math.PI * 2); ctx.clip();
@@ -5019,8 +5533,8 @@
                         ctx.fillText((pick.userName || '?').replace('@','').charAt(0).toUpperCase(), pick.x - 10 - oAvSize / 2, oAvY);
                         ctx.restore();
                     }
-                    ctx.fillStyle = '#ffdd44'; ctx.font = isMobile ? 'bold 22px Arial' : 'bold 26px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-                    ctx.strokeStyle = '#000'; ctx.lineWidth = isMobile ? 3 : 4; ctx.lineJoin = 'round';
+                    ctx.fillStyle = '#ffdd44'; ctx.font = 'bold 26px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+                    ctx.strokeStyle = '#000'; ctx.lineWidth = 4; ctx.lineJoin = 'round';
                     ctx.strokeText(pick.userName, pick.x + 10, oAvY);
                     if (SHADOW_ENABLED) { ctx.shadowBlur = 8; ctx.shadowColor = '#000'; }
                     ctx.fillText(pick.userName, pick.x + 10, oAvY);
@@ -5056,8 +5570,8 @@
                     }
                     ctx.restore();
                     // Draw clone avatar and name (same size as original picks)
-                    var cloneAvSize = isMobile ? 32 : 48;
-                    var cloneAvY = ep.y - PICK_HALF - (isMobile ? 30 : 44);
+                    var cloneAvSize = 48;
+                    var cloneAvY = ep.y - PICK_HALF - 44;
                     if (ep.cloneAvatar && avatarCache[ep.cloneAvatar]) {
                         var avImg = avatarCache[ep.cloneAvatar];
                         if (avImg.complete && avImg.naturalWidth > 0) {
@@ -5075,8 +5589,8 @@
                     }
                     ctx.save();
                     ctx.globalAlpha = cloneAlpha * 0.85;
-                    ctx.fillStyle = '#fff'; ctx.font = isMobile ? 'bold 22px Arial' : 'bold 26px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-                    ctx.strokeStyle = '#000'; ctx.lineWidth = isMobile ? 3 : 4; ctx.lineJoin = 'round';
+                    ctx.fillStyle = '#fff'; ctx.font = 'bold 26px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+                    ctx.strokeStyle = '#000'; ctx.lineWidth = 4; ctx.lineJoin = 'round';
                     ctx.strokeText(ep.cloneOwner || '', ep.x + 10, cloneAvY);
                     if (SHADOW_ENABLED) { ctx.shadowBlur = 8; ctx.shadowColor = '#000'; }
                     ctx.fillText(ep.cloneOwner || '', ep.x + 10, cloneAvY);
@@ -5126,8 +5640,8 @@
                     loadAvatar(up.userAvatarUrl);
                 }
                 var avImg = (up.userAvatarUrl && avatarCache[up.userAvatarUrl]) || null;
-                var avSize = isMobile ? 32 : 48;
-                var avY = up.y - PICK_HALF - (isMobile ? 30 : 44);
+                var avSize = 48;
+                var avY = up.y - PICK_HALF - 44;
                 if (avImg && avImg.complete && avImg.naturalWidth > 0) {
                     ctx.save();
                     ctx.beginPath(); ctx.arc(up.x - 10 - avSize / 2, avY, avSize / 2, 0, Math.PI * 2); ctx.clip();
@@ -5145,8 +5659,8 @@
                     ctx.fillText((up.userName || '?').replace('@','').charAt(0).toUpperCase(), up.x - 10 - avSize / 2, avY);
                     ctx.restore();
                 }
-                ctx.fillStyle = '#fff'; ctx.font = isMobile ? 'bold 22px Arial' : 'bold 26px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-                ctx.strokeStyle = '#000'; ctx.lineWidth = isMobile ? 3 : 4; ctx.lineJoin = 'round';
+                ctx.fillStyle = '#fff'; ctx.font = 'bold 26px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+                ctx.strokeStyle = '#000'; ctx.lineWidth = 4; ctx.lineJoin = 'round';
                 ctx.strokeText(up.userName, up.x + 10, avY);
                 if (SHADOW_ENABLED) { ctx.shadowBlur = 8; ctx.shadowColor = '#000'; }
                 ctx.fillText(up.userName, up.x + 10, avY);
@@ -5201,7 +5715,7 @@
 
         // ── ZOMBIES ────────────────────────────────────────────────────────────────
         var zombies = [];
-        var MAX_ZOMBIES = 8;
+        var MAX_ZOMBIES = 5;
         var ZOMBIE_SIZE = TILE;
 
         // Preload zombie sprites
@@ -5238,7 +5752,7 @@
 
         // ── SPIDER SYSTEM (mini-clearings) ──────────────────────────────────────
         var spiders = [];
-        var MAX_SPIDERS = 12;
+        var MAX_SPIDERS = 6;
         var SPIDER_SIZE = TILE * 1.6;
         var SPIDER_MOTHER_SCALE = 1.5;
         var SPIDER_MOTHER_SPAWN_MS = 5000;
@@ -5557,7 +6071,7 @@
 
         // ── BAT / VESP SYSTEM (alternating per clearing) ──────────────────────
         var bats = [];
-        var MAX_BATS = 18;
+        var MAX_BATS = 8;
         var BAT_SIZE = TILE * 1.05;
         var MOTHER_SCALE = 3.0; // 300% size
         var MOTHER_SPAWN_MS = 4000; // spawn baby every 4s
@@ -7343,16 +7857,21 @@
         ensureRows(0, VIS + 4);
         spawnPick();
 
-        // Carrega pontuações persistentes do localStorage
-        (function () {
-            try {
-                var saved = JSON.parse(localStorage.getItem('pd_persistent_scores') || '{}');
-                if (saved && typeof saved === 'object' && !Array.isArray(saved)) {
-                    persistentScores = saved;
-                }
-                console.log('Scores loaded from localStorage:', Object.keys(persistentScores).length);
-            } catch (e) { console.error('Error loading scores:', e); }
-        })();
+         // Carrega pontuações persistentes do localStorage
+         (function () {
+             try {
+                 var saved = JSON.parse(localStorage.getItem('pd_persistent_scores') || '{}');
+                 if (saved && typeof saved === 'object' && !Array.isArray(saved)) {
+                     persistentScores = saved;
+                     // Normaliza campos para upgrades (likes, giftsValue)
+                     Object.keys(persistentScores).forEach(function(k) {
+                         if (persistentScores[k].likes === undefined) persistentScores[k].likes = 0;
+                         if (persistentScores[k].giftsValue === undefined) persistentScores[k].giftsValue = 0;
+                     });
+                 }
+                 console.log('Scores loaded from localStorage:', Object.keys(persistentScores).length);
+             } catch (e) { console.error('Error loading scores:', e); }
+         })();
 
         // Carrega ranking para avatares
         var rankingData = [];
@@ -7519,11 +8038,21 @@
                 if (!isOwner && !userPicks.some(function(up) { return up.userName === cUser; })) spawnUserPickaxe(cUser, cAvatar);
                 var msg = cText.toLowerCase();
                 if (msg.includes('play') || msg.includes('join')) spawnUserPickaxe(cUser, cAvatar);
+                if (msg === 'sr') activateSpin(cUser, 'right');
+                else if (msg === 'sl') activateSpin(cUser, 'left');
+                else if (msg === 'su') activateSpin(cUser, 'up');
+                else if (msg === 'sd') activateSpin(cUser, 'down');
+                else if (msg === 'sr' || msg === 'sl' || msg === 'su' || msg === 'sd' || msg.includes('spin')) { var dirs = ['right','left','up','down']; var rd = dirs[Math.floor(Math.random()*4)]; activateSpin(cUser, rd); }
                 var uPick = isOwner ? pick : userPicks.find(function(up) { return up.userName === cUser; });
                 var tx = uPick ? uPick.x : undefined, ty = uPick ? uPick.y : undefined;
-                if (msg.includes('power tnt') || msg.includes('mega tnt') || msg.includes('powertnt')) activateMegaTNT(tx, ty, cUser, cAvatar);
+                if (msg.includes('power tnt') || msg.includes('mega tnt') || msg.includes('powertnt') || msg === 'mega') activateMegaTNT(tx, ty, cUser, cAvatar);
                 else if (msg.includes('tnt')) activateTNT(tx, ty, cUser, cAvatar);
                 else if (msg.includes('clone') || msg.includes('clonar')) spawnClone(cUser, cAvatar);
+                else if (msg.includes('thor') || msg.includes('raio')) activateThor(tx, ty, cUser, cAvatar);
+                else if (msg.includes('nuke') || msg.includes('nuclear')) activateNuke(tx, ty, cUser, cAvatar);
+                else if (msg.includes('pp') || msg.includes('storm') || msg.includes('tempestade')) activateStorm(uPick);
+                else if (msg.includes('bh') || msg.includes('blackhole') || msg.includes('buraco')) activateBlackHole(tx, ty, cUser, cAvatar);
+                else if (msg.includes('big') || msg.includes('grande')) activateBig(cUser);
                 if (msg.includes('bot20ok')) { for (var bi = 0; bi < 20; bi++) { var bn = '@Bot_' + (1 + Math.floor(Math.random() * 9999)); spawnUserPickaxe(bn, ''); } spawnText(canvas.width / 2, camY + 100, '20 BOTS!', '#ffff00'); }
             }
             else if (data.type === 'superchat') {
@@ -7536,7 +8065,13 @@
                 for (var sci = 0; sci < Math.min(20, Math.floor(numVal)); sci++) activateTNT(scx + (Math.random() - 0.5) * TILE * 4, scy, scUser, scAvatar);
                 if (numVal >= 10) activateMegaTNT(scx, scy, scUser, scAvatar);
                 spawnText(scx, scy - 30, '💰 ' + (data.amount || '') + ' SUPER CHAT!', '#ffdd00');
-                score += Math.floor(numVal * 10);
+                var superchatScore = Math.floor(numVal * 10);
+                score += superchatScore;
+                // Contabilizar superchat como presente no ranking
+                if (!persistentScores[scUser]) persistentScores[scUser] = { score: 0, avatar: scAvatar, color: '#ffdd44', likes: 0, giftsValue: 0 };
+                persistentScores[scUser].score += superchatScore;
+                persistentScores[scUser].giftsValue = (persistentScores[scUser].giftsValue || 0) + numVal;
+                addCycleScore(scUser, superchatScore);
                 triggerBotrixEvent('superchat', scUser, scAvatar);
             }
             else if (data.type === 'member') { var mUser = '@' + (data.user || '').toLowerCase(); if (mUser === '@') return; lastActivity[mUser] = Date.now(); if (data.avatar) loadAvatar(data.avatar); spawnUserPickaxe(mUser, data.avatar || ''); }
@@ -7544,26 +8079,55 @@
                 var gUser = '@' + (data.user || 'unknown').toLowerCase(), gAvatar = data.avatar || '', giftName = (data.giftName || '').toLowerCase();
                 lastActivity[gUser] = Date.now(); if (gAvatar) loadAvatar(gAvatar); spawnUserPickaxe(gUser, gAvatar);
                 var gPick = userPicks.find(function(up) { return up.userName === gUser; });
-                var gx = gPick ? gPick.x : (pick ? pick.x : canvas.width / 2), gy = gPick ? gPick.y : (pick ? pick.y : camY + canvas.height / 2);
+                var gx = gPick ? gPick.x : (pick ? pick.x : canvas.width/2), gy = gPick ? gPick.y : (pick ? pick.y : camY + canvas.height/2);
                 var diamonds = data.diamondCount || 1, repeat = data.repeatCount || 1;
-                if (giftName.includes('rose') || giftName.includes('rosa')) { for (var gi = 0; gi < Math.min(repeat, 5); gi++) activateTNT(gx + (Math.random()-0.5)*TILE*3, gy, gUser, gAvatar); spawnText(gx, gy-30, '🌹 TNT!', '#ff6688'); score += 10*repeat; }
-                else if (giftName.includes('tiktok')) { for (var gi = 0; gi < Math.min(repeat*2, 10); gi++) activateTNT(gx + (Math.random()-0.5)*TILE*4, gy, gUser, gAvatar); spawnText(gx, gy-30, '🎵 TNT!', '#00f2ea'); score += 20*repeat; }
-                else if (giftName.includes('gg')) { for (var gi = 0; gi < Math.min(repeat*3, 15); gi++) activateTNT(gx + (Math.random()-0.5)*TILE*5, gy, gUser, gAvatar); spawnText(gx, gy-30, '🎮 TNT!', '#44ff44'); score += 30*repeat; }
-                else if (giftName.includes('like') || giftName.includes('heart')) { for (var gi = 0; gi < Math.min(repeat, 3); gi++) activateMegaTNT(gx + (Math.random()-0.5)*TILE*3, gy, gUser, gAvatar); spawnText(gx, gy-30, '❤️ MEGA!', '#ff4488'); score += 50*repeat; }
+                if (giftName.includes('rose') || giftName.includes('rosa')) { for (var gi = 0; gi < Math.min(repeat * 2, 10); gi++) activateTNT(gx + (Math.random()-0.5)*TILE*3, gy, gUser, gAvatar); spawnText(gx, gy-30, '🌹 10 TNT!', '#ff6688'); score += 10*repeat; }
+                else if (giftName.includes('creeper')) { for (var gi = 0; gi < Math.min(repeat * 3, 30); gi++) activateTNT(gx + (Math.random()-0.5)*TILE*4, gy, gUser, gAvatar); spawnText(gx, gy-30, '💣 30 TNT!', '#44ff44'); score += 30*repeat; }
+                else if (giftName.includes('gg')) { for (var gi = 0; gi < Math.min(repeat * 2, 20); gi++) activateTNT(gx + (Math.random()-0.5)*TILE*5, gy, gUser, gAvatar); spawnText(gx, gy-30, '🎮 20 TNT!', '#44ff44'); score += 30*repeat; }
+                else                 if (giftName.includes('like') || giftName.includes('heart')) { for (var gi = 0; gi < Math.min(repeat, 3); gi++) activateMegaTNT(gx + (Math.random()-0.5)*TILE*3, gy, gUser, gAvatar); spawnText(gx, gy-30, '❤️ MEGA!', '#ff4488'); score += 50*repeat; }
                 else if (diamonds >= 100) triggerBotrixEvent('gift', gUser, gAvatar);
                 else if (diamonds >= 10) triggerBotrixEvent('superchat', gUser, gAvatar);
                 else { for (var gi = 0; gi < Math.min(repeat, 5); gi++) activateTNT(gx + (Math.random()-0.5)*TILE*3, gy, gUser, gAvatar); spawnText(gx, gy-30, '🎁 TNT!', '#ffaa44'); score += 10*repeat; }
-                if (gUser !== ownerName) { if (!persistentScores[gUser]) persistentScores[gUser] = { score: 0, avatar: gAvatar, color: '#ff88ff' }; persistentScores[gUser].score += diamonds*repeat; }
+                // Contabilizar valor dos presentes (diamantes) no ranking — TODOS os jogadores, incluindo owner
+                if (!persistentScores[gUser]) persistentScores[gUser] = { score: 0, avatar: gAvatar, color: '#ff88ff', likes: 0, giftsValue: 0 };
+                var giftScoreValue = diamonds * repeat;
+                persistentScores[gUser].score += giftScoreValue;
+                persistentScores[gUser].giftsValue = (persistentScores[gUser].giftsValue || 0) + giftScoreValue;
+                // Adiciona também ao cycle score para aparecer no ranking
+                addCycleScore(gUser, giftScoreValue);
             }
-            else if (data.type === 'follow') { var fUser = '@' + (data.user || 'unknown').toLowerCase(); lastActivity[fUser] = Date.now(); if (data.avatar) loadAvatar(data.avatar); spawnUserPickaxe(fUser, data.avatar || ''); triggerBotrixEvent('follow', fUser, data.avatar || ''); }
+            else if (data.type === 'follow') { 
+                var fUser = '@' + (data.user || 'unknown').toLowerCase(); lastActivity[fUser] = Date.now(); 
+                if (data.avatar) loadAvatar(data.avatar); spawnUserPickaxe(fUser, data.avatar || ''); 
+                var fx = pick ? pick.x : canvas.width/2, fy = pick ? pick.y : camY + canvas.height/2;
+                for (var fi = 0; fi < 10; fi++) activateTNT(fx + (Math.random()-0.5)*TILE*4, fy, fUser, data.avatar || '');
+                for (var mi = 0; mi < 5; mi++) activateMegaTNT(fx + (Math.random()-0.5)*TILE*3, fy, fUser, data.avatar || '');
+                spawnText(fx, fy-40, '👤 FOLLOW! 10💥+5🔥', '#44ff88');
+                triggerBotrixEvent('follow', fUser, data.avatar || ''); 
+            }
             else if (data.type === 'like') {
                 var lName = (data.user || '').toLowerCase(); if (!lName) return; var lUser = '@' + lName;
                 var lAvatar = data.avatar || ''; lastActivity[lUser] = Date.now(); if (lAvatar) loadAvatar(lAvatar);
                 spawnUserPickaxe(lUser, lAvatar);
                 var lPick = userPicks.find(function(up) { return up.userName === lUser; });
                 var lx = lPick ? lPick.x : (pick ? pick.x : canvas.width/2), ly = lPick ? lPick.y : (pick ? pick.y : camY + canvas.height/2);
-                spawnParts(lx, ly, '#ff4488', 5); var likePts = Math.min(data.likeCount || 1, 10) * 2; score += likePts;
+                var likeCount = data.likeCount || 1;
+                var likePts = Math.min(likeCount, 10) * 2;
+                score += likePts;
+                // Gerar heartTNT apenas se não estiver no período de ignoração inicial
+                if (Date.now() >= _ignoreLikesUntil) {
+                    activateHeartTNT(lx, ly, lUser, lAvatar);
+                }
+                spawnParts(lx, ly, '#ff4488', Math.min(likeCount, 5));
                 spawnText(lx, ly-20, '+' + likePts + ' ❤', '#ff4488');
+                // Contabilizar likes no ranking
+                if (!persistentScores[lUser]) persistentScores[lUser] = { score: 0, avatar: lAvatar, color: '#ff4488', likes: 0, giftsValue: 0 };
+                persistentScores[lUser].likes = (persistentScores[lUser].likes || 0) + likeCount;
+                persistentScores[lUser].score = (persistentScores[lUser].score || 0) + likePts;
+                // Atualiza cycle scores
+                if (!_cycleScores[lUser]) _cycleScores[lUser] = { score: 0, kills: 0, items: 0, balls: 0, likes: 0, avatar: persistentScores[lUser].avatar || '' };
+                _cycleScores[lUser].score += likePts;
+                _cycleScores[lUser].likes += likeCount;
             }
             else if (data.type === 'share') {
                 var sUser = '@' + (data.user || 'unknown').toLowerCase(); lastActivity[sUser] = Date.now();
@@ -7620,10 +8184,12 @@
 
             // Garante que está na persistência
             if (!persistentScores[userName]) {
-                persistentScores[userName] = { score: p.score, avatar: avatarUrl, color: p.color };
+                persistentScores[userName] = { score: p.score, avatar: avatarUrl, color: p.color, likes: 0, giftsValue: 0 };
             } else {
                 if (avatarUrl) persistentScores[userName].avatar = avatarUrl;
                 if (!persistentScores[userName].color) persistentScores[userName].color = p.color;
+                if (persistentScores[userName].likes === undefined) persistentScores[userName].likes = 0;
+                if (persistentScores[userName].giftsValue === undefined) persistentScores[userName].giftsValue = 0;
             }
 
             userPicks.push(p);
@@ -8377,55 +8943,60 @@
             osc.start(t); osc.stop(t + 0.45);
         }
 
-        function updateLeaderboard() {
-            for (var i = 0; i < userPicks.length; i++) {
-                userPicks[i].pickaxe = getPickaxeForTime(userPicks[i].joinTime);
-            }
+         function updateLeaderboard() {
+             for (var i = 0; i < userPicks.length; i++) {
+                 userPicks[i].pickaxe = getPickaxeForTime(userPicks[i].joinTime);
+             }
 
-            var list = document.getElementById('leaderboardList');
-            if (!list) return;
+             var list = document.getElementById('leaderboardList');
+             if (!list) return;
 
-            // Use cycle scores (reset every 400m round)
-            var players = Object.keys(_cycleScores).map(function(name) {
-                var cs = _cycleScores[name];
-                var pTier = currentPickaxe;
-                if (ownerName && name === ownerName) {
-                    pTier = currentPickaxe;
-                } else {
-                    for (var j = 0; j < userPicks.length; j++) {
-                        if (userPicks[j].userName === name) { pTier = userPicks[j].pickaxe || PICKAXES[0]; break; }
-                    }
-                }
-                var av = cs.avatar || (persistentScores[name] ? persistentScores[name].avatar : '');
-                return { userName: name, score: cs.score || 0, kills: cs.kills || 0, items: cs.items || 0, balls: cs.balls || 0, userAvatarUrl: av, pickaxe: pTier };
-            }).filter(function(p) { return p.score > 0; });
+             // Use cycle scores (reset every 400m round) mas usa totais de likes/gifts do persistentScores
+             var players = Object.keys(_cycleScores).map(function(name) {
+                 var cs = _cycleScores[name];
+                 var pTier = currentPickaxe;
+                 if (ownerName && name === ownerName) {
+                     pTier = currentPickaxe;
+                 } else {
+                     for (var j = 0; j < userPicks.length; j++) {
+                         if (userPicks[j].userName === name) { pTier = userPicks[j].pickaxe || PICKAXES[0]; break; }
+                     }
+                 }
+                 var av = cs.avatar || (persistentScores[name] ? persistentScores[name].avatar : '');
+                 var totalLikes = (persistentScores[name] && persistentScores[name].likes !== undefined) ? persistentScores[name].likes : (cs.likes || 0);
+                 var giftsVal = (persistentScores[name] && persistentScores[name].giftsValue !== undefined) ? persistentScores[name].giftsValue : 0;
+                 return { userName: name, score: cs.score || 0, kills: cs.kills || 0, items: cs.items || 0, balls: cs.balls || 0, likes: totalLikes, giftsValue: giftsVal, userAvatarUrl: av, pickaxe: pTier };
+             }).filter(function(p) { return p.score > 0 || p.giftsValue > 0 || p.likes > 0; });
 
-            var sorted = players.sort((a, b) => b.score - a.score).slice(0, 10);
+             var sorted = players.sort((a, b) => b.score - a.score).slice(0, 10);
 
-            if (sorted.length === 0) {
-                list.innerHTML = '<div style="text-align:center; opacity:0.5; font-size:11px;">Round ' + ((_currentCycle || 0) + 1) + ' — 400m</div>';
-                return;
-            }
+             if (sorted.length === 0) {
+                 list.innerHTML = '<div style="text-align:center; opacity:0.5; font-size:11px;">Round ' + ((_currentCycle || 0) + 1) + ' — 400m</div>';
+                 return;
+             }
 
-            var rankClass = ['gold', 'silver', 'bronze'];
-            var rankEmoji = ['🥇', '🥈', '🥉'];
-            var html = '';
-            sorted.forEach((u, i) => {
-                var av = u.userAvatarUrl || '';
-                var cachedImg = avatarCache[av];
-                var avSrc = (cachedImg && cachedImg.src && cachedImg.naturalWidth > 0) ? cachedImg.src : av;
-                var pickImg = u.pickaxe ? u.pickaxe.img : 'pickaxe/wooden_pickaxe.png';
-                var pickColor = u.pickaxe ? u.pickaxe.color : '#c8a464';
-                var rClass = rankClass[i] || '';
-                var rankLabel = i < 3 ? rankEmoji[i] : '#' + (i + 1);
-                var stats = '';
-                if (u.kills > 0) stats += '💥' + u.kills;
-                if (u.balls > 0) stats += '🔮' + u.balls;
-                var statsBadge = stats ? '<span style="color:#aaa;font-size:10px;margin-left:2px;">' + stats + '</span>' : '';
-                html += `<div class="lb-item"><span class="lb-rank ${rClass}">${rankLabel}</span><img class="lb-avatar" src="${avSrc}" onerror="this.onerror=null;this.style.display='none'"><span class="lb-name">${u.userName}</span>${statsBadge}<span class="lb-score" style="color:${pickColor}">${Math.floor(u.score)}</span></div>`;
-            });
-            list.innerHTML = html;
-        }
+             var rankClass = ['gold', 'silver', 'bronze'];
+             var rankEmoji = ['🥇', '🥈', '🥉'];
+              var html = '';
+              sorted.forEach((u, i) => {
+                  var av = u.userAvatarUrl || '';
+                  var cachedImg = avatarCache[av];
+                  var avSrc = (cachedImg && cachedImg.src && cachedImg.naturalWidth > 0) ? cachedImg.src : av;
+                  var pickColor = u.pickaxe ? u.pickaxe.color : '#c8a464';
+                  var rClass = rankClass[i] || '';
+                  var rankLabel = i < 3 ? rankEmoji[i] : '#' + (i + 1);
+                  // Remove @ do nome
+                  var displayName = u.userName.replace(/^@/, '');
+                  // Stats com ícones maiores
+                  var stats = '';
+                  if (u.kills > 0) stats += '<span class="lb-stat">💥' + u.kills + '</span>';
+                  if (u.balls > 0) stats += '<span class="lb-stat">🔮' + u.balls + '</span>';
+                  if (u.likes > 0) stats += '<span class="lb-stat lb-like">❤️' + u.likes + '</span>';
+                  if (u.giftsValue > 0) stats += '<span class="lb-stat lb-gift">🎁' + u.giftsValue + '</span>';
+                  html += `<div class="lb-item"><span class="lb-rank ${rClass}">${rankLabel}</span><img class="lb-avatar" src="${avSrc}" onerror="this.onerror=null;this.style.display='none'"><span class="lb-name">${displayName}</span><span class="lb-stats">${stats}</span><span class="lb-score" style="color:${pickColor}">${Math.floor(u.score)}</span></div>`;
+              });
+             list.innerHTML = html;
+         }
         setInterval(updateLeaderboard, 1000);
 
         // Remove inactive players every 30s
