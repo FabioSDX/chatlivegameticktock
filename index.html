@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <title>Pickaxe Drop</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛏</text></svg>" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -26,73 +27,118 @@
             font-family: Arial, sans-serif;
         }
 
-         #ui {
-             position: fixed;
-             top: 0;
-             left: 0;
-             right: 0;
-             z-index: 10;
-             color: #ffffff;
-             text-align: center;
-             padding: 4px 0 8px;
-             background: transparent;
-         }
+        #ui {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            color: #ffffff;
+            text-align: center;
+            padding: 4px 0 8px;
+            background: transparent;
+        }
 
-#ui .depth {
-              font-size: 26px;
-              opacity: 1;
-              margin-top: -2px;
-              color: #ffffff;
-              text-shadow:
-                  -1px -1px 0 #000,
-                  1px -1px 0 #000,
-                  -1px 1px 0 #000,
-                  1px 1px 0 #000;
-          }
+        .ui-action-btn {
+            font-family: 'Inter', Arial, sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.15s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-.score-display {
-              font-size: 30px;
-              font-weight: bold;
-              color: #ffee00;
-              margin-top: 18px;
-              text-shadow:
-                  -1px -1px 0 #000,
-                  1px -1px 0 #000,
-                  -1px 1px 0 #000,
-                  1px 1px 0 #000;
-          }
+        .ui-action-btn:hover {
+            transform: translateY(-1px);
+        }
 
-#ui .depth {
-              font-size: 26px;
-              opacity: 1;
-              margin-top: -2px;
-              color: #ffffff;
-              text-shadow:
-                  -1px -1px 0 #000,
-                  1px -1px 0 #000,
-                  -1px 1px 0 #000,
-                  1px 1px 0 #000;
-          }
+        .ui-action-btn:active {
+            transform: translateY(0);
+        }
 
-.score-display {
-              font-size: 30px;
-              font-weight: bold;
-              color: #ffee00;
-              margin-top: 18px;
-              text-shadow:
-                  -1px -1px 0 #000,
-                  1px -1px 0 #000,
-                  -1px 1px 0 #000,
-                  1px 1px 0 #000;
-          }
+        .ui-btn-report {
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.4);
+        }
 
-         canvas {
+        .ui-btn-report:hover {
+            background: rgba(255, 215, 0, 0.25);
+            border-color: #ffd700;
+        }
+
+        .ui-btn-reset {
+            background: rgba(255, 68, 68, 0.15);
+            color: #ff6666;
+            border: 1px solid rgba(255, 68, 68, 0.4);
+        }
+
+        .ui-btn-reset:hover {
+            background: rgba(255, 68, 68, 0.25);
+            border-color: #ff4444;
+        }
+
+        #ui .depth {
+            font-size: 26px;
+            opacity: 1;
+            margin-top: -2px;
+            color: #ffffff;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+        .score-display {
+            font-size: 30px;
+            font-weight: bold;
+            color: #ffee00;
+            margin-top: 18px;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+        #ui .depth {
+            font-size: 26px;
+            opacity: 1;
+            margin-top: -2px;
+            color: #ffffff;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+        .score-display {
+            font-size: 30px;
+            font-weight: bold;
+            color: #ffee00;
+            margin-top: 18px;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+        canvas {
             display: block;
             touch-action: manipulation;
             -webkit-user-select: none;
             user-select: none;
             -webkit-touch-callout: none;
-            /* escala para preencher a tela mantendo proporção 1080x1920 */
             max-width: 100vw;
             max-height: 100vh;
             width: auto;
@@ -104,7 +150,7 @@
             position: fixed;
             top: 4px;
             right: 6px;
-            z-index: 100;
+            z-index: 1000;
             background: transparent;
             padding: 0;
             border: none;
@@ -120,34 +166,34 @@
             pointer-events: auto;
         }
 
-         .status-dot {
-             width: 8px;
-             height: 8px;
-             border-radius: 50%;
-             background: #ff4444;
-         }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ff4444;
+        }
 
-         .status-dot.online {
-             background: #00ff88;
-         }
+        .status-dot.online {
+            background: #00ff88;
+        }
 
-         .status-dot.warning {
-             background: #ffaa00;
-         }
+        .status-dot.warning {
+            background: #ffaa00;
+        }
 
-         #fpsCounter {
-             position: fixed;
-             top: 4px;
-             left: 6px;
-             z-index: 100;
-             background: transparent;
-             padding: 0;
-             color: #ffffff;
-             font-family: 'Inter', Arial, sans-serif;
-             font-size: 10px;
-             font-weight: bold;
-             pointer-events: none;
-         }
+        #fpsCounter {
+            position: fixed;
+            top: 4px;
+            left: 6px;
+            z-index: 1000;
+            background: transparent;
+            padding: 0;
+            color: #ffffff;
+            font-family: 'Inter', Arial, sans-serif;
+            font-size: 10px;
+            font-weight: bold;
+            pointer-events: none;
+        }
 
         @keyframes statusPulse {
             0% {
@@ -163,23 +209,10 @@
             100% {
                 transform: scale(1);
                 opacity: 1;
+                }
             }
-        }
 
-        #announceOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 9999;
-            pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding-top: 35%;
-        }
+        
 
         .announce-card {
             pointer-events: none;
@@ -242,63 +275,81 @@
             text-shadow: 0 1px 3px #000;
         }
 
-        @keyframes announceIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.5);
-            }
+         #announceOverlay {
+             position: fixed;
+             top: 0;
+             left: 0;
+             right: 0;
+             bottom: 0;
+             pointer-events: none;
+             z-index: 1000;
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             justify-content: center;
+         }
 
-            60% {
-                opacity: 1;
-                transform: scale(1.08);
-            }
-
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
+        .announce-card {
+            pointer-events: auto;
         }
 
-        @keyframes announceOut {
-            0% {
-                opacity: 1;
-                transform: scale(1);
-            }
+         @keyframes announceIn {
+             0% {
+                 opacity: 0;
+                 transform: scaleY(0.5);
+             }
 
-            100% {
-                opacity: 0;
-                transform: scale(0.7) translateY(-20px);
-            }
-        }
+             60% {
+                 opacity: 1;
+                 transform: scaleY(1.08);
+             }
 
-        @keyframes comboPopIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.3) rotate(-10deg);
-            }
+             100% {
+                 opacity: 1;
+                 transform: scaleY(1);
+             }
+         }
 
-            50% {
-                opacity: 1;
-                transform: scale(1.3) rotate(3deg);
-            }
+         @keyframes announceOut {
+             0% {
+                 opacity: 1;
+                 transform: scaleY(1);
+             }
 
-            100% {
-                opacity: 1;
-                transform: scale(1) rotate(0deg);
-            }
-        }
+             100% {
+                 opacity: 0;
+                 transform: scaleY(0.7) translateY(-20px);
+             }
+         }
 
-        @keyframes comboPopOut {
-            0% {
-                opacity: 1;
-                transform: scale(1);
-            }
+         @keyframes comboPopIn {
+             0% {
+                 opacity: 0;
+                 transform: scaleY(0.3) rotate(-10deg);
+             }
 
-            100% {
-                opacity: 0;
-                transform: scale(1.8) translateY(-30px);
-            }
-        }
+             50% {
+                 opacity: 1;
+                 transform: scaleY(1.3) rotate(3deg);
+             }
+
+             100% {
+                 opacity: 1;
+                 transform: scaleY(1) rotate(0deg);
+             }
+         }
+
+         @keyframes comboPopOut {
+             0% {
+                 opacity: 1;
+                 transform: scaleY(1);
+             }
+
+             100% {
+                 opacity: 0;
+                 transform: scaleY(1.8) translateY(-30px);
+             }
+         }
 
         @keyframes comboShake {
 
@@ -595,12 +646,29 @@
               color: #cc88ff;
           }
 
-          .badge-pink {
-              background: transparent;
-              color: #ff88dd;
-          }
+           .badge-pink {
+               background: transparent;
+               color: #ff88dd;
+           }
 
-        .cmd-desc {
+        .cmd-section-header {
+            font-family: 'Inter', Arial, sans-serif;
+            font-size: 11px;
+            font-weight: 800;
+            color: #ff88dd;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 0;
+            margin-top: 4px;
+            border-top: 1px solid rgba(255,255,255,0.12);
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+         .cmd-desc {
             font-family: 'Inter', Arial, sans-serif;
             font-size: 11px;
             color: rgba(255, 255, 255, 0.45);
@@ -1178,10 +1246,74 @@
         #leaderboard {
             animation: panelSlideIn 0.4s ease-out both;
         }
+
+        /* Top Controls */
+        #topControls {
+            position: fixed;
+            top: 4px;
+            left: 70px;
+            z-index: 1002;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .ui-action-btn {
+            font-family: 'Inter', Arial, sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.15s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .ui-btn-report {
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.4);
+        }
+        .ui-btn-report:hover {
+            background: rgba(255, 215, 0, 0.25);
+            border-color: #ffd700;
+        }
+        .ui-btn-reset {
+            background: rgba(255, 68, 68, 0.15);
+            color: #ff6666;
+            border: 1px solid rgba(255, 68, 68, 0.4);
+        }
+        .ui-btn-reset:hover {
+            background: rgba(255, 68, 68, 0.25);
+            border-color: #ff4444;
+        }
+
+        .ui-btn-music {
+            background: rgba(0, 150, 255, 0.15);
+            color: #00ddff;
+            border: 1px solid rgba(0, 200, 255, 0.4);
+        }
+
+        .ui-btn-music:hover {
+            background: rgba(0, 150, 255, 0.25);
+            border-color: #00ddff;
+        }
+
     </style>
 </head>
 
 <body>
+    <div id="topControls">
+        <button class="ui-action-btn ui-btn-report" onclick="generateScoreReport()">📊 Relatório</button>
+        <button class="ui-action-btn ui-btn-reset" onclick="resetAllScores()">🔄 Zerar</button>
+        <button class="ui-action-btn ui-btn-music" id="btnMusic">🎵 Trilha</button>
+        <input type="file" id="bgmFileInput" accept="audio/*" style="display:none">
+    </div>
+
     <!-- Live Setup Modal -->
     <div id="apiSetupOverlay"
         style="display:flex; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.92); align-items:center; justify-content:center; font-family:Arial,sans-serif;">
@@ -1245,11 +1377,11 @@
                     <span class="cmd-badge badge-cyan">sr sl su sd</span>
                 </div>
                 <div class="cmd-row" onclick="ensureAudio();var m=pick.userName||'@Player';activateTNT(pick?pick.x:undefined,pick?pick.y:undefined,m)">
-                    <span class="cmd-icon">💥</span>
+                    <img src="block/tnt.png" style="width:16px;height:16px;vertical-align:middle;" />
                     <span class="cmd-badge badge-orange">tnt</span>
                 </div>
                 <div class="cmd-row" onclick="ensureAudio();var m=pick.userName||'@Player';activateMegaTNT(pick?pick.x:undefined,pick?pick.y:undefined,m)">
-                    <span class="cmd-icon">🔥</span>
+                    <img src="block/mega_tnt.png" style="width:22px;height:22px;vertical-align:middle;" />
                     <span class="cmd-badge badge-red">mega</span>
                 </div>
                 <div class="cmd-row" onclick="ensureAudio();var m=pick.userName||'@Player';activateThor(pick?pick.x:undefined,pick?pick.y:undefined,m)">
@@ -1257,7 +1389,7 @@
                     <span class="cmd-badge badge-cyan">thor</span>
                 </div>
                 <div class="cmd-row" onclick="ensureAudio();var m=pick.userName||'@Player';activateNuke(pick?pick.x:undefined,pick?pick.y:undefined,m)">
-                    <span class="cmd-icon">☢️</span>
+                    <span class="cmd-icon" style="font-size:18px;">☢️</span>
                     <span class="cmd-badge badge-red">nuke</span>
                 </div>
                 <div class="cmd-row" onclick="ensureAudio();activateStorm(pick)">
@@ -1272,22 +1404,30 @@
                     <span class="cmd-icon">🕳️</span>
                     <span class="cmd-badge badge-purple">bh</span>
                 </div>
-                <div class="cmd-row" onclick="ensureAudio();activateBig(pick.userName||'@Player')">
-                    <span class="cmd-icon">🔷</span>
-                    <span class="cmd-badge badge-cyan">big</span>
-                </div>
-                <div class="cmd-row" onclick="ensureAudio();var m=pick.userName||'@Player';for(var i=0;i<10;i++)activateTNT(pick?pick.x+Math.random()*40-20:0,pick?pick.y:0,m)">
-                    <span class="cmd-icon">🌹</span>
-                    <span class="cmd-badge" style="background:transparent;color:#ff6688;">rose 10💥</span>
-                </div>
-                <div class="cmd-row" onclick="ensureAudio();var m=pick.userName||'@Player';for(var i=0;i<20;i++)activateTNT(pick?pick.x+Math.random()*60-30:0,pick?pick.y:0,m)">
-                    <span class="cmd-icon">🎮</span>
-                    <span class="cmd-badge" style="background:transparent;color:#44ff44;">gg 20💥</span>
-                </div>
-                <div class="cmd-row" onclick="ensureAudio();var m=pick.userName||'@Player';for(var i=0;i<30;i++)activateTNT(pick?pick.x+Math.random()*80-40:0,pick?pick.y:0,m)">
-                    <span class="cmd-icon">💣</span>
-                    <span class="cmd-badge" style="background:transparent;color:#ff8844;">creeper 30💥</span>
-                </div>
+                 <div class="cmd-row" onclick="ensureAudio();activateBig(pick.userName||'@Player')">
+                     <span class="cmd-icon">🍄</span>
+                     <span class="cmd-badge badge-cyan">big</span>
+                 </div>
+
+                  <!-- Presentes do TikTok -->
+                  <div class="cmd-section-header"><img src="tiktok.png" style="width:32px;height:32px;vertical-align:middle;margin-right:6px;" /> PRESENT</div>
+
+                 <div class="cmd-row" onclick="ensureAudio();var m=pick.userName||'@Player';for(var i=0;i<10;i++)activateTNT(pick?pick.x+Math.random()*40-20:0,pick?pick.y:0,m)">
+                     <span class="cmd-icon">🌹</span>
+                     <span class="cmd-badge badge-pink">rose 10</span>
+                 </div>
+                 <div class="cmd-row" onclick="ensureAudio();var m=pick.userName||'@Player';for(var i=0;i<20;i++)activateTNT(pick?pick.x+Math.random()*60-30:0,pick?pick.y:0,m)">
+                     <span class="cmd-icon">🎮</span>
+                     <span class="cmd-badge badge-green">gg 20</span>
+                 </div>
+                 <div class="cmd-row" onclick="ensureAudio(); var m=pick?pick.userName:'@Player'; var cx=pick?pick.x:canvas.width/2; var cy=pick?pick.y:camY+100; for(var i=0;i<10;i++) activateCreeper(cx+Math.random()*60-30, cy, m); score+=50; spawnText(cx, cy-40, '+50 CREEPERS!', '#00ff00')">
+                     <img src="block/creeper.png" style="width:32px;height:32px;vertical-align:middle;margin-left:-6px;" />
+                     <span class="cmd-badge badge-green" style="margin-left:-6px;">creeper</span>
+                 </div>
+                 <div class="cmd-row" onclick="ensureAudio(); var m=pick?pick.userName:'@Player'; var av=pick?pick.userAvatarUrl:''; var lx=pick?pick.x:canvas.width/2; var ly=pick?pick.y:camY+canvas.height/2; for(var i=0;i<30;i++){activateHeartTNT(lx+(Math.random()-0.5)*TILE*4,ly,m,av)}; score+=3; spawnText(lx,ly-20,'❤️ 30 CORAÇÕES!','#ff6688')">
+                     <span class="cmd-icon">❤️</span>
+                     <span class="cmd-badge badge-pink">heart me</span>
+                 </div>
             </div>
         </div>
 
@@ -1306,11 +1446,10 @@
         </div>
     </div>
 
-    <div id="announceOverlay"></div>
-
-    <div id="gameWrapper" style="position:relative;display:inline-block;max-width:100vw;max-height:100vh;">
-        <canvas id="gameCanvas"></canvas>
-    </div>
+     <div id="gameWrapper" style="position:relative;display:inline-block;max-width:100vw;max-height:100vh;">
+         <div id="announceOverlay"></div>
+         <canvas id="gameCanvas"></canvas>
+     </div>
     <script>
         var canvas = document.getElementById('gameCanvas');
         var ctx = canvas.getContext('2d');
@@ -1332,25 +1471,25 @@
         var E = 0, DIRT = 1, STONE = 2, COAL = 3, IRON = 4, GOLD = 5, REDSTONE = 6, DIAMOND = 7, EMERALD = 8, BEDROCK = 9,
             GRASS = 10, ANDESITE = 11, DIORITE = 12, GRANITE = 13, COBBLE = 14, MOSSY = 15, COPPER = 16, LAPIS = 17, OBSIDIAN = 18, BONUS_BOX = 19;
         var BDEF = {
-            1: { color: '#c4a423', glow: '#c88451', hp: 1, pts: 5, name: 'Dirt', img: 'block/dirt.png' },
-            2: { color: '#4a5a6a', glow: '#90b0c0', hp: 3, pts: 10, name: 'Stone', img: 'block/stone.png' },
-            3: { color: '#2a2a2a', glow: '#888888', hp: 2, pts: 20, name: 'Coal', img: 'block/coal_ore.png' },
-            4: { color: '#7a6050', glow: '#ffcc80', hp: 3, pts: 35, name: 'Iron', img: 'block/iron_ore.png' },
-            5: { color: '#a07010', glow: '#ffe066', hp: 4, pts: 60, name: 'Gold', img: 'block/gold_ore.png' },
-            6: { color: '#8a0000', glow: '#ff4444', hp: 3, pts: 50, name: 'Redstone', img: 'block/redstone_ore.png' },
-            7: { color: '#007a9a', glow: '#88ffff', hp: 6, pts: 150, name: 'Diamond', img: 'block/diamond_ore.png' },
-            8: { color: '#006040', glow: '#88ffcc', hp: 5, pts: 200, name: 'Emerald', img: 'block/emerald_ore.png' },
-            9: { color: '#1a1a2a', glow: '#444466', hp: 999, pts: 0, name: 'Bedrock', img: 'block/bedrock.png' },
-            10: { color: '#5a8c32', glow: '#7acc44', hp: 1, pts: 3, name: 'Grass', img: 'block/grass_block.png' },
-            11: { color: '#6a6a6a', glow: '#a0a0a0', hp: 2, pts: 8, name: 'Andesite', img: 'block/andesite.png' },
-            12: { color: '#b0a8a0', glow: '#d0c8c0', hp: 2, pts: 8, name: 'Diorite', img: 'block/diorite.png' },
-            13: { color: '#9a6a4a', glow: '#c09070', hp: 2, pts: 8, name: 'Granite', img: 'block/granite.png' },
-            14: { color: '#5a5a5a', glow: '#909090', hp: 3, pts: 12, name: 'Cobblestone', img: 'block/cobblestone.png' },
-            15: { color: '#4a6a4a', glow: '#70a070', hp: 3, pts: 15, name: 'Mossy Cobblestone', img: 'block/mossy_cobblestone.png' },
-            16: { color: '#b06030', glow: '#e08850', hp: 3, pts: 30, name: 'Copper', img: 'block/copper_ore.png' },
-            17: { color: '#1a3a8a', glow: '#4488ff', hp: 3, pts: 45, name: 'Lapis Lazuli', img: 'block/lapis_ore.png' },
-            18: { color: '#0a0a14', glow: '#4a2a6a', hp: 8, pts: 100, name: 'Obsidian', img: 'block/obsidian.png' },
-            19: { color: '#ffdd44', glow: '#ffff88', hp: 4, pts: 50, name: 'Bonus Box', img: 'block/obsidian.png' }
+             1: { color: '#c4a423', glow: '#c88451', hp: 1, pts: 0.5, name: 'Dirt', img: 'block/dirt.png' },
+             2: { color: '#4a5a6a', glow: '#90b0c0', hp: 3, pts: 1, name: 'Stone', img: 'block/stone.png' },
+             3: { color: '#2a2a2a', glow: '#888888', hp: 2, pts: 2, name: 'Coal', img: 'block/coal_ore.png' },
+             4: { color: '#7a6050', glow: '#ffcc80', hp: 3, pts: 3.5, name: 'Iron', img: 'block/iron_ore.png' },
+             5: { color: '#a07010', glow: '#ffe066', hp: 4, pts: 6, name: 'Gold', img: 'block/gold_ore.png' },
+             6: { color: '#8a0000', glow: '#ff4444', hp: 3, pts: 5, name: 'Redstone', img: 'block/redstone_ore.png' },
+             7: { color: '#007a9a', glow: '#88ffff', hp: 6, pts: 15, name: 'Diamond', img: 'block/diamond_ore.png' },
+             8: { color: '#006040', glow: '#88ffcc', hp: 5, pts: 20, name: 'Emerald', img: 'block/emerald_ore.png' },
+             9: { color: '#1a1a2a', glow: '#444466', hp: 999, pts: 0, name: 'Bedrock', img: 'block/bedrock.png' },
+             10: { color: '#5a8c32', glow: '#7acc44', hp: 1, pts: 0.3, name: 'Grass', img: 'block/grass_block.png' },
+             11: { color: '#6a6a6a', glow: '#a0a0a0', hp: 2, pts: 0.8, name: 'Andesite', img: 'block/andesite.png' },
+             12: { color: '#b0a8a0', glow: '#d0c8c0', hp: 2, pts: 0.8, name: 'Diorite', img: 'block/diorite.png' },
+             13: { color: '#9a6a4a', glow: '#c09070', hp: 2, pts: 0.8, name: 'Granite', img: 'block/granite.png' },
+             14: { color: '#5a5a5a', glow: '#909090', hp: 3, pts: 1.2, name: 'Cobblestone', img: 'block/cobblestone.png' },
+             15: { color: '#4a6a4a', glow: '#70a070', hp: 3, pts: 1.5, name: 'Mossy Cobblestone', img: 'block/mossy_cobblestone.png' },
+             16: { color: '#b06030', glow: '#e08850', hp: 3, pts: 3, name: 'Copper', img: 'block/copper_ore.png' },
+             17: { color: '#1a3a8a', glow: '#4488ff', hp: 3, pts: 4.5, name: 'Lapis Lazuli', img: 'block/lapis_ore.png' },
+             18: { color: '#0a0a14', glow: '#4a2a6a', hp: 8, pts: 10, name: 'Obsidian', img: 'block/obsidian.png' },
+             19: { color: '#ffdd44', glow: '#ffff88', hp: 4, pts: 5, name: 'Bonus Box', img: 'block/obsidian.png' }
         };
 
         // ── Itens Colecionáveis ──
@@ -1366,6 +1505,7 @@
         };
         var ITEX = {};
         var BTEX = {};
+        var CREEPER_TEX = null;
 
         (function () {
             Object.keys(BDEF).forEach(function (k) {
@@ -1378,6 +1518,9 @@
                 img.src = ITEM_DEFS[k].img;
                 ITEX[k] = img;
             });
+            // Creeper explosivo
+            CREEPER_TEX = new Image();
+            CREEPER_TEX.src = 'block/creeper.png';
         })();
 
         // ── Destroy stages (0-9) ──
@@ -1401,10 +1544,12 @@
         })();
         var TNT_TEX = new Image(); TNT_TEX.src = 'block/tnt.png';
         var MEGA_TNT_TEX = new Image(); MEGA_TNT_TEX.src = 'block/mega_tnt.png';
+        var HEART_TNT_TEX = new Image(); HEART_TNT_TEX.src = 'block/heart_tnt.png';
 
-         var TNT_RADIUS = 3;
-         var MEGA_TNT_RADIUS = 6;
-         var HEART_TNT_RADIUS = 3; // igual à TNT normal
+          var TNT_RADIUS = 3;
+          var MEGA_TNT_RADIUS = 6;
+          var HEART_TNT_RADIUS = 3;
+          var CREEPER_RADIUS = 4;
 
         var BOUNCE = 0.82;
         var FRICTION = 0.995;
@@ -1621,7 +1766,7 @@
                     cell.t = E; cell.hp = 0; cell.cr = 0;
                 }
             }
-            if (pts > 0) {
+if (pts > 0) {
                 score += pts;
                 spawnText(b.x, b.y, '+' + pts, '#ffdd44');
                 if (b.userName) {
@@ -1629,6 +1774,10 @@
                     if (player) player.score = (player.score || 0) + pts;
                     if (!persistentScores[b.userName]) persistentScores[b.userName] = { score: 0, avatar: b.userAvatarUrl || '' };
                     persistentScores[b.userName].score += pts;
+                }
+                // Also add to owner score for daily total
+                if (ownerName && persistentScores[ownerName]) {
+                    persistentScores[ownerName].score += pts;
                 }
             }
              var debrisPerBlock = b.mega ? 2 : (b.heart ? 0 : 1);
@@ -1683,6 +1832,10 @@
                         score += zz.pts;
                         spawnText(zz.x, zz.y - ZOMBIE_SIZE * 0.6, '+' + zz.pts, '#ffdd44');
                         if (b.userName) addCycleScore(b.userName, zz.pts, 'kill');
+                        // Also add to owner score for daily total
+                        if (ownerName && persistentScores[ownerName]) {
+                            persistentScores[ownerName].score += zz.pts;
+                        }
                         sfxZombieDeath();
                     }
                 }
@@ -1708,6 +1861,10 @@
                             if (!persistentScores[b.userName]) persistentScores[b.userName] = { score: 0, avatar: '' };
                             persistentScores[b.userName].score += bb.pts;
                             addCycleScore(b.userName, bb.pts, 'kill');
+                        }
+                        // Also add to owner score for daily total
+                        if (ownerName && persistentScores[ownerName]) {
+                            persistentScores[ownerName].score += bb.pts;
                         }
                         spawnText(bb.x, bb.y - BAT_SIZE * 0.5, '+' + bb.pts, '#ffdd44');
                         sfxBatDeath();
@@ -1736,6 +1893,10 @@
                             persistentScores[b.userName].score += ss.pts;
                             addCycleScore(b.userName, ss.pts, 'kill');
                         }
+                        // Also add to owner score for daily total
+                        if (ownerName && persistentScores[ownerName]) {
+                            persistentScores[ownerName].score += ss.pts;
+                        }
                         sfxZombieDeath();
                     }
                 }
@@ -1743,6 +1904,238 @@
              shakeAmt = Math.max(shakeAmt, b.nuke ? 40 : (b.mega ? 22 : (b.heart ? 12 : 10)));
              if (b.nuke || b.mega) sfxMegaTNT(); else sfxTNT();
         }
+
+        function updateCreepers() {
+            var CREEPER_GRAVITY = 0.35;
+            var wallLeft = 1;
+            var wallRight = COLS * TILE - 1;
+            for (var i = creepers.length - 1; i >= 0; i--) {
+                var c = creepers[i];
+                var hs = TILE; // half-size para creeper de 2xTILE
+                c.vy += CREEPER_GRAVITY;
+                // Creeper floats in water (como TNT)
+                if (isInWater(c.x, c.y)) {
+                    c.vx *= 0.9;
+                    c.vy *= 0.8;
+                    c.vy -= CREEPER_GRAVITY * 1.2;
+                    c.spin = (c.spin || 0) * 0.95;
+                }
+                c.ang = (c.ang || 0) + (c.spin || 0);
+
+                // sanitizar NaN/Infinity
+                if (!isFinite(c.vx)) c.vx = 0;
+                if (!isFinite(c.vy)) c.vy = 0;
+                if (!isFinite(c.x) || !isFinite(c.y)) { creepers.splice(i, 1); continue; }
+
+                var maxSpd = TILE * 0.9;
+                var spd = Math.sqrt(c.vx * c.vx + c.vy * c.vy);
+                if (spd > maxSpd) { c.vx = c.vx / spd * maxSpd; c.vy = c.vy / spd * maxSpd; }
+
+                // clamp paredes laterais (bedrock)
+                if (c.x - hs < wallLeft) { c.x = wallLeft + hs; c.vx = Math.abs(c.vx) * BOUNCE; }
+                if (c.x + hs > wallRight) { c.x = wallRight - hs; c.vx = -Math.abs(c.vx) * BOUNCE; }
+
+                // topo
+                if (c.y - hs < 0) { c.y = hs; c.vy = Math.abs(c.vy) * BOUNCE; }
+
+                // depenetração — se o creeper está dentro de um bloco sólido, empurrar para fora
+                var centerCol = Math.floor(c.x / TILE);
+                var centerRow = Math.floor(c.y / TILE);
+                var depR0 = Math.floor((c.y - hs) / TILE);
+                var depR1 = Math.floor((c.y + hs) / TILE);
+                var depC0 = Math.floor((c.x - hs) / TILE);
+                var depC1 = Math.floor((c.x + hs) / TILE);
+                for (var dr = depR0; dr <= depR1; dr++) {
+                    for (var dc = depC0; dc <= depC1; dc++) {
+                        var depCell = getCell(dr, dc);
+                        if (!depCell || depCell.t === E) continue;
+                        // calcular overlap AABB
+                        var bl = c.x - hs, br2 = c.x + hs, bt = c.y - hs, bb = c.y + hs;
+                        var tl = dc * TILE, tr = tl + TILE, tt = dr * TILE, tb = tt + TILE;
+                        var ox = Math.min(br2, tr) - Math.max(bl, tl);
+                        var oy = Math.min(bb, tb) - Math.max(bt, tt);
+                        if (ox > 0 && oy > 0) {
+                            // empurrar pelo eixo de menor penetração
+                            if (ox < oy) {
+                                if (c.x < tl + TILE * 0.5) { c.x -= ox + 1; c.vx = -Math.abs(c.vx) * 0.3; }
+                                else { c.x += ox + 1; c.vx = Math.abs(c.vx) * 0.3; }
+                            } else {
+                                if (c.y < tt + TILE * 0.5) { c.y -= oy + 1; c.vy = -Math.abs(c.vy) * 0.3; }
+                                else { c.y += oy + 1; c.vy = Math.abs(c.vy) * 0.3; }
+                            }
+                        }
+                    }
+                }
+
+                // swept collision — até 3 bounces por frame
+                var remainVx = c.vx, remainVy = c.vy;
+                for (var iter = 0; iter < 3; iter++) {
+                    if (remainVx === 0 && remainVy === 0) break;
+
+                    //    candidatos ao redor do creeper
+                    var r0 = Math.floor((c.y - hs) / TILE) - 1;
+                    var r1 = Math.floor((c.y + hs) / TILE) + 1;
+                    var c0 = Math.floor((c.x - hs) / TILE) - 1;
+                    var c1 = Math.floor((c.x + hs) / TILE) + 1;
+
+                    var earliest = null;
+                    for (var r = r0; r <= r1; r++) {
+                        for (var cc = c0; cc <= c1; cc++) {
+                            var cell = getCell(r, cc);
+                            if (!cell || cell.t === E) continue;
+                            var hit = sweptAABB(c.x, c.y, remainVx, remainVy, hs, cc, r);
+                            if (hit && (!earliest || hit.t < earliest.t)) {
+                                earliest = hit;
+                            }
+                        }
+                    }
+                    if (!earliest) break;
+
+                    // mover até ponto de colisão
+                    c.x += remainVx * earliest.t;
+                    c.y += remainVy * earliest.t;
+
+                    // responder colisão
+                    if (earliest.nx) {
+                        c.vx = -c.vx * BOUNCE;
+                        remainVx = -remainVx * BOUNCE;
+                        c.x += earliest.nx * 0.1;
+                    }
+                    if (earliest.ny) {
+                        c.vy = -c.vy * BOUNCE;
+                        remainVy = -remainVy * BOUNCE;
+                        c.y += earliest.ny * 0.1;
+                    }
+                }
+                c.vx = remainVx;
+                c.vy = remainVy;
+                c.x += c.vx;
+                c.y += c.vy;
+
+                c.fuse--;
+                if (c.fuse <= 0 && !c.exploded) {
+                    detonateCreeper(c);
+                    creepers.splice(i, 1);
+                    continue;
+                }
+            }
+        }
+
+        function detonateCreeper(c) {
+            if (c.exploded) return;
+            c.exploded = true;
+            var radius = CREEPER_RADIUS;
+            var cx = Math.floor(c.x / TILE);
+            var cy = Math.floor(c.y / TILE);
+            var pts = 0;
+            var destroyedBlocks = [];
+            for (var r = cy - radius; r <= cy + radius; r++) {
+                for (var cc = cx - radius; cc <= cx + radius; cc++) {
+                    var dist = Math.sqrt((cc - cx)*(cc - cx) + (r - cy)*(r - cy));
+                    if (dist > radius) continue;
+                    var cell = getCell(r, cc);
+                    if (!cell || cell.t === E || cell.t === BEDROCK) continue;
+                    var bPts = BDEF[cell.t].pts || 0;
+                    pts += bPts;
+                    destroyedBlocks.push({ t: cell.t, wx: cc*TILE + TILE/2, wy: r*TILE + TILE/2 });
+                    cell.t = E; cell.hp = 0; cell.cr = 0;
+                }
+            }
+            if (pts > 0) {
+                score += pts;
+                spawnText(c.x, c.y, '+' + pts, '#00ff00');
+                if (c.userName) {
+                    var player = userPicks.find(function(u) { return u.userName === c.userName; });
+                    if (player) player.score = (player.score || 0) + pts;
+                    if (!persistentScores[c.userName]) persistentScores[c.userName] = { score: 0, avatar: c.userAvatarUrl || '' };
+                    persistentScores[c.userName].score += pts;
+                }
+                if (ownerName && persistentScores[ownerName]) {
+                    persistentScores[ownerName].score += pts;
+                }
+            }
+            var debrisPerBlock = 1;
+            var maxDebris = 20;
+            var spawned = 0;
+            for (var bi = 0; bi < destroyedBlocks.length && spawned < maxDebris; bi++) {
+                var blk = destroyedBlocks[bi];
+                debris.push({
+                    x: blk.wx, y: blk.wy,
+                    vx: (Math.random()-0.5)*4, vy: -Math.random()*4,
+                    t: blk.t, size: 8 + Math.random()*6,
+                    life: 1, age: 0, followFrames: 0,
+                    ang: Math.random()*Math.PI*2, spin: (Math.random()-0.5)*0.3
+                });
+                spawned++;
+            }
+            explosions.push({ x: c.x, y: c.y, frame: 0, timer: 0, mega: false, nuke: false });
+            // Danificar mobs próximos
+            var blastR = radius * TILE;
+            for (var zi = zombies.length-1; zi >= 0; zi--) {
+                var zz = zombies[zi];
+                if (zz.state === 'dead') continue;
+                var zdx = zz.x - c.x, zdy = zz.y - c.y;
+                var zd = Math.sqrt(zdx*zdx + zdy*zdy);
+                if (zd < blastR) {
+                    zz.hp -= 3;
+                    zz.hurtTimer = 10;
+                    zz.animTimer = 0;
+                    spawnText(zz.x, zz.y - 40, '-3', '#00ff00');
+                    if (zz.hp <= 0) {
+                        zz.state = 'dead'; zz.animTimer = 0; zz.deadTimer = 0;
+                        score += zz.pts;
+                        spawnText(zz.x, zz.y - 60, '+' + zz.pts, '#ffdd44');
+                        if (c.userName) addCycleScore(c.userName, zz.pts, 'kill');
+                        if (ownerName && persistentScores[ownerName]) persistentScores[ownerName].score += zz.pts;
+                    }
+                }
+            }
+            for (var bi = bats.length-1; bi >= 0; bi--) {
+                var bb = bats[bi];
+                if (bb.state === 'dead') continue;
+                var bdx = bb.x - c.x, bdy = bb.y - c.y;
+                var bd = Math.sqrt(bdx*bdx + bdy*bdy);
+                if (bd < blastR) {
+                    bb.hp -= 2;
+                    bb.hurtTimer = 8;
+                    bb.anim = 0;
+                    spawnText(bb.x, bb.y - 30, '-2', '#00ff00');
+                    if (bb.hp <= 0) {
+                        bb.state = 'dead'; bb.anim = 0; bb.deadTimer = 0;
+                        score += bb.pts;
+                        if (c.userName) {
+                            if (!persistentScores[c.userName]) persistentScores[c.userName] = { score: 0, avatar: '' };
+                            persistentScores[c.userName].score += bb.pts;
+                            addCycleScore(c.userName, bb.pts, 'kill');
+                        }
+                        if (ownerName && persistentScores[ownerName]) persistentScores[ownerName].score += bb.pts;
+                    }
+                }
+            }
+            for (var si = spiders.length-1; si >= 0; si--) {
+                var ss = spiders[si];
+                if (ss.state === 'dead') continue;
+                var sdx = ss.x - c.x, sdy = ss.y - c.y;
+                var sd = Math.sqrt(sdx*sdx + sdy*sdy);
+                if (sd < blastR) {
+                    ss.hp -= 2;
+                    ss.state = 'hurt'; ss.hurtTimer = 10; ss.animTimer = 0;
+                    if (ss.hp <= 0) {
+                        ss.state = 'dead'; ss.animTimer = 0; ss.deadTimer = 0;
+                        score += ss.pts;
+                        if (c.userName) {
+                            if (!persistentScores[c.userName]) persistentScores[c.userName] = { score: 0, avatar: '' };
+                            persistentScores[c.userName].score += ss.pts;
+                            addCycleScore(c.userName, ss.pts, 'kill');
+                        }
+                        if (ownerName && persistentScores[ownerName]) persistentScores[ownerName].score += ss.pts;
+                    }
+                }
+            }
+            shakeAmt = Math.max(shakeAmt, 8);
+            if (_audioStarted) sfxTNT();
+        }
+
 
         // encontra posição Y segura (espaço vazio) para spawnar TNT
         function findSafeTNTSpawn(bx, sy, hs) {
@@ -1770,7 +2163,7 @@
         var _tntSpawnCount = 0; // sequential counter for staggered fuses
 
         function activateTNT(tx, ty, userName, avatarUrl) {
-            if (tntBlocks.length > 20) return;
+            if (tntBlocks.length > 50) return;
             var sx = tx !== undefined ? tx : pick.x;
             var sy = ty !== undefined ? ty : pick.y;
             var bx = sx + (Math.random() - 0.5) * TILE * 2;
@@ -1793,7 +2186,7 @@
         }
 
          function activateMegaTNT(tx, ty, userName, avatarUrl) {
-             if (tntBlocks.length > 20) return;
+             if (tntBlocks.length > 50) return;
              var sx = tx !== undefined ? tx : pick.x;
              var sy = ty !== undefined ? ty : pick.y;
              var bx = sx + (Math.random() - 0.5) * TILE * 2;
@@ -1815,30 +2208,51 @@
              tntBlocks.push(b);
          }
 
-         function activateHeartTNT(tx, ty, userName, avatarUrl) {
-             if (tntBlocks.length > 20) return;
-             var sx = tx !== undefined ? tx : pick.x;
-             var sy = ty !== undefined ? ty : pick.y;
-             var bx = sx; // sem spread horizontal para ser mais leve
-             var hs = TILE * 0.5;
-             bx = Math.max(hs + 2, Math.min(COLS * TILE - hs - 2, bx));
-             var by = findSafeTNTSpawn(bx, sy, hs);
-             _tntSpawnCount++;
-             var b = {
-                 x: bx,
-                 y: by,
-                 vx: 0, // sem velocidade horizontal
-                 vy: -2 - Math.random() * 2, // velocidade vertical menor
-                 ang: 0,
-                 spin: 0,
-                 blinkTimer: -(_tntSpawnCount % 8) * 15 - Math.floor(Math.random() * 10),
-                 fuse: 100,
-                 heart: true,
-                 userName: userName,
-                 userAvatarUrl: avatarUrl
-             };
-             tntBlocks.push(b);
-         }
+          function activateHeartTNT(tx, ty, userName, avatarUrl) {
+              if (tntBlocks.length > 50) return;
+              var sx = tx !== undefined ? tx : pick.x;
+              var sy = ty !== undefined ? ty : pick.y;
+              var bx = sx; // sem spread horizontal para ser mais leve
+              var hs = TILE * 0.5;
+              bx = Math.max(hs + 2, Math.min(COLS * TILE - hs - 2, bx));
+              var by = findSafeTNTSpawn(bx, sy, hs);
+              _tntSpawnCount++;
+              var b = {
+                  x: bx,
+                  y: by,
+                  vx: 0, // sem velocidade horizontal
+                  vy: -2 - Math.random() * 2, // velocidade vertical menor
+                  ang: 0,
+                  spin: 0,
+                  blinkTimer: -(_tntSpawnCount % 8) * 15 - Math.floor(Math.random() * 10),
+                  fuse: 100,
+                  heart: true,
+                  userName: userName,
+                  userAvatarUrl: avatarUrl
+              };
+              tntBlocks.push(b);
+          }
+
+           function activateCreeper(tx, ty, userName) {
+               if (creepers.length > 20) return;
+               var sx = tx !== undefined ? tx : pick.x;
+               var sy = ty !== undefined ? ty : pick.y;
+               var bx = sx + (Math.random() - 0.5) * TILE * 3; // spread de 3 tiles
+               var hs = TILE; // half-size do creeper (2xTILE)
+               bx = Math.max(hs + 2, Math.min(COLS * TILE - hs - 2, bx));
+               var by = findSafeTNTSpawn ? findSafeTNTSpawn(bx, sy, hs) : sy - TILE * 2;
+                creepers.push({
+                    x: bx,
+                    y: by,
+                    vx: (Math.random() - 0.5) * 6,
+                    vy: -3 - Math.random() * 3,
+                    ang: 0,
+                    spin: (Math.random() - 0.5) * 0.1,
+                    fuse: 120 + Math.random() * 60, // variação: entre 2s e 3s (120-180 frames)
+                    exploded: false,
+                    userName: userName
+                });
+           }
 
         function safeUpdate(id, text, color) {
             var el = document.getElementById(id);
@@ -2460,11 +2874,12 @@
         function tipPos() { var pts = collPoints(); return pts[0]; }
         function tailPos() { var pts = collPoints(); return pts[4]; }
 
-         // ── Estado ───────────────────────────────────────────────────────────────────
-         var maxDepth = 0;
-         var parts = [], texts = [], debris = [];
-         var announcements = [];
-         var persistentScores = {};
+          // ── Estado ───────────────────────────────────────────────────────────────────
+          var maxDepth = 0;
+          var parts = [], texts = [], debris = [];
+          var announcements = [];
+          var persistentScores = {};
+          var creepers = []; // array de creepers explosivos
 
          // ── Cycle Scoring (every 200m) ──
          var _cycleScores = {}; // { userName: { score, kills, items, balls, likes } } — per cycle
@@ -2516,6 +2931,7 @@
                     }
                 }
                 var av = cs.avatar || (persistentScores[n] ? persistentScores[n].avatar : '');
+                if (av) loadAvatar(av);
                 var giftsTotal = (persistentScores[n] && persistentScores[n].giftsValue !== undefined) ? persistentScores[n].giftsValue : 0;
                 return { name: n, score: cs.score || 0, kills: cs.kills || 0, items: cs.items || 0, balls: cs.balls || 0, likes: cs.likes || 0, giftsValue: giftsTotal, userAvatarUrl: av, pickaxe: pTier };
             }).sort(function(a, b) { return b.score - a.score; }).slice(0, 3);
@@ -2654,9 +3070,9 @@
                 ctx.arc(avX, avY, avSize / 2, 0, Math.PI * 2);
                 ctx.closePath();
                 ctx.clip();
-                var avUrl = p.avatar;
+                var avUrl = p.userAvatarUrl || p.avatar;
                 var avImg = avUrl ? avatarCache[avUrl] : null;
-                if (avImg && avImg.complete && avImg.naturalWidth > 0) {
+                if (avImg && avImg.src && avImg.complete && avImg.naturalWidth > 0) {
                     ctx.drawImage(avImg, avX - avSize / 2, avY - avSize / 2, avSize, avSize);
                 } else {
                     ctx.fillStyle = medalColors[i];
@@ -2779,12 +3195,12 @@
         var activeSpins = [];       // { pick, dir, phase, timer, origSpin }
 
         // ── New Combat Skills State ──
-        var thorCooldown = 900;     // 15 seconds at 60fps
-        var nukeCooldown = 3600;    // 60 seconds at 60fps
-        var cloneCooldown = 900;    // 15 seconds at 60fps
+        var thorCooldown = 600;     // 10 seconds at 60fps
+        var nukeCooldown = 600;      // 10 seconds at 60fps
+        var cloneCooldown = 600;    // 10 seconds at 60fps
         var stormCooldown = 900;    // 15 seconds at 60fps
-        var blackholeCooldown = 1800; // 30 seconds at 60fps
-        var bigCooldown = 1800;     // 30 seconds at 60fps
+        var blackholeCooldown = 600; // 10 seconds at 60fps
+        var bigCooldown = 600;     // 10 seconds at 60fps
         var BIG_DURATION = 900;     // 15 seconds at 60fps
         var BIG_SCALE = 2.5;
         var BLACKHOLE_RADIUS = 400;   // suction radius in pixels
@@ -2803,7 +3219,8 @@
         var score = 0;
         var items = [];
         var explosions = [];
-        var tntBlocks = [];
+          var tntBlocks = [];
+          var creepers = []; // array de creepers explosivos
 
         // ── Mineral piles in mini-clearings ──
         var MINERAL_PILE_DEFS = [
@@ -2821,6 +3238,18 @@
         var shakeDec = 0.88;
 
         function restart() {
+            // Preserve player score from persistentScores before reset
+            var playerKey = ownerName || (pick ? pick.userName : null);
+            // If still no key, try to get from localStorage
+            if (!playerKey) {
+                var savedTT = localStorage.getItem('pd_tiktok_username');
+                if (savedTT) playerKey = '@' + savedTT.toLowerCase();
+            }
+            var preservedScore = 0;
+            if (playerKey && persistentScores[playerKey]) {
+                preservedScore = persistentScores[playerKey].score || 0;
+            }
+            
             score = 0; maxDepth = 0; parts = []; texts = []; debris = []; announcements = [];
             var ov = document.getElementById('announceOverlay'); if (ov) ov.innerHTML = '';
             worldMap = {}; explosions = []; tntBlocks = []; items = []; zombies = []; bats = []; spiders = []; spiderWebs = []; fallingBlocks = []; bonusBalls = []; collectBoxes = []; clearedZones = {}; clearingShapes = {}; crystalDecoList = []; torchList = []; clearingCrystals = {}; megaClearedZones = {};
@@ -2833,7 +3262,9 @@
             activeSpins = []; spinCooldowns = {}; spinQueues = {};
             bgChunks = {}; bgTick = 0;
             document.getElementById('depthDisplay').textContent = 'Depth: 0m';
-            document.getElementById('scoreDisplay').textContent = '⛏ 0';
+            // Show preserved score from persistentScores (daily total)
+            var displayScore = preservedScore;
+            document.getElementById('scoreDisplay').textContent = '⛏ ' + displayScore;
             ensureRows(0, VIS + 4);
             spawnPick();
             // Preserve owner on main pick after restart
@@ -2887,7 +3318,7 @@
             if (!p) return;
             skillCooldowns[cdKey] = bigCooldown;
             p.bigTimer = BIG_DURATION;
-            spawnText(p.x, p.y - 40, '🔷 BIG MODE!', '#44aaff');
+            spawnText(p.x, p.y - 40, '🍄 BIG MODE!', '#44aaff');
             if (_audioStarted) sfxSkillActivate();
         }
 
@@ -3150,6 +3581,10 @@
                         persistentScores[tName].score += pts;
                         if (target !== pick) target.score = (target.score || 0) + pts;
                         addCycleScore(tName, pts, 'item');
+                    }
+                    // Also add to owner score for daily total
+                    if (ownerName && persistentScores[ownerName]) {
+                        persistentScores[ownerName].score += pts;
                     }
                     if (_audioStarted) sfxSkillActivate();
                     items.splice(i, 1); continue;
@@ -3784,7 +4219,7 @@ for (var sw = 0; sw < 6; sw++) {
         var bonusBalls = [];
         var collectBoxes = [];
         var BONUS_BALL_COLORS = ['#ff4466','#44bbff','#66ff66','#ffaa22','#dd44ff','#ffff44','#44ffdd','#ff88cc'];
-        var BONUS_BALL_PTS = 500;
+        var BONUS_BALL_PTS = 50;
         var BONUS_BALLS_PER_BOX = 8;
         var COLLECT_BOX_WIDTH = 4; // in tiles
 
@@ -3915,6 +4350,10 @@ for (var sw = 0; sw < 6; sw++) {
                             persistentScores[owner.userName].score += BONUS_BALL_PTS;
                             persistentScores[owner.userName].balls = (persistentScores[owner.userName].balls || 0) + 1;
                             addCycleScore(owner.userName, BONUS_BALL_PTS, 'ball');
+                        }
+                        // Also add to owner score for daily total
+                        if (ownerName && persistentScores[ownerName]) {
+                            persistentScores[ownerName].score += BONUS_BALL_PTS;
                         }
                         spawnText(ball.x, ball.y - 10, '+' + BONUS_BALL_PTS, '#ffdd44');
                         spawnText(boxX + boxW / 2, boxY - 16, '→ ' + (ball.ownerName || '?'), ball.color);
@@ -4065,7 +4504,14 @@ for (var sw = 0; sw < 6; sw++) {
                     triggerCycleEnd(newCycle);
                 }
             }
-            document.getElementById('scoreDisplay').textContent = '⛏ ' + score;
+            // Show score from persistentScores if owner (daily total), otherwise current score
+            var displayOwner = ownerName;
+            if (!displayOwner) {
+                var savedTT = localStorage.getItem('pd_tiktok_username');
+                if (savedTT) displayOwner = '@' + savedTT.toLowerCase();
+            }
+            var displayScore = (displayOwner && persistentScores[displayOwner]) ? persistentScores[displayOwner].score : score;
+            document.getElementById('scoreDisplay').textContent = '⛏ ' + displayScore;
 
             // ── Democratic Camera: follow the deepest player for 5+ seconds ──
             var allCamPicks = [pick].concat(userPicks).filter(function(p) { return p && !p.stuck; });
@@ -4118,6 +4564,7 @@ for (var sw = 0; sw < 6; sw++) {
             updateUserPicks();
             updateExtraPicks();
             updateTNTBlocks();
+            updateCreepers();
             updateFallingBlocks();
             updateBonusBalls();
             updateItems();
@@ -4900,9 +5347,10 @@ for (var sw = 0; sw < 6; sw++) {
                 { id: '_thor', color: '#00ffff', label: '⚡', maxKey: 'thor' },
                 { id: '_clone', color: '#44ffaa', label: '👥', maxKey: 'clone' },
                 { id: '_storm', color: '#ff88ff', label: '🏓', maxKey: 'storm' },
-                { id: '_blackhole', color: '#8800ff', label: '🕳️', maxKey: 'blackhole' }
+                { id: '_blackhole', color: '#8800ff', label: '🕳️', maxKey: 'blackhole' },
+                { id: '_big', color: '#44aaff', label: '🍄', maxKey: 'big' }
             ];
-            var maxMap = { nuke: nukeCooldown, thor: thorCooldown, clone: cloneCooldown, storm: stormCooldown, blackhole: blackholeCooldown };
+            var maxMap = { nuke: nukeCooldown, thor: thorCooldown, clone: cloneCooldown, storm: stormCooldown, blackhole: blackholeCooldown, big: bigCooldown };
 
             context.save();
             var anyActive = false;
@@ -5274,10 +5722,10 @@ for (var sw = 0; sw < 6; sw++) {
                  } else if (b.mega) {
                      drawSize = TILE * 1.8;
                      tntTexture = MEGA_TNT_TEX;
-                 } else if (b.heart) {
-                     drawSize = TILE * 0.9;
-                     tntTexture = null;
-                 } else {
+} else if (b.heart) {
+                      drawSize = TILE * 0.9;
+                      tntTexture = HEART_TNT_TEX;
+                  } else {
                      drawSize = TILE;
                      tntTexture = TNT_TEX;
                  }
@@ -5308,14 +5756,19 @@ for (var sw = 0; sw < 6; sw++) {
                          ctx.fillStyle = '#880088';
                          ctx.fillRect(-drawSize / 2, -drawSize / 2, drawSize, drawSize);
                      }
-                 } else if (b.heart) {
-                     ctx.fillStyle = '#ff0000';
-                     var fontSize = drawSize * 1.6;
-                     ctx.font = 'bold ' + fontSize + 'px Arial';
-                     ctx.textAlign = 'center';
-                     ctx.textBaseline = 'middle';
-                     ctx.fillText('♥', 0, 0);
-                 } else {
+} else if (b.heart) {
+                      if (SHADOW_ENABLED) { ctx.shadowBlur = 10 + glow * 40; ctx.shadowColor = 'rgba(255,0,80,1)'; }
+                      if (tntTexture && tntTexture.complete && tntTexture.naturalWidth > 0) {
+                          ctx.drawImage(tntTexture, -drawSize / 2, -drawSize / 2, drawSize, drawSize);
+                      } else {
+                          ctx.fillStyle = '#ff0000';
+                          var fontSize = drawSize * 1.6;
+                          ctx.font = 'bold ' + fontSize + 'px Arial';
+                          ctx.textAlign = 'center';
+                          ctx.textBaseline = 'middle';
+                          ctx.fillText('♥', 0, 0);
+                      }
+                  } else {
                      if (SHADOW_ENABLED) { ctx.shadowBlur = 10 + glow * 40; ctx.shadowColor = 'rgba(255,' + Math.floor(80 + glow * 100) + ',0,1)'; }
                      if (tntTexture && tntTexture.complete && tntTexture.naturalWidth > 0) {
                          ctx.drawImage(tntTexture, -drawSize / 2, -drawSize / 2, drawSize, drawSize);
@@ -5346,6 +5799,23 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
                       if (SHADOW_ENABLED) { ctx.shadowBlur = 4; ctx.shadowColor = '#000'; }
                       ctx.fillText(b.userName, b.x + 5, avY);
                      ctx.restore();
+                  }
+               }
+
+              // creepers caindo (desenho)
+              for (var i = 0; i < creepers.length; i++) {
+                  var c = creepers[i];
+                  if (c.y < viewTop - TILE*2 || c.y > viewBot + TILE*2) continue;
+                  var size = TILE * 2; // dobro do tamanho
+                  if (CREEPER_TEX && CREEPER_TEX.complete && CREEPER_TEX.naturalWidth > 0) {
+                      ctx.save();
+                      ctx.translate(c.x, c.y);
+                      ctx.rotate(c.ang || 0);
+                      ctx.drawImage(CREEPER_TEX, -size/2, -size/2, size, size);
+                      ctx.restore();
+                  } else {
+                      ctx.fillStyle = '#00ff00';
+                      ctx.fillRect(c.x - size/2, c.y - size/2, size, size);
                   }
               }
 
@@ -5687,7 +6157,6 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
 
             // Cycle scoring overlay (screen space)
             drawCycleOverlay();
-            _drawBigPopup();
 
         }
 
@@ -5768,24 +6237,24 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
             jump:   { folder: 'Jump_Simple',  count: 24, speed: 0.15 }
         };
 
-        // Baby spiders use 256x144, mothers use 384x216
-        var spiderSprites = { baby: {}, mother: {} };
-        (function() {
-            ['baby', 'mother'].forEach(function(size) {
-                var res = size === 'baby' ? 'Frames_256x144' : 'Frames_384x216';
-                Object.keys(SPIDER_ANIMS).forEach(function(anim) {
-                    var a = SPIDER_ANIMS[anim];
-                    spiderSprites[size][anim] = [];
-                    for (var i = 1; i <= a.count; i++) {
-                        var img = new Image();
-                        var frame = String(i);
-                        while (frame.length < 4) frame = '0' + frame;
-                        img.src = 'Spider/' + res + '/' + a.folder + '/Body/' + a.folder + '_' + frame + '.png';
-                        spiderSprites[size][anim].push(img);
-                    }
-                });
-            });
-        })();
+        // Spider sprites disabled - using canvas drawing instead
+        // var spiderSprites = { baby: {}, mother: {} };
+        // (function() {
+        //     ['baby', 'mother'].forEach(function(size) {
+        //         var res = size === 'baby' ? 'Frames_256x144' : 'Frames_384x216';
+        //         Object.keys(SPIDER_ANIMS).forEach(function(anim) {
+        //             var a = SPIDER_ANIMS[anim];
+        //             spiderSprites[size][anim] = [];
+        //             for (var i = 1; i <= a.count; i++) {
+        //                 var img = new Image();
+        //                 var frame = String(i);
+        //                 while (frame.length < 4) frame = '0' + frame;
+        //                 img.src = 'Spider/' + res + '/' + a.folder + '/Body/' + a.folder + '_' + frame + '.png';
+        //                 spiderSprites[size][anim].push(img);
+        //             }
+        //         });
+        //     });
+        // })();
 
         function spawnSpider(wx, wy, isMother) {
             if (spiders.length >= MAX_SPIDERS) return;
@@ -6186,7 +6655,7 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
                 targetX: wx, targetY: wy,
                 homeX: wx, homeY: wy,
                 retargetTimer: 0,
-                pts: 500 + zone * 50
+                 pts: 50 + zone * 5
             });
         }
 
@@ -6637,7 +7106,7 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
                 sleepTimer: 0,
                 sleepZzz: 0,
                 returnToSleep: false,
-                pts: 50 + depth * 3
+                 pts: 5 + depth * 0.3
             });
         }
 
@@ -7565,6 +8034,13 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
         var musicTimeout = null;
         var musicMode = 'normal'; // normal, mega, boss
 
+        // ── BGM personalizado (upload) ──────────────────────────────────
+        var customBGM = null;           // Audio element
+        var customBGMSource = null;     // MediaElementSourceNode
+        var customBGMGain = null;       // GainNode para volume
+        var customBGMPlaying = false;
+        var customBGMInitialized = false;
+
         // C Major pentatonic — happy and bright
         var ROOT = 130.81; // C3
         var SCALE = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24]; // major pentatonic
@@ -7650,6 +8126,11 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
 
         function scheduleMusicBeat() {
             if (!musicPlaying) return;
+            // Se trilha personalizada estiver ativa, não tocar BGM procedural
+            if (customBGMPlaying) {
+                musicTimeout = setTimeout(scheduleMusicBeat, BEAT * 1000);
+                return;
+            }
             var ac = getAC();
             var t = ac.currentTime;
             musicMode = getMusicMode();
@@ -7736,13 +8217,80 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
             if (musicTimeout) clearTimeout(musicTimeout);
         }
 
+        // ── BGM personalizado por upload ───────────────────────────────────────────
+        function initCustomBGM() {
+            if (customBGMInitialized) return;
+            customBGMInitialized = true;
+            customBGM = new Audio();
+            customBGM.loop = true;
+            customBGM.crossOrigin = 'anonymous';
+            // conectar ao AudioContext do jogo
+            var ac = getAC();
+            customBGMSource = ac.createMediaElementSource(customBGM);
+            customBGMGain = ac.createGain();
+            customBGMGain.gain.value = 0.3; // volume da trilha (30% para não sobrepor SFX)
+            customBGMSource.connect(customBGMGain);
+            customBGMGain.connect(ac.destination);
+        }
+
+        function handleBGMUpload(input) {
+            var file = input.files && input.files[0];
+            if (!file) return;
+
+            // Parar BGM procedural se estiver rodando
+            if (musicPlaying) stopMusic();
+
+            initCustomBGM();
+            var url = URL.createObjectURL(file);
+            // Revogar URL anterior se existir
+            if (customBGM.src && customBGM.src.startsWith('blob:')) {
+                URL.revokeObjectURL(customBGM.src);
+            }
+            customBGM.src = url;
+            customBGM.load();
+            customBGM.play().then(function() {
+                customBGMPlaying = true;
+                var btn = document.getElementById('btnMusic');
+                if (btn) btn.textContent = '🎵 Trilha';
+                spawnText(canvas.width/2, canvas.height/2 - 80, '🎵 Trilha ativada!', '#00ddff');
+            }).catch(function(err) {
+                console.error('Erro ao tocar trilha:', err);
+                alert('Não foi possível reproduzir o arquivo de áudio.');
+            });
+        }
+
+        function toggleCustomBGM() {
+            if (!customBGM || !customBGM.src) return;
+            if (customBGMPlaying) {
+                customBGM.pause();
+                customBGMPlaying = false;
+            } else {
+                customBGM.play();
+                customBGMPlaying = true;
+            }
+            var btn = document.getElementById('btnMusic');
+            if (btn) btn.textContent = customBGMPlaying ? '🎵 Trilha' : '⏸️ Pausa';
+        }
+
+        // Atalho de teclado para alternar trilha (tecla M)
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'm' || e.key === 'M') {
+                ensureAudio();
+                toggleCustomBGM();
+                var btn = document.getElementById('btnMusic');
+                if (btn) btn.textContent = customBGMPlaying ? '🎵 Trilha' : '⏸️ Pausa';
+            }
+        });
+
         // ── Integração com o jogo ─────────────────────────────────────────────────────
         // inicia música no primeiro input do usuário
         var _audioStarted = false;
         function ensureAudio() {
             if (_audioStarted) return;
             _audioStarted = true;
-            startMusic();
+            if (!customBGMPlaying) {
+                startMusic();
+            }
         }
         window.addEventListener('keydown', ensureAudio, { once: false });
         window.addEventListener('pointerdown', ensureAudio, { once: false });
@@ -7771,6 +8319,20 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
             if (e.key === 'u' || e.key === 'U') triggerBotrixEvent('follow', '@fabiosdx');
             if (e.key === 'i' || e.key === 'I') triggerBotrixEvent('superchat', '@fabiosdx');
             if (e.key === 'p' || e.key === 'P') triggerBotrixEvent('gift', '@fabiosdx');
+            if (e.key === 'l' || e.key === 'L') {
+                var lMe = pick ? pick.userName : (ownerName || '@Player');
+                var lx = pick ? pick.x : canvas.width/2;
+                var ly = pick ? pick.y : camY + canvas.height/2;
+                activateHeartTNT(lx, ly, lMe, pick ? pick.userAvatarUrl : '');
+                score += 1;
+                spawnText(lx, ly-20, '+2 ❤', '#ff4488');
+                if (!persistentScores[lMe]) persistentScores[lMe] = { score: 0, avatar: pick ? pick.userAvatarUrl : '', color: '#ff4488', likes: 0, giftsValue: 0 };
+                persistentScores[lMe].likes = (persistentScores[lMe].likes || 0) + 1;
+                persistentScores[lMe].score = (persistentScores[lMe].score || 0) + 2;
+                if (!_cycleScores[lMe]) _cycleScores[lMe] = { score: 0, kills: 0, items: 0, balls: 0, likes: 0, avatar: persistentScores[lMe].avatar || '' };
+                _cycleScores[lMe].score += 1;
+                _cycleScores[lMe].likes += 1;
+            }
             if (e.key === 's' || e.key === 'S') {
                 for (var i = 0; i < 20; i++) {
                     var botName = '@Bot_' + (1 + Math.floor(Math.random() * 9999));
@@ -7857,20 +8419,64 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
         ensureRows(0, VIS + 4);
         spawnPick();
 
-         // Carrega pontuações persistentes do localStorage
-         (function () {
-             try {
-                 var saved = JSON.parse(localStorage.getItem('pd_persistent_scores') || '{}');
-                 if (saved && typeof saved === 'object' && !Array.isArray(saved)) {
-                     persistentScores = saved;
-                     // Normaliza campos para upgrades (likes, giftsValue)
-                     Object.keys(persistentScores).forEach(function(k) {
-                         if (persistentScores[k].likes === undefined) persistentScores[k].likes = 0;
-                         if (persistentScores[k].giftsValue === undefined) persistentScores[k].giftsValue = 0;
-                     });
-                 }
-                 console.log('Scores loaded from localStorage:', Object.keys(persistentScores).length);
-             } catch (e) { console.error('Error loading scores:', e); }
+// Carrega pontuações persistentes do localStorage
+          (function () {
+              try {
+                  var saved = JSON.parse(localStorage.getItem('pd_persistent_scores') || '{}');
+                  if (saved && typeof saved === 'object' && !Array.isArray(saved)) {
+                      // Limpar bots antigos do localStorage (manter apenas owner e top players)
+                      var ownerKey = localStorage.getItem('pd_tiktok_username');
+                      if (ownerKey) ownerKey = '@' + ownerKey.toLowerCase();
+                      var cleaned = {};
+                      // Sempre manter o owner se existir
+                      if (ownerKey && saved[ownerKey]) {
+                          cleaned[ownerKey] = saved[ownerKey];
+                      }
+                      // Manter apenas entradas que NÃO são bots
+                      Object.keys(saved).forEach(function(k) {
+                          if (k && !k.startsWith('@Bot_')) {
+                              cleaned[k] = saved[k];
+                          }
+                      });
+                      persistentScores = cleaned;
+                      // Limitar a no máximo 50 jogadores para performance
+                      var keys = Object.keys(persistentScores);
+                      if (keys.length > 50) {
+                          // Ordenar por score e manter top 50
+                          keys.sort(function(a, b) { return (persistentScores[b].score || 0) - (persistentScores[a].score || 0); });
+                          var limited = {};
+                          keys.slice(0, 50).forEach(function(k) { limited[k] = persistentScores[k]; });
+                          persistentScores = limited;
+                      }
+                      // Normaliza campos para upgrades (likes, giftsValue)
+                      Object.keys(persistentScores).forEach(function(k) {
+                          if (persistentScores[k].likes === undefined) persistentScores[k].likes = 0;
+                          if (persistentScores[k].giftsValue === undefined) persistentScores[k].giftsValue = 0;
+                      });
+                      // Salva versão limpa
+                      localStorage.setItem('pd_persistent_scores', JSON.stringify(persistentScores));
+                  }
+                  console.log('Scores loaded from localStorage:', Object.keys(persistentScores).length);
+              } catch (e) { console.error('Error loading scores:', e); }
+          // Expor funções globais para onclick
+         window.ensureAudio = ensureAudio;
+         window.activateCreeper = activateCreeper;
+         window.activateTNT = activateTNT;
+         window.activateMegaTNT = activateMegaTNT;
+         window.activateThor = activateThor;
+         window.activateNuke = activateNuke;
+         window.activateStorm = activateStorm;
+         window.spawnClone = spawnClone;
+         window.activateBlackHole = activateBlackHole;
+         window.activateBig = activateBig;
+         window.activateHeartTNT = activateHeartTNT;
+         window.resetAllScores = resetAllScores;
+         window.generateScoreReport = generateScoreReport;
+         window.tiktokConnect = tiktokConnect;
+         window.youtubeConnect = youtubeConnect;
+         window.platformConnectBoth = platformConnectBoth;
+         window.platformSkip = platformSkip;
+
          })();
 
         // Carrega ranking para avatares
@@ -7914,9 +8520,11 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
             if (!url || avatarCache[url] || _avatarLoading[url]) return;
             if (_avatarDataCache[url]) { var c = new Image(); c.onload = function() { avatarCache[url] = c; }; c.src = _avatarDataCache[url]; _avatarLoading[url] = true; return; }
             _avatarLoading[url] = true;
-            fetch(url, { mode: 'cors' }).then(function(r) { if (!r.ok) throw new Error(r.status); return r.blob(); }).then(function(blob) {
-                var reader = new FileReader(); reader.onloadend = function() { _avatarDataCache[url] = reader.result; _saveAvatarDataCache(); var img = new Image(); img.onload = function() { avatarCache[url] = img; }; img.src = reader.result; }; reader.readAsDataURL(blob);
-            }).catch(function() { var img = new Image(); img.onload = function() { if (img.naturalWidth > 0) avatarCache[url] = img; }; img.src = url; });
+            // Try direct load without CORS (will work if server allows it, fail silently otherwise)
+            var img = new Image();
+            img.onload = function() { if (img.naturalWidth > 0) avatarCache[url] = img; _avatarLoading[url] = false; };
+            img.onerror = function() { _avatarLoading[url] = false; }; // Silently fail for blocked URLs
+            img.src = url;
         }
 
         function updateStatusDots() {
@@ -8072,22 +8680,26 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
                 persistentScores[scUser].score += superchatScore;
                 persistentScores[scUser].giftsValue = (persistentScores[scUser].giftsValue || 0) + numVal;
                 addCycleScore(scUser, superchatScore);
+                // Also add to owner score for daily total
+                if (ownerName && persistentScores[ownerName]) {
+                    persistentScores[ownerName].score += superchatScore;
+                }
                 triggerBotrixEvent('superchat', scUser, scAvatar);
             }
-            else if (data.type === 'member') { var mUser = '@' + (data.user || '').toLowerCase(); if (mUser === '@') return; lastActivity[mUser] = Date.now(); if (data.avatar) loadAvatar(data.avatar); spawnUserPickaxe(mUser, data.avatar || ''); }
+            else if (data.type === 'member') { var mUserRaw = data.user || ''; var mUser = (mUserRaw.charAt(0) === '@' ? mUserRaw : '@' + mUserRaw).toLowerCase(); if (mUser === '@') return; lastActivity[mUser] = Date.now(); if (data.avatar) loadAvatar(data.avatar); spawnUserPickaxe(mUser, data.avatar || ''); }
             else if (data.type === 'gift') {
-                var gUser = '@' + (data.user || 'unknown').toLowerCase(), gAvatar = data.avatar || '', giftName = (data.giftName || '').toLowerCase();
+                var gUserRaw = data.user || 'unknown';
+                var gUser = (gUserRaw.charAt(0) === '@' ? gUserRaw : '@' + gUserRaw).toLowerCase(), gAvatar = data.avatar || '', giftName = (data.giftName || '').toLowerCase();
                 lastActivity[gUser] = Date.now(); if (gAvatar) loadAvatar(gAvatar); spawnUserPickaxe(gUser, gAvatar);
                 var gPick = userPicks.find(function(up) { return up.userName === gUser; });
                 var gx = gPick ? gPick.x : (pick ? pick.x : canvas.width/2), gy = gPick ? gPick.y : (pick ? pick.y : camY + canvas.height/2);
                 var diamonds = data.diamondCount || 1, repeat = data.repeatCount || 1;
-                if (giftName.includes('rose') || giftName.includes('rosa')) { for (var gi = 0; gi < Math.min(repeat * 2, 10); gi++) activateTNT(gx + (Math.random()-0.5)*TILE*3, gy, gUser, gAvatar); spawnText(gx, gy-30, '🌹 10 TNT!', '#ff6688'); score += 10*repeat; }
-                else if (giftName.includes('creeper')) { for (var gi = 0; gi < Math.min(repeat * 3, 30); gi++) activateTNT(gx + (Math.random()-0.5)*TILE*4, gy, gUser, gAvatar); spawnText(gx, gy-30, '💣 30 TNT!', '#44ff44'); score += 30*repeat; }
-                else if (giftName.includes('gg')) { for (var gi = 0; gi < Math.min(repeat * 2, 20); gi++) activateTNT(gx + (Math.random()-0.5)*TILE*5, gy, gUser, gAvatar); spawnText(gx, gy-30, '🎮 20 TNT!', '#44ff44'); score += 30*repeat; }
-                else                 if (giftName.includes('like') || giftName.includes('heart')) { for (var gi = 0; gi < Math.min(repeat, 3); gi++) activateMegaTNT(gx + (Math.random()-0.5)*TILE*3, gy, gUser, gAvatar); spawnText(gx, gy-30, '❤️ MEGA!', '#ff4488'); score += 50*repeat; }
-                else if (diamonds >= 100) triggerBotrixEvent('gift', gUser, gAvatar);
-                else if (diamonds >= 10) triggerBotrixEvent('superchat', gUser, gAvatar);
-                else { for (var gi = 0; gi < Math.min(repeat, 5); gi++) activateTNT(gx + (Math.random()-0.5)*TILE*3, gy, gUser, gAvatar); spawnText(gx, gy-30, '🎁 TNT!', '#ffaa44'); score += 10*repeat; }
+                if (data.platform === 'youtube') { repeat = 1; }
+                if (giftName.includes('yt_heart_me')) { for (var gi = 0; gi < 30; gi++) activateHeartTNT(gx + (Math.random()-0.5)*TILE*4, gy, gUser, gAvatar); spawnText(gx, gy-30, '❤️ 30 CORAÇÕES!', '#ff6688'); score += 3; }
+                else if (giftName.includes('yt_rose')) { for (var gi = 0; gi < 10; gi++) activateTNT(gx + (Math.random()-0.5)*TILE*3, gy, gUser, gAvatar); spawnText(gx, gy-30, '🌹 10 TNT!', '#ff6688'); score += 1; }
+                else if (giftName.includes('yt_gg')) { for (var gi = 0; gi < 20; gi++) activateTNT(gx + (Math.random()-0.5)*TILE*5, gy, gUser, gAvatar); spawnText(gx, gy-30, '🎮 20 TNT!', '#44ff44'); score += 4; }
+                else if (giftName.includes('like')) { for (var gi = 0; gi < Math.min(repeat, 3); gi++) activateMegaTNT(gx + (Math.random()-0.5)*TILE*3, gy, gUser, gAvatar); spawnText(gx, gy-30, '❤️ MEGA!', '#ff4488'); score += 5*repeat; }
+                else { for (var gi = 0; gi < Math.min(repeat, 5); gi++) activateTNT(gx + (Math.random()-0.5)*TILE*3, gy, gUser, gAvatar); spawnText(gx, gy-30, '🎁 TNT!', '#ffaa44'); score += 1*repeat; }
                 // Contabilizar valor dos presentes (diamantes) no ranking — TODOS os jogadores, incluindo owner
                 if (!persistentScores[gUser]) persistentScores[gUser] = { score: 0, avatar: gAvatar, color: '#ff88ff', likes: 0, giftsValue: 0 };
                 var giftScoreValue = diamonds * repeat;
@@ -8097,7 +8709,8 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
                 addCycleScore(gUser, giftScoreValue);
             }
             else if (data.type === 'follow') { 
-                var fUser = '@' + (data.user || 'unknown').toLowerCase(); lastActivity[fUser] = Date.now(); 
+                var fUserRaw = data.user || 'unknown';
+                var fUser = (fUserRaw.charAt(0) === '@' ? fUserRaw : '@' + fUserRaw).toLowerCase(); lastActivity[fUser] = Date.now(); 
                 if (data.avatar) loadAvatar(data.avatar); spawnUserPickaxe(fUser, data.avatar || ''); 
                 var fx = pick ? pick.x : canvas.width/2, fy = pick ? pick.y : camY + canvas.height/2;
                 for (var fi = 0; fi < 10; fi++) activateTNT(fx + (Math.random()-0.5)*TILE*4, fy, fUser, data.avatar || '');
@@ -8106,13 +8719,14 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
                 triggerBotrixEvent('follow', fUser, data.avatar || ''); 
             }
             else if (data.type === 'like') {
-                var lName = (data.user || '').toLowerCase(); if (!lName) return; var lUser = '@' + lName;
+                var lNameRaw = data.user || '';
+                if (!lNameRaw) return; var lUser = (lNameRaw.charAt(0) === '@' ? lNameRaw : '@' + lNameRaw).toLowerCase();
                 var lAvatar = data.avatar || ''; lastActivity[lUser] = Date.now(); if (lAvatar) loadAvatar(lAvatar);
                 spawnUserPickaxe(lUser, lAvatar);
                 var lPick = userPicks.find(function(up) { return up.userName === lUser; });
                 var lx = lPick ? lPick.x : (pick ? pick.x : canvas.width/2), ly = lPick ? lPick.y : (pick ? pick.y : camY + canvas.height/2);
                 var likeCount = data.likeCount || 1;
-                var likePts = Math.min(likeCount, 10) * 2;
+                var likePts = Math.min(likeCount, 10) * 0.5;
                 score += likePts;
                 // Gerar heartTNT apenas se não estiver no período de ignoração inicial
                 if (Date.now() >= _ignoreLikesUntil) {
@@ -8128,12 +8742,17 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
                 if (!_cycleScores[lUser]) _cycleScores[lUser] = { score: 0, kills: 0, items: 0, balls: 0, likes: 0, avatar: persistentScores[lUser].avatar || '' };
                 _cycleScores[lUser].score += likePts;
                 _cycleScores[lUser].likes += likeCount;
+                // Also add to owner score for daily total
+                if (ownerName && persistentScores[ownerName]) {
+                    persistentScores[ownerName].score += likePts;
+                }
             }
             else if (data.type === 'share') {
-                var sUser = '@' + (data.user || 'unknown').toLowerCase(); lastActivity[sUser] = Date.now();
+                var sUserRaw = data.user || 'unknown';
+                var sUser = (sUserRaw.charAt(0) === '@' ? sUserRaw : '@' + sUserRaw).toLowerCase(); lastActivity[sUser] = Date.now();
                 var sPick = userPicks.find(function(up) { return up.userName === sUser; });
                 var sx = sPick ? sPick.x : (pick ? pick.x : canvas.width/2), sy = sPick ? sPick.y : (pick ? pick.y : camY + canvas.height/2);
-                activateMegaTNT(sx, sy, sUser, data.avatar || ''); score += 100; spawnText(sx, sy-30, '+100 SHARE!', '#44ddff');
+                activateMegaTNT(sx, sy, sUser, data.avatar || ''); score += 10; spawnText(sx, sy-30, '+10 SHARE!', '#44ddff');
             }
         }
 
@@ -8192,6 +8811,10 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
                 if (persistentScores[userName].giftsValue === undefined) persistentScores[userName].giftsValue = 0;
             }
 
+            // Limitar userPicks a no máximo 30 para performance
+            if (userPicks.length >= 30) {
+                userPicks.shift(); // Remove o mais antigo
+            }
             userPicks.push(p);
             lastActivity[userName] = Date.now();
             spawnText(p.x, p.y, userName + ' JOINED!', '#00ff88');
@@ -8631,8 +9254,7 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
             var inWater = isInWater(startX, startY);
             var submergedEnemies = [];
             if (inWater) {
-                // Collect ALL enemies in water (not dead, in view)
-                var allEnemies = [].concat(bats, zombies);
+                var allEnemies = [].concat(bats, zombies, spiders);
                 for (var ei = 0; ei < allEnemies.length; ei++) {
                     var e = allEnemies[ei];
                     if (!e || e.state === 'dead' || e.y < camY - 100 || e.y > camY + canvas.height + 100) continue;
@@ -8641,8 +9263,9 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
             }
 
             var hasTarget = false;
-            for (var i = 0; i < bats.length; i++) {
-                var b = bats[i];
+            var allTargets = [].concat(bats, zombies, spiders);
+            for (var i = 0; i < allTargets.length; i++) {
+                var b = allTargets[i];
                 if (b.state === 'dead' || b.y < camY - 200 || b.y > camY + canvas.height + 200) continue;
                 var dist = Math.sqrt((b.x - startX) * (b.x - startX) + (b.y - startY) * (b.y - startY));
                 if (dist <= 800) { hasTarget = true; break; }
@@ -8689,17 +9312,17 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
                 spawnText(startX, startY - 60, '🌊 WATER SHOCK! ⚡', '#00ffff');
             }
 
-            // 2. THOR STRIKES: Serial hits for flyers
+            // 2. THOR STRIKES: Serial hits for all enemies
             if (hasTarget) {
                 activeThorAttacks.push({
                     userName: userName,
                     x: startX,
                     y: startY,
-                    hitsLeft: 5,
+                    hitsLeft: 10,
                     timer: 0,
                     lastBat: null
                 });
-                spawnText(startX, startY - 40, '⚡ THOR ACTIVATED!', '#00ffff');
+                spawnText(startX, startY - 40, '⚡⚡ THOR 10x!', '#00ffff');
             }
 
             if (typeof sfxSkillActivate === 'function' && _audioStarted) sfxSkillActivate();
@@ -8943,7 +9566,7 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
             osc.start(t); osc.stop(t + 0.45);
         }
 
-         function updateLeaderboard() {
+function updateLeaderboard() {
              for (var i = 0; i < userPicks.length; i++) {
                  userPicks[i].pickaxe = getPickaxeForTime(userPicks[i].joinTime);
              }
@@ -8951,26 +9574,56 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
              var list = document.getElementById('leaderboardList');
              if (!list) return;
 
-             // Use cycle scores (reset every 400m round) mas usa totais de likes/gifts do persistentScores
-             var players = Object.keys(_cycleScores).map(function(name) {
-                 var cs = _cycleScores[name];
-                 var pTier = currentPickaxe;
-                 if (ownerName && name === ownerName) {
-                     pTier = currentPickaxe;
-                 } else {
-                     for (var j = 0; j < userPicks.length; j++) {
-                         if (userPicks[j].userName === name) { pTier = userPicks[j].pickaxe || PICKAXES[0]; break; }
+             // Get list of players currently in game
+             var inGamePlayers = {};
+             if (ownerName && persistentScores[ownerName]) {
+                 inGamePlayers[ownerName] = true;
+             }
+             for (var j = 0; j < userPicks.length; j++) {
+                 inGamePlayers[userPicks[j].userName] = true;
+             }
+
+             // Get all players sorted by global score
+             var allSorted = Object.keys(persistentScores)
+                 .map(function(name) {
+                     var ps = persistentScores[name];
+                     return { userName: name, score: ps.score || 0, likes: ps.likes || 0, giftsValue: ps.giftsValue || 0, avatar: ps.avatar || '' };
+                 })
+                 .filter(function(p) { return p.score > 0 || p.giftsValue > 0 || p.likes > 0; })
+                 .sort(function(a, b) { return b.score - a.score; });
+
+             // Filter to only in-game players but keep their global ranking position
+             var globalRankMap = {};
+             allSorted.forEach(function(p, idx) { globalRankMap[p.userName] = idx + 1; });
+
+             var playersInGame = allSorted
+                 .filter(function(p) { return inGamePlayers[p.userName]; })
+                 .map(function(p) {
+                     var pTier = currentPickaxe;
+                     if (ownerName && p.userName === ownerName) {
+                         pTier = currentPickaxe;
+                     } else {
+                         for (var k = 0; k < userPicks.length; k++) {
+                             if (userPicks[k].userName === p.userName) { pTier = userPicks[k].pickaxe || PICKAXES[0]; break; }
+                         }
                      }
-                 }
-                 var av = cs.avatar || (persistentScores[name] ? persistentScores[name].avatar : '');
-                 var totalLikes = (persistentScores[name] && persistentScores[name].likes !== undefined) ? persistentScores[name].likes : (cs.likes || 0);
-                 var giftsVal = (persistentScores[name] && persistentScores[name].giftsValue !== undefined) ? persistentScores[name].giftsValue : 0;
-                 return { userName: name, score: cs.score || 0, kills: cs.kills || 0, items: cs.items || 0, balls: cs.balls || 0, likes: totalLikes, giftsValue: giftsVal, userAvatarUrl: av, pickaxe: pTier };
-             }).filter(function(p) { return p.score > 0 || p.giftsValue > 0 || p.likes > 0; });
+                     var cs = _cycleScores[p.userName] || {};
+                     return { 
+                         userName: p.userName, 
+                         globalRank: globalRankMap[p.userName] || 0,
+                         score: p.score, 
+                         kills: cs.kills || 0, 
+                         items: cs.items || 0, 
+                         balls: cs.balls || 0, 
+                         likes: p.likes, 
+                         giftsValue: p.giftsValue, 
+                         userAvatarUrl: p.avatar, 
+                         pickaxe: pTier 
+                     };
+                 })
+                 .slice(0, 10);
 
-             var sorted = players.sort((a, b) => b.score - a.score).slice(0, 10);
-
-             if (sorted.length === 0) {
+             if (playersInGame.length === 0) {
                  list.innerHTML = '<div style="text-align:center; opacity:0.5; font-size:11px;">Round ' + ((_currentCycle || 0) + 1) + ' — 400m</div>';
                  return;
              }
@@ -8978,16 +9631,14 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
              var rankClass = ['gold', 'silver', 'bronze'];
              var rankEmoji = ['🥇', '🥈', '🥉'];
               var html = '';
-              sorted.forEach((u, i) => {
+              playersInGame.forEach((u, i) => {
                   var av = u.userAvatarUrl || '';
                   var cachedImg = avatarCache[av];
                   var avSrc = (cachedImg && cachedImg.src && cachedImg.naturalWidth > 0) ? cachedImg.src : av;
                   var pickColor = u.pickaxe ? u.pickaxe.color : '#c8a464';
                   var rClass = rankClass[i] || '';
-                  var rankLabel = i < 3 ? rankEmoji[i] : '#' + (i + 1);
-                  // Remove @ do nome
+                  var rankLabel = i < 3 ? rankEmoji[i] : '#' + u.globalRank;
                   var displayName = u.userName.replace(/^@/, '');
-                  // Stats com ícones maiores
                   var stats = '';
                   if (u.kills > 0) stats += '<span class="lb-stat">💥' + u.kills + '</span>';
                   if (u.balls > 0) stats += '<span class="lb-stat">🔮' + u.balls + '</span>';
@@ -9017,10 +9668,10 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
             var cx = pick ? pick.x : canvas.width / 2;
             var cy = pick ? pick.y : camY + canvas.height * 0.5;
             var config = {
-                follow: { icon: '⭐', title: 'NEW FOLLOWER!', color: '#44ff88', pts: 200, dur: 150 },
-                superchat: { icon: '💎', title: 'SUPER CHAT!', color: '#ffdd44', pts: 1000, dur: 200 },
-                member: { icon: '👑', title: 'NEW MEMBER!', color: '#ff44ff', pts: 500, dur: 180 },
-                gift: { icon: '🎁', title: 'GIFTED MEMBERSHIP!', color: '#44ddff', pts: 800, dur: 200 }
+                follow: { icon: '⭐', title: 'NEW FOLLOWER!', color: '#44ff88', pts: 20, dur: 150 },
+                superchat: { icon: '💎', title: 'SUPER CHAT!', color: '#ffdd44', pts: 100, dur: 200 },
+                member: { icon: '👑', title: 'NEW MEMBER!', color: '#ff44ff', pts: 50, dur: 180 },
+                gift: { icon: '🎁', title: 'GIFTED MEMBERSHIP!', color: '#44ddff', pts: 80, dur: 200 }
             };
             var cfg = config[type];
             if (!cfg) return;
@@ -9124,6 +9775,94 @@ ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'left'; ct
                 shakeAmt = Math.max(shakeAmt, 22);
             }
         }
+
+        // ── Gerar relatório de pontuação (top 50) ──
+        function generateScoreReport() {
+            var players = Object.keys(persistentScores)
+                .map(function(name) {
+                    var ps = persistentScores[name];
+                    return {
+                        name: name,
+                        score: ps.score || 0,
+                        likes: ps.likes || 0,
+                        gifts: ps.giftsValue || 0
+                    };
+                })
+                .sort(function(a, b) { return b.score - a.score; })
+                .slice(0, 50);
+
+            if (players.length === 0) {
+                alert('Nenhum jogador com pontuação registrada.');
+                return;
+            }
+
+            var now = new Date();
+            var dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+
+            var content = 'RELATÓRIO DE PONTUAÇÕES - PICKAXE DROP\n';
+            content += 'Gerado em: ' + dateStr + '\n';
+            content += 'Total de jogadores com pontuação: ' + players.length + '\n';
+            content += '\n';
+            content += 'TOP 50 JOGADORES\n';
+            content += '──────────────────────────────────────\n';
+            players.forEach(function(p, idx) {
+                content += (idx+1) + '. ' + p.name + ' — ' + Math.floor(p.score) + ' pts';
+                if (p.likes > 0 || p.gifts > 0) {
+                    content += ' (';
+                    var extras = [];
+                    if (p.likes > 0) extras.push('❤️ ' + p.likes);
+                    if (p.gifts > 0) extras.push('🎁 ' + p.gifts);
+                    content += extras.join(', ');
+                    content += ')';
+                }
+                content += '\n';
+            });
+            content += '\n';
+            var totalScore = players.reduce(function(sum, p) { return sum + p.score; }, 0);
+            content += 'Soma total dos top 50: ' + Math.floor(totalScore) + ' pts\n';
+
+            var blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'relatorio_pontuacao_' + now.toISOString().slice(0,10) + '.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // ── Zerar todas as pontuações ──
+        function resetAllScores() {
+            if (!confirm('Tem certeza que deseja ZERAR todas as pontuações?\n\nEsta ação não pode ser desfeita.')) return;
+
+            persistentScores = {};
+            _cycleScores = {};
+            localStorage.removeItem('pd_cycle_scores');
+
+            // Força atualização do leaderboard
+            updateLeaderboard();
+
+            spawnText(canvas.width / 2, canvas.height / 2, '🔄 PONTUAÇÕES ZERADAS!', '#ff4444');
+        }
+
+        // ── Inicialização dos controles de UI ───────────────────────────────────────
+        (function initUIControls() {
+            var btn = document.getElementById('btnMusic');
+            var input = document.getElementById('bgmFileInput');
+            if (!btn || !input) return;
+            btn.addEventListener('click', function() {
+                if (customBGM && customBGM.src) {
+                    toggleCustomBGM();
+                    btn.textContent = customBGMPlaying ? '🎵 Trilha' : '⏸️ Pausa';
+                } else {
+                    input.click();
+                }
+            });
+            input.addEventListener('change', function() {
+                handleBGMUpload(this);
+            });
+        })();
 
     </script>
 </body>
