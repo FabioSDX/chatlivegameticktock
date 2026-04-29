@@ -2081,6 +2081,11 @@
         var SHEEP_MOTHER_TEX = new Image(); SHEEP_MOTHER_TEX.src = 'animais bonus/ovelha/Ovelha.png';
         var SHEEP_KID_TEX = new Image(); SHEEP_KID_TEX.src = 'animais bonus/ovelha/Ovelha kid.png';
         var SHEEP_EGG_TEX = new Image(); SHEEP_EGG_TEX.src = 'animais bonus/ovelha/ovo ovelha.png';
+        var PIG_MOTHER_TEX = new Image(); PIG_MOTHER_TEX.src = 'pig/pig mother.png';
+        var PIG_KID_TEX = new Image(); PIG_KID_TEX.src = 'pig/pig kid.png';
+        var PIG_EGG_TEX = new Image(); PIG_EGG_TEX.src = 'pig/Pig eg.png';
+
+        var lastBonusType = 'pig'; // will start with sheep
         
         // Bee Animation Frames
         var ABELHA_MOTHER_FRAMES = [];
@@ -4836,6 +4841,8 @@
         }
 
         function spawnBonusBalls(x, y, owner) {
+            lastBonusType = (lastBonusType === 'sheep' ? 'pig' : 'sheep');
+            var animalType = lastBonusType;
             var ow = owner || pick;
             var owAvatar = ow.userAvatarUrl || '';
             var owName = ow.userName || '@Player';
@@ -4850,7 +4857,8 @@
                     owner: ow, ownerAvatar: owAvatar, ownerName: owName,
                     collected: false, sparkle: Math.random() * Math.PI * 2,
                     bounces: 0, energy: 0.7 + Math.random() * 0.3,
-                    sheepTimer: 180 + Math.random() * 900 // periodic bleat
+                    sheepTimer: 180 + Math.random() * 900, // periodic sound
+                    animalType: animalType
                 });
             }
             var baseRow = Math.floor(y / TILE) + 20 + Math.floor(Math.random() * 30);
@@ -4859,7 +4867,8 @@
             collectBoxes.push({
                 col: boxCol, row: boxRow, w: COLLECT_BOX_WIDTH,
                 owner: ow, ownerName: owName, ownerAvatar: owAvatar,
-                life: 3600, maxLife: 3600, pulse: 0, collected: 0, shakeTimer: 0
+                life: 3600, maxLife: 3600, pulse: 0, collected: 0, shakeTimer: 0,
+                animalType: animalType
             });
             spawnText(x, y - 20, '🎁 ' + owName + ' BONUS!', '#ffdd44');
         }
@@ -4884,7 +4893,8 @@
                 if (ball.sheepTimer > 0) {
                     ball.sheepTimer--;
                     if (ball.sheepTimer <= 0) {
-                        sfxSheep();
+                        if (ball.animalType === 'sheep') sfxSheep();
+                        else sfxPig();
                         ball.sheepTimer = 400 + Math.random() * 1200;
                     }
                 }
@@ -4949,11 +4959,12 @@
                     var box = collectBoxes[b];
                     var boxX = box.col * TILE, boxY = box.row * TILE;
                     var boxW = box.w * TILE, boxH = TILE * 2;
-                    if (ball.x > boxX && ball.x < boxX + boxW && ball.y > boxY && ball.y < boxY + boxH) {
+                    if (ball.x > boxX && ball.x < boxX + boxW && ball.y > boxY && ball.y < boxY + boxH && ball.animalType === box.animalType) {
                         var owner = ball.owner || pick;
                         box.collected++;
                         box.shakeTimer = 20;
-                        sfxSheep(); // Bleat on collect!
+                        if (ball.animalType === 'sheep') sfxSheep(true);
+                        else sfxPig(true);
                         if (owner.userName) {
                             var player = userPicks.find(function (u) { return u.userName === owner.userName; });
                             if (player) player.score = (player.score || 0) + BONUS_BALL_PTS;
@@ -5006,15 +5017,16 @@
                 ctx.fillStyle = 'rgba(255,221,68,' + gAlpha + ')';
                 ctx.fillRect(bx - 6, by - 6, bw + 12, bh + 12);
                 
-                if (SHEEP_MOTHER_TEX.complete) {
-                    ctx.drawImage(SHEEP_MOTHER_TEX, bx, by, bw, bh);
+                var boxImg = (box.animalType === 'sheep') ? SHEEP_MOTHER_TEX : PIG_MOTHER_TEX;
+                if (boxImg.complete) {
+                    ctx.drawImage(boxImg, bx, by, bw, bh);
                 } else {
                     ctx.fillStyle = '#ffcc22'; ctx.fillRect(bx, by, bw, bh);
                     ctx.strokeStyle = '#aa7700'; ctx.lineWidth = 2;
                     ctx.strokeRect(bx + 1, by + 1, bw - 2, bh - 2);
                     ctx.fillStyle = '#fff'; ctx.font = (TILE * 0.8) + 'px sans-serif';
                     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                    ctx.fillText('🐏', bx + bw / 2, by + bh / 2);
+                    ctx.fillText(box.animalType === 'sheep' ? '🐏' : '🐖', bx + bw / 2, by + bh / 2);
                 }
                 ctx.restore();
             }
@@ -5027,12 +5039,13 @@
                 ctx.globalAlpha = 0.25 + Math.sin(ball.sparkle) * 0.1;
                 ctx.fill(); ctx.globalAlpha = 1;
                 
-                if (SHEEP_KID_TEX.complete) {
-                    ctx.drawImage(SHEEP_KID_TEX, -ball.r, -ball.r, ball.r * 2, ball.r * 2);
+                var ballImg = (ball.animalType === 'sheep') ? SHEEP_KID_TEX : PIG_KID_TEX;
+                if (ballImg.complete) {
+                    ctx.drawImage(ballImg, -ball.r, -ball.r, ball.r * 2, ball.r * 2);
                 } else {
                     ctx.fillStyle = '#fff'; ctx.font = (ball.r * 1.5) + 'px Arial';
                     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                    ctx.fillText('🐑', 0, 0);
+                    ctx.fillText(ball.animalType === 'sheep' ? '🐑' : '🐷', 0, 0);
                 }
                 ctx.restore();
             }
@@ -6228,10 +6241,12 @@
                         ctx.fillRect(x - 0.5, y - 0.5, TILE + 1, TILE + 1);
                     }
 
-                    // Custom Bonus Box rendering (Sheep Egg)
+                    // Custom Bonus Box rendering (Sheep or Pig Egg)
                     if (cell.t === BONUS_BOX) {
-                        if (SHEEP_EGG_TEX.complete) {
-                            ctx.drawImage(SHEEP_EGG_TEX, x, y, TILE, TILE);
+                        var isPigEgg = ((r + c) % 2 === 0);
+                        var eggImg = isPigEgg ? PIG_EGG_TEX : SHEEP_EGG_TEX;
+                        if (eggImg.complete) {
+                            ctx.drawImage(eggImg, x, y, TILE, TILE);
                         } else {
                             ctx.fillStyle = '#ffcc00';
                             ctx.fillRect(x, y, TILE, TILE);
@@ -6241,7 +6256,7 @@
                             ctx.fillStyle = '#fff';
                             ctx.font = (TILE * 0.5) + 'px sans-serif';
                             ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                            ctx.fillText('🥚', x + TILE / 2, y + TILE / 2);
+                            ctx.fillText(isPigEgg ? '🥚🐖' : '🥚🐑', x + TILE / 2, y + TILE / 2);
                         }
                     }
 
@@ -8993,10 +9008,40 @@
             new Audio('sons/som ovelha dois.ogg'),
             new Audio('sons/som ovelha tres.ogg')
         ];
-        function sfxSheep() {
+        function sfxSheep(force) {
             if (!_audioStarted) return;
+            // Only play if at least one sheep is visible (unless forced)
+            if (!force) {
+                var visible = bonusBalls.some(function(b) { 
+                    return b.animalType === 'sheep' && b.y > camY && b.y < camY + canvas.height; 
+                });
+                if (!visible) return;
+            }
+
             try {
                 var s = sheepSounds[Math.floor(Math.random() * sheepSounds.length)].cloneNode();
+                s.volume = 0.4;
+                s.play();
+            } catch (e) {}
+        }
+
+        var pigSounds = [
+            new Audio('sons/som pig um.ogg'),
+            new Audio('sons/som pig dois.ogg'),
+            new Audio('sons/som pig tres.ogg')
+        ];
+        function sfxPig(force) {
+            if (!_audioStarted) return;
+            // Only play if at least one pig is visible (unless forced)
+            if (!force) {
+                var visible = bonusBalls.some(function(b) { 
+                    return b.animalType === 'pig' && b.y > camY && b.y < camY + canvas.height; 
+                });
+                if (!visible) return;
+            }
+
+            try {
+                var s = pigSounds[Math.floor(Math.random() * pigSounds.length)].cloneNode();
                 s.volume = 0.4;
                 s.play();
             } catch (e) {}
