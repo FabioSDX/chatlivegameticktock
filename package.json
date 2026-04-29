@@ -1,7 +1,7 @@
 {
   "name": "pickaxe-drop-live",
   "version": "1.0.0",
-  "description": "Pickaxe Drop - TikTok + YouTube Live Integration",
+  "description": "Pickaxe Drop - TikTok Live Integration",
   "main": "server.js",
   "engines": {
     "node": ">=18.0.0"
@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "express": "^4.21.0",
-    "tiktok-live-connector": "^1.2.2",
-    "ws": "^8.18.0",
-    "youtube-chat": "^2.2.0"
+    "sharp": "^0.34.5",
+    "tiktok-live-connector": "^2.1.1-beta1",
+    "ws": "^8.18.0"
   }
 }
