@@ -475,7 +475,10 @@
         /* NEW PODIUM RANKING STYLES */
         .ranking-overlay {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: radial-gradient(circle, rgba(20, 20, 60, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%);
             backdrop-filter: blur(8px);
             z-index: 10000;
@@ -490,7 +493,10 @@
             overflow: hidden;
         }
 
-        .ranking-overlay.active { opacity: 1; pointer-events: auto; }
+        .ranking-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
         .ranking-title {
             font-size: min(8vw, 64px);
@@ -508,8 +514,17 @@
         }
 
         @keyframes epicTitle {
-            from { transform: scale(0.5); opacity: 0; filter: blur(10px); }
-            to { transform: scale(1); opacity: 1; filter: blur(0); }
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+                filter: blur(10px);
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+                filter: blur(0);
+            }
         }
 
         .podium-container {
@@ -532,14 +547,26 @@
             width: 200px;
         }
 
-        .active .podium-step { transform: translateY(0) rotateX(0); opacity: 1; }
-        .podium-step.second { transition-delay: 0.2s; }
-        .podium-step.first { transition-delay: 0.4s; }
-        .podium-step.third { transition-delay: 0.6s; }
+        .active .podium-step {
+            transform: translateY(0) rotateX(0);
+            opacity: 1;
+        }
+
+        .podium-step.second {
+            transition-delay: 0.2s;
+        }
+
+        .podium-step.first {
+            transition-delay: 0.4s;
+        }
+
+        .podium-step.third {
+            transition-delay: 0.6s;
+        }
 
         .podium-base {
             width: 100%;
-            background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
             border-radius: 20px 20px 0 0;
             display: flex;
             align-items: center;
@@ -547,19 +574,28 @@
             font-size: 80px;
             font-weight: 900;
             color: rgba(255, 255, 255, 0.6);
-            text-shadow: 0 0 15px rgba(0,0,0,0.8);
-            box-shadow: 0 10px 50px rgba(0,0,0,0.8);
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.8);
             border: 2px solid rgba(255, 255, 255, 0.2);
             position: relative;
         }
 
-        .first .podium-base { 
-            height: 350px; border-color: #ffd700; 
+        .first .podium-base {
+            height: 350px;
+            border-color: #ffd700;
             background: linear-gradient(180deg, rgba(255, 215, 0, 0.3) 0%, rgba(255, 215, 0, 0.05) 100%);
             box-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
         }
-        .second .podium-base { height: 220px; border-color: #c0c0c0; }
-        .third .podium-base { height: 140px; border-color: #cd7f32; }
+
+        .second .podium-base {
+            height: 220px;
+            border-color: #c0c0c0;
+        }
+
+        .third .podium-base {
+            height: 140px;
+            border-color: #cd7f32;
+        }
 
         .podium-info {
             position: absolute;
@@ -581,19 +617,30 @@
             height: 100px;
             border-radius: 50%;
             border: 4px solid #fff;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
             background: #222;
             object-fit: cover;
         }
 
-        .first .podium-avatar { 
-            width: 130px; height: 130px; border-color: #ffd700; 
+        .first .podium-avatar {
+            width: 130px;
+            height: 130px;
+            border-color: #ffd700;
             animation: avatarPulse 2s infinite ease-in-out;
         }
 
         @keyframes avatarPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); }
-            50% { transform: scale(1.05); box-shadow: 0 0 50px rgba(255, 215, 0, 0.8); }
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+            }
         }
 
         .podium-medal {
@@ -609,11 +656,25 @@
             align-items: center;
             justify-content: center;
             border: 3px solid currentColor;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
 
-        .podium-name { font-size: 24px; font-weight: 900; color: #fff; margin-bottom: 5px; text-align: center; }
-        .podium-score { font-size: 18px; font-weight: 700; color: #00ff88; background: rgba(0,255,136,0.1); padding: 4px 12px; border-radius: 20px; }
+        .podium-name {
+            font-size: 24px;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .podium-score {
+            font-size: 18px;
+            font-weight: 700;
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
 
         .podium-stats {
             display: flex;
@@ -622,7 +683,7 @@
         }
 
         .podium-stat-badge {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             padding: 4px 8px;
             border-radius: 6px;
             font-size: 12px;
@@ -633,21 +694,77 @@
         }
 
         /* Mobile adjustments for Podium */
-        @media (max-width: 768px), (max-height: 800px) {
-            .ranking-title { font-size: 32px; margin-bottom: 20px; letter-spacing: 4px; }
-            .podium-container { height: 55vh; gap: 10px; width: 98%; }
-            .podium-step { width: 30%; }
-            .first .podium-base { height: 28vh; }
-            .second .podium-base { height: 18vh; }
-            .third .podium-base { height: 12vh; }
-            .podium-avatar { width: 60px; height: 60px; border-width: 2px; }
-            .first .podium-avatar { width: 85px; height: 85px; }
-            .podium-medal { width: 30px; height: 30px; font-size: 20px; bottom: -2px; right: -2px; }
-            .podium-name { font-size: 14px; max-width: 100%; }
-            .podium-score { font-size: 12px; padding: 2px 8px; }
-            .podium-stats { gap: 4px; }
-            .podium-stat-badge { font-size: 9px; padding: 2px 4px; }
-            .podium-info { margin-bottom: 10px; }
+        @media (max-width: 768px),
+        (max-height: 800px) {
+            .ranking-title {
+                font-size: 32px;
+                margin-bottom: 20px;
+                letter-spacing: 4px;
+            }
+
+            .podium-container {
+                height: 55vh;
+                gap: 10px;
+                width: 98%;
+            }
+
+            .podium-step {
+                width: 30%;
+            }
+
+            .first .podium-base {
+                height: 28vh;
+            }
+
+            .second .podium-base {
+                height: 18vh;
+            }
+
+            .third .podium-base {
+                height: 12vh;
+            }
+
+            .podium-avatar {
+                width: 60px;
+                height: 60px;
+                border-width: 2px;
+            }
+
+            .first .podium-avatar {
+                width: 85px;
+                height: 85px;
+            }
+
+            .podium-medal {
+                width: 30px;
+                height: 30px;
+                font-size: 20px;
+                bottom: -2px;
+                right: -2px;
+            }
+
+            .podium-name {
+                font-size: 14px;
+                max-width: 100%;
+            }
+
+            .podium-score {
+                font-size: 12px;
+                padding: 2px 8px;
+            }
+
+            .podium-stats {
+                gap: 4px;
+            }
+
+            .podium-stat-badge {
+                font-size: 9px;
+                padding: 2px 4px;
+            }
+
+            .podium-info {
+                margin-bottom: 10px;
+            }
         }
 
 
@@ -760,7 +877,7 @@
             flex-direction: row-reverse;
             align-items: center;
             justify-content: flex-start;
-            gap: 8px;
+            gap: 2px;
             padding: 0;
             margin-bottom: 0;
             cursor: pointer;
@@ -781,7 +898,7 @@
 
         .cmd-icon {
             font-size: 18px;
-            flex: 0 0 24px;
+            flex: 0 0 auto;
             text-align: center;
             line-height: 1;
             text-shadow:
@@ -1604,19 +1721,48 @@
             pointer-events: none;
             display: none;
         }
+
         @keyframes slideInDown {
-            0% { transform: translateY(-30px) scale(0.85); opacity: 0; }
-            70% { transform: translateY(5px) scale(1.02); opacity: 1; }
-            100% { transform: translateY(0) scale(1); opacity: 1; }
+            0% {
+                transform: translateY(-30px) scale(0.85);
+                opacity: 0;
+            }
+
+            70% {
+                transform: translateY(5px) scale(1.02);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
         }
+
         @keyframes slideOutUp {
-            from { transform: translateY(0) scale(1); opacity: 1; }
-            to { transform: translateY(-30px) scale(0.85); opacity: 0; }
+            from {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateY(-30px) scale(0.85);
+                opacity: 0;
+            }
         }
+
         @keyframes giftPulse {
-            0% { box-shadow: 0 0 15px rgba(255,68,136,0.5), inset 0 0 8px rgba(255,68,136,0.2); }
-            50% { box-shadow: 0 0 25px rgba(255,68,136,0.8), inset 0 0 12px rgba(255,68,136,0.4); }
-            100% { box-shadow: 0 0 15px rgba(255,68,136,0.5), inset 0 0 8px rgba(255,68,136,0.2); }
+            0% {
+                box-shadow: 0 0 15px rgba(255, 68, 136, 0.5), inset 0 0 8px rgba(255, 68, 136, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 25px rgba(255, 68, 136, 0.8), inset 0 0 12px rgba(255, 68, 136, 0.4);
+            }
+
+            100% {
+                box-shadow: 0 0 15px rgba(255, 68, 136, 0.5), inset 0 0 8px rgba(255, 68, 136, 0.2);
+            }
         }
     </style>
 </head>
@@ -1667,7 +1813,8 @@
             <div style="display:flex; gap:8px; justify-content:center; width:100%; margin-top:10px;">
                 <button onclick="platformSkip()"
                     style="flex:1; padding:10px 16px; border:1px solid #555; border-radius:8px; background:rgba(255,255,255,0.05); color:#ccc; font-size:13px; cursor:pointer; font-weight:bold; transition:all 0.2s;"
-                    onmouseover="this.style.background='rgba(255,255,255,0.1)';" onmouseout="this.style.background='rgba(255,255,255,0.05)';">Play Offline</button>
+                    onmouseover="this.style.background='rgba(255,255,255,0.1)';"
+                    onmouseout="this.style.background='rgba(255,255,255,0.05)';">Play Offline</button>
             </div>
         </div>
     </div>
@@ -1695,7 +1842,8 @@
                     <option value="browser">Nativo</option>
                     <option value="tiktok">Natural (Microsoft)</option>
                 </select>
-                <select id="ttsVoice" onchange="saveTTSSettings()" style="background:rgba(0,0,0,0.4); color:#fff; border:none; font-size:10px; border-radius:4px; padding:2px; outline:none; cursor:pointer; display:none;">
+                <select id="ttsVoice" onchange="saveTTSSettings()"
+                    style="background:rgba(0,0,0,0.4); color:#fff; border:none; font-size:10px; border-radius:4px; padding:2px; outline:none; cursor:pointer; display:none;">
                     <option value="en-US-GuyNeural">Guy (English)</option>
                     <option value="en-US-JennyNeural">Jenny (English)</option>
                     <option value="en-US-EmmaNeural">Emma (English)</option>
@@ -1816,8 +1964,10 @@
                     <span class="cmd-icon">🍄</span>
                     <span class="cmd-badge badge-cyan">big</span>
                 </div>
-                <div class="cmd-row" onclick="ensureAudio();var m=pick.userName||'@Player';var cdK=m+'_creeper';if(!(skillCooldowns[cdK]>0)){skillCooldowns[cdK]=creeperCooldown;var px=pick?pick.x:canvas.width/2;var py=pick?pick.y:camY+canvas.height/2;for(var i=0;i<10;i++)activateCreeper(px+(Math.random()-0.5)*TILE*4,py-Math.random()*TILE*2,m)}">
-                    <img src="block/creeper.png" style="width:20px;height:20px;vertical-align:middle;margin-right:4px;" />
+                <div class="cmd-row"
+                    onclick="ensureAudio();var m=pick.userName||'@Player';var cdK=m+'_creeper';if(!(skillCooldowns[cdK]>0)){skillCooldowns[cdK]=creeperCooldown;var px=pick?pick.x:canvas.width/2;var py=pick?pick.y:camY+canvas.height/2;for(var i=0;i<10;i++)activateCreeper(px+(Math.random()-0.5)*TILE*4,py-Math.random()*TILE*2,m)}">
+                    <img src="block/creeper.png"
+                        style="width:32px;height:32px;vertical-align:middle;margin-right:4px;" />
                     <span class="cmd-badge badge-green">creeper</span>
                 </div>
 
@@ -1828,38 +1978,48 @@
 
                 <div class="cmd-row"
                     onclick="ensureAudio();var m=(pick.userName||'@player').toLowerCase();for(var i=0;i<10;i++)activateTNT(pick?pick.x+Math.random()*40-20:0,pick?pick.y:0,m); showGiftAlert(m, pick.userAvatarUrl, 'rose', document.getElementById('imgGiftRose').src);">
-                    <img id="imgGiftRose" src="" style="width:32px;height:32px;vertical-align:middle;margin-left:-6px;display:none;" />
+                    <span class="cmd-badge badge-pink"><img src="block/tnt.png"
+                            style="width:14px;height:14px;vertical-align:middle;margin-top:-2px;" /> x 10</span>
+                    <img id="imgGiftRose" src="" style="width:32px;height:32px;vertical-align:middle;display:none;" />
                     <span id="txtGiftRose" class="cmd-icon">🌹</span>
-                    <span class="cmd-badge badge-pink">rose 10</span>
                 </div>
                 <div class="cmd-row"
                     onclick="ensureAudio();var m=(pick.userName||'@player').toLowerCase();for(var i=0;i<20;i++)activateTNT(pick?pick.x+Math.random()*60-30:0,pick?pick.y:0,m); showGiftAlert(m, pick.userAvatarUrl, 'gg', document.getElementById('imgGiftGG').src);">
-                    <img id="imgGiftGG" src="" style="width:32px;height:32px;vertical-align:middle;margin-left:-6px;display:none;" />
+                    <span class="cmd-badge badge-green"><img src="block/tnt.png"
+                            style="width:14px;height:14px;vertical-align:middle;margin-top:-2px;" /> x 20</span>
+                    <img id="imgGiftGG" src="" style="width:32px;height:32px;vertical-align:middle;display:none;" />
                     <span id="txtGiftGG" class="cmd-icon">🎮</span>
-                    <span class="cmd-badge badge-green">gg 20</span>
                 </div>
                 <div class="cmd-row"
-                    onclick="ensureAudio(); var m=(pick?pick.userName:'@player').toLowerCase(); var cx=pick?pick.x:canvas.width/2; var cy=pick?pick.y:camY+100; var wavesLeft=20; spawnText(cx, cy-30, '🍩 DONUT CREEPER RAIN!', '#00ff00'); score+=50; for(var i=0;i<10;i++) activateCreeper(cx+(Math.random()-0.5)*TILE*4, cy-Math.random()*TILE*2, m); wavesLeft--; var donutInt=setInterval(function(){if(wavesLeft<=0||!_gameStarted){clearInterval(donutInt);return;}wavesLeft--;var px=pick?pick.x:canvas.width/2;var py=pick?pick.y:camY+canvas.height/2;for(var i=0;i<10;i++)activateCreeper(px+(Math.random()-0.5)*TILE*4,py-Math.random()*TILE*2,m);spawnText(px,py-30,'🍩 WAVES LEFT: '+wavesLeft,'#00ff00');}, 30000); showGiftAlert(m, pick.userAvatarUrl, 'donut (10x CREEPERS / 30s)', 'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23ff8800\' stroke-width=\'5\'><circle cx=\'12\' cy=\'12\' r=\'8\'/></svg>', {img: 'block/creeper.png'});">
-                    <span class="cmd-icon">🍩</span>
-                    <span class="cmd-badge badge-orange" style="margin-left:-6px;">donut</span>
+                    onclick="ensureAudio(); var m=(pick?pick.userName:'@player').toLowerCase(); var cx=pick?pick.x:canvas.width/2; var cy=pick?pick.y:camY+100; var wavesLeft=20; spawnText(cx, cy-30, '🍩 DONUT CREEPER RAIN!', '#00ff00'); score+=50; for(var i=0;i<10;i++) activateCreeper(cx+(Math.random()-0.5)*TILE*4, cy-Math.random()*TILE*2, m); wavesLeft--; var donutInt=setInterval(function(){if(wavesLeft<=0||!_gameStarted){clearInterval(donutInt);return;}wavesLeft--;var px=pick?pick.x:canvas.width/2;var py=pick?pick.y:camY+canvas.height/2;for(var i=0;i<10;i++)activateCreeper(px+(Math.random()-0.5)*TILE*4,py-Math.random()*TILE*2,m);spawnText(px,py-30,'🍩 WAVES LEFT: '+wavesLeft,'#00ff00');}, 30000); showGiftAlert(m, pick.userAvatarUrl, 'donut (10x CREEPERS / 30s)', document.getElementById('imgGiftDonut').src, {img: 'block/creeper.png'});">
+                    <img src="block/creeper.png" style="width:32px;height:32px;vertical-align:middle;" />
+                    <span class="cmd-badge badge-orange">x 10</span>
+                    <img id="imgGiftDonut" src="item/donut.png" style="width:32px;height:32px;vertical-align:middle;display:none;" />
+                    <span id="txtGiftDonut" class="cmd-icon"><img src="item/donut.png" style="width:32px;height:32px;vertical-align:middle;" /></span>
                 </div>
                 <div class="cmd-row"
                     onclick="ensureAudio(); var m=(pick?pick.userName:'@player').toLowerCase(); var av=pick?pick.userAvatarUrl:''; var lx=pick?pick.x:canvas.width/2; var ly=pick?pick.y:camY+canvas.height/2; for(var i=0;i<30;i++){activateHeartTNT(lx+(Math.random()-0.5)*TILE*4,ly,m,av)}; score+=3; spawnText(lx,ly-20,'❤️ 30 CORAÇÕES!','#ff6688'); showGiftAlert(m, pick.userAvatarUrl, 'heart me', document.getElementById('imgGiftHeart').src);">
-                    <img id="imgGiftHeart" src="" style="width:32px;height:32px;vertical-align:middle;margin-left:-6px;display:none;" />
+                    <span class="cmd-badge badge-pink"><img src="block/heart_tnt.png"
+                            style="width:14px;height:14px;vertical-align:middle;margin-top:-2px;" /> x 30</span>
+                    <img id="imgGiftHeart" src="" style="width:32px;height:32px;vertical-align:middle;display:none;" />
                     <span id="txtGiftHeart" class="cmd-icon">❤️</span>
-                    <span class="cmd-badge badge-pink">heart me</span>
                 </div>
                 <div class="cmd-row"
                     onclick="ensureAudio();var m=(pick.userName||'@player').toLowerCase(); var p=persistentScores[m]=persistentScores[m]||{score:0,giftsValue:0}; p.giftsCount=(p.giftsCount||0)+1; spawnText(pick?pick.x:canvas.width/2, (pick?pick.y:camY+100)-30, '🍦 UPGRADE!', '#00ffff'); pick.pickaxe=getPickaxeForGifts(m); currentPickaxe=pick.pickaxe||PICKAXES[0]; safeUpdate('pickaxeDisplay', '⛏ ' + currentPickaxe.name, currentPickaxe.color); if(_audioStarted)sfxPickaxeChange(); showGiftAlert(m, pick.userAvatarUrl, 'ice cream', document.getElementById('imgGiftIceCream').src, currentPickaxe);">
-                    <img id="imgGiftIceCream" src="" style="width:32px;height:32px;vertical-align:middle;margin-left:-6px;display:none;" />
-                    <span id="txtGiftIceCream" class="cmd-icon">🍦</span>
-                    <span class="cmd-badge badge-cyan">ice cream</span>
+                    <img src="pickaxe/wooden_pickaxe.png" style="width:32px;height:32px;vertical-align:middle;" />
+                    <span class="cmd-badge badge-cyan">+ 1</span>
+                    <img id="imgGiftIceCream" src=""
+                        style="width:32px;height:32px;vertical-align:middle;display:none;" />
+                    <span id="txtGiftIceCream" class="cmd-icon" style="font-size:32px;">🍦</span>
                 </div>
                 <div class="cmd-row"
                     onclick="ensureAudio();var m=(pick.userName||'@player').toLowerCase(); var p=persistentScores[m]=persistentScores[m]||{score:0,giftsValue:0}; p.giftsCount=PICKAXES.length-1; spawnText(pick?pick.x:canvas.width/2, (pick?pick.y:camY+100)-30, '🤞 MAX PICKAXE!', '#ff00ff'); pick.pickaxe=getPickaxeForGifts(m); currentPickaxe=pick.pickaxe||PICKAXES[0]; safeUpdate('pickaxeDisplay', '⛏ ' + currentPickaxe.name, currentPickaxe.color); if(_audioStarted)sfxPickaxeChange(); showGiftAlert(m, pick.userAvatarUrl, 'finger heart', document.getElementById('imgGiftFingerHeart').src, currentPickaxe);">
-                    <img id="imgGiftFingerHeart" src="" style="width:32px;height:32px;vertical-align:middle;margin-left:-6px;display:none;" />
-                    <span id="txtGiftFingerHeart" class="cmd-icon">🤞</span>
-                    <span class="cmd-badge badge-purple">finger heart</span>
+                    <img src="pickaxe/wooden_pickaxe.png" style="width:32px;height:32px;vertical-align:middle;" />
+                    <span class="cmd-badge badge-purple">++</span>
+                    <img src="pickaxe/netherite_pickaxe.png" style="width:32px;height:32px;vertical-align:middle;" />
+                    <img id="imgGiftFingerHeart" src=""
+                        style="width:32px;height:32px;vertical-align:middle;display:none;" />
+                    <span id="txtGiftFingerHeart" class="cmd-icon" style="font-size:32px;">🤞</span>
                 </div>
             </div>
         </div>
@@ -1903,6 +2063,9 @@
         var ownerName = '';
         var _cycleScores = {};
         var lastActivity = {};
+        // --- Otimização: Fila de Eventos ---
+        var liveEventQueue = [];
+        var uiUpdateTick = 0;
         var countryMapping = {}; // ISO code -> Name
         var nameToCountryCode = {}; // Name -> ISO code
         var flagImages = {}; // ISO code -> Image object
@@ -2086,11 +2249,11 @@
         var PIG_EGG_TEX = new Image(); PIG_EGG_TEX.src = 'pig/Pig eg.png';
 
         var lastBonusType = 'pig'; // will start with sheep
-        
+
         // Bee Animation Frames
         var ABELHA_MOTHER_FRAMES = [];
         var ABELHA_KID_FRAMES = [];
-        
+
         // Load Mother frames (84 frames)
         for (var i = 0; i <= 83; i++) {
             var img = new Image();
@@ -2130,16 +2293,17 @@
         // Sword Assets
         var SWORD_ASSETS = {};
         function loadSwordAssets() {
-            var materials = ['Wood', 'Stone', 'Iron', 'Gold', 'Diamond', 'Netherite'];
+            var materials = ['Wood', 'Stone', 'Copper', 'Iron', 'Gold', 'Diamond', 'Netherite'];
             var filenames = {
                 'Wood': 'Wooden_Sword.png',
                 'Stone': 'Stone_Sword.png',
+                'Copper': 'Copper_Sword.png',
                 'Iron': 'Iron_Sword.png',
                 'Gold': 'Golden_Sword.png',
                 'Diamond': 'Diamond_Sword.png',
                 'Netherite': 'Netherite_Sword_JE2_BE2.png'
             };
-            materials.forEach(function(m) {
+            materials.forEach(function (m) {
                 var img = new Image();
                 img.src = 'sword/' + filenames[m];
                 SWORD_ASSETS[m] = img;
@@ -2876,11 +3040,11 @@
 
             // Visual Effect: Circle on avatar (same as nuke style feedback)
             var uNameL = (userName || '').toLowerCase();
-            var uPick = userPicks.find(function(up) { return (up.userName || '').toLowerCase() === uNameL; }) || 
-                        ((ownerName && ownerName.toLowerCase() === uNameL) ? pick : null);
-            
+            var uPick = userPicks.find(function (up) { return (up.userName || '').toLowerCase() === uNameL; }) ||
+                ((ownerName && ownerName.toLowerCase() === uNameL) ? pick : null);
+
             if (uPick) {
-                var effectExists = _creeperSpawnEffects.some(function(e) { return e.userName === uNameL && e.life > 35; });
+                var effectExists = _creeperSpawnEffects.some(function (e) { return e.userName === uNameL && e.life > 35; });
                 if (!effectExists) {
                     var avSize = 48;
                     var avY = uPick.y - PICK_HALF - 44;
@@ -2934,6 +3098,7 @@
         var PICKAXES = [
             { name: 'Wood', img: 'pickaxe/wooden_pickaxe.png', damage: 0.5, color: '#c8a464' },
             { name: 'Stone', img: 'pickaxe/stone_pickaxe.png', damage: 1.0, color: '#aaaaaa' },
+            { name: 'Copper', img: 'pickaxe/copper_pickaxe.png', damage: 1.1, color: '#e77c56' },
             { name: 'Gold', img: 'pickaxe/golden_pickaxe.png', damage: 1.2, color: '#ffe066' },
             { name: 'Iron', img: 'pickaxe/iron_pickaxe.png', damage: 1.5, color: '#d8d8d8' },
             { name: 'Diamond', img: 'pickaxe/diamond_pickaxe.png', damage: 2.5, color: '#44ddff' },
@@ -2950,9 +3115,9 @@
                 var data = imageData.data;
                 var pixelsChanged = 0;
                 for (var i = 0; i < data.length; i += 4) {
-                    var r = data[i], g = data[i+1], b = data[i+2], a = data[i+3];
+                    var r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3];
                     if (a < 10) continue;
-                    
+
                     // Minecraft handle colors: #8a5a3c, #533725, #b37b57
                     var handleColors = [[138, 90, 60], [83, 55, 37], [179, 123, 87]];
                     var isHandle = false;
@@ -2961,12 +3126,12 @@
                         if (d < 60) { isHandle = true; break; }
                     }
                     // Secondary check for any brownish pixels that aren't the head color
-                    if (!isHandle && r > g && g > b && r < 200 && (r/g) > 1.2 && (g/b) > 1.1) {
+                    if (!isHandle && r > g && g > b && r < 200 && (r / g) > 1.2 && (g / b) > 1.1) {
                         isHandle = true;
                     }
 
                     if (isHandle) {
-                        data[i+3] = 0;
+                        data[i + 3] = 0;
                         pixelsChanged++;
                     }
                 }
@@ -2980,7 +3145,7 @@
 
         PICKAXES.forEach(function (p) {
             p.imgObj = new Image();
-            p.imgObj.onload = function() {
+            p.imgObj.onload = function () {
                 // If it's the wooden pickaxe, we skip masking or it would disappear
                 if (p.name.toLowerCase() === 'wood') {
                     p.headMask = p.imgObj; // Mask is the whole thing for wood
@@ -3584,7 +3749,6 @@
         var parts = [], texts = [], debris = [];
         var announcements = [];
         // persistentScores movido para o topo do script
-        var creepers = []; // array de creepers explosivos
 
         // ── Cycle Scoring (every 200m) ──
         // _cycleScores movido para o topo do script
@@ -3609,6 +3773,8 @@
                     if (_cycleScores[k].kills === undefined) _cycleScores[k].kills = 0;
                     if (_cycleScores[k].items === undefined) _cycleScores[k].items = 0;
                     if (_cycleScores[k].balls === undefined) _cycleScores[k].balls = 0;
+                    if (_cycleScores[k].sheep === undefined) _cycleScores[k].sheep = 0;
+                    if (_cycleScores[k].pig === undefined) _cycleScores[k].pig = 0;
                 });
             } catch (e) { }
         }
@@ -3616,11 +3782,13 @@
 
         function addCycleScore(userName, pts, type) {
             if (!userName) return;
-            if (!_cycleScores[userName]) _cycleScores[userName] = { score: 0, kills: 0, items: 0, balls: 0, likes: 0, avatar: '' };
+            if (!_cycleScores[userName]) _cycleScores[userName] = { score: 0, kills: 0, items: 0, balls: 0, likes: 0, sheep: 0, pig: 0, avatar: '' };
             _cycleScores[userName].score += pts;
             if (type === 'kill') _cycleScores[userName].kills++;
             if (type === 'item') _cycleScores[userName].items++;
             if (type === 'ball') _cycleScores[userName].balls++;
+            if (type === 'sheep') _cycleScores[userName].sheep++;
+            if (type === 'pig') _cycleScores[userName].pig++;
             if (persistentScores[userName] && persistentScores[userName].avatar) _cycleScores[userName].avatar = persistentScores[userName].avatar;
         }
 
@@ -3769,7 +3937,7 @@
         var extraPicks = [];
         // userPicks movido para o topo do script
         var lastActivity = {};  // { userName: timestamp }
-        var INACTIVE_MS = 3 * 60 * 1000; // 3 minutes
+        var INACTIVE_MS = 15 * 1000; // 15 seconds
         var doublePickActive = false;
         var doublePickTimer = 0;
         var DOUBLE_PICK_DURATION = 600;
@@ -3865,7 +4033,7 @@
             extraPicks = []; userPicks = []; lastActivity = {};
             camTarget = null; camLeaderTimer = 0; camY = 0;
             doublePickActive = false; doublePickTimer = 0; updateDoublePickHUD();
-            stormActive = false; stormTimer = 0; 
+            stormActive = false; stormTimer = 0;
             tormentaActive = false; tormentaTimer = 0; tormentaPick = null;
             activeSpins = []; spinCooldowns = {}; spinQueues = {};
             bgChunks = {}; bgTick = 0;
@@ -4150,7 +4318,6 @@
                 if (ep.cloneOwner) {
                     ep.cloneTimer--;
                     if (ep.cloneTimer <= 0) {
-                        spawnText(ep.x, ep.y - 20, '⚔️ clone expired', '#888');
                         extraPicks.splice(i, 1);
                         continue;
                     }
@@ -4985,8 +5152,13 @@
                             if (player) player.score = (player.score || 0) + BONUS_BALL_PTS;
                             if (!persistentScores[owner.userName]) persistentScores[owner.userName] = { score: 0, avatar: owner.userAvatarUrl || '' };
                             persistentScores[owner.userName].score += BONUS_BALL_PTS;
-                            persistentScores[owner.userName].balls = (persistentScores[owner.userName].balls || 0) + 1;
-                            addCycleScore(owner.userName, BONUS_BALL_PTS, 'ball');
+                            if (ball.animalType === 'sheep') {
+                                persistentScores[owner.userName].sheep = (persistentScores[owner.userName].sheep || 0) + 1;
+                                addCycleScore(owner.userName, BONUS_BALL_PTS, 'sheep');
+                            } else {
+                                persistentScores[owner.userName].pig = (persistentScores[owner.userName].pig || 0) + 1;
+                                addCycleScore(owner.userName, BONUS_BALL_PTS, 'pig');
+                            }
                         }
                         var isOwnerTarget = (owner === pick);
                         if (isOwnerTarget && pick.active) {
@@ -5031,7 +5203,7 @@
                 var gAlpha = 0.15 + Math.sin(box.pulse) * 0.1;
                 ctx.fillStyle = 'rgba(255,221,68,' + gAlpha + ')';
                 ctx.fillRect(bx - 6, by - 6, bw + 12, bh + 12);
-                
+
                 var boxImg = (box.animalType === 'sheep') ? SHEEP_MOTHER_TEX : PIG_MOTHER_TEX;
                 if (boxImg.complete) {
                     ctx.drawImage(boxImg, bx, by, bw, bh);
@@ -5053,7 +5225,7 @@
                 ctx.fillStyle = ball.color;
                 ctx.globalAlpha = 0.25 + Math.sin(ball.sparkle) * 0.1;
                 ctx.fill(); ctx.globalAlpha = 1;
-                
+
                 var ballImg = (ball.animalType === 'sheep') ? SHEEP_KID_TEX : PIG_KID_TEX;
                 if (ballImg.complete) {
                     ctx.drawImage(ballImg, -ball.r, -ball.r, ball.r * 2, ball.r * 2);
@@ -5157,29 +5329,33 @@
             depthPicks.forEach(function (p) { if (p.y > deepestYForDepth) deepestYForDepth = p.y; });
             var depth = Math.floor(deepestYForDepth / TILE);
 
-            if (depth > maxDepth) {
-                var oldMilestone = Math.floor(maxDepth / 200);
-                var oldCycle = Math.floor(maxDepth / 400);
-                maxDepth = depth;
-                document.getElementById('depthDisplay').textContent = 'Depth: ' + maxDepth + 'm';
-                var newMilestone = Math.floor(maxDepth / 200);
-                var newCycle = Math.floor(maxDepth / 400);
-                if (newMilestone > oldMilestone && newMilestone > 0) {
-                    showDepthWarning(newMilestone * 200);
-                    sfxEvilLaugh();
+            // Otimização: Atualiza placar e profundidade apenas a cada 10 frames
+            uiUpdateTick++;
+            if (uiUpdateTick % 10 === 0) {
+                if (depth > maxDepth) {
+                    var oldMilestone = Math.floor(maxDepth / 200);
+                    var oldCycle = Math.floor(maxDepth / 400);
+                    maxDepth = depth;
+                    document.getElementById('depthDisplay').textContent = 'Depth: ' + maxDepth + 'm';
+                    var newMilestone = Math.floor(maxDepth / 200);
+                    var newCycle = Math.floor(maxDepth / 400);
+                    if (newMilestone > oldMilestone && newMilestone > 0) {
+                        showDepthWarning(newMilestone * 200);
+                        sfxEvilLaugh();
+                    }
+                    if (newCycle > oldCycle && newCycle > 0) {
+                        triggerCycleEnd(newCycle);
+                    }
                 }
-                if (newCycle > oldCycle && newCycle > 0) {
-                    triggerCycleEnd(newCycle);
+
+                var displayOwner = ownerName;
+                if (!displayOwner) {
+                    var savedTT = localStorage.getItem('pd_tiktok_username');
+                    if (savedTT) displayOwner = '@' + savedTT.toLowerCase();
                 }
+                var displayScore = (displayOwner && persistentScores[displayOwner]) ? persistentScores[displayOwner].score : score;
+                document.getElementById('scoreDisplay').textContent = '⛏ ' + displayScore;
             }
-            // Show score from persistentScores if owner (daily total), otherwise current score
-            var displayOwner = ownerName;
-            if (!displayOwner) {
-                var savedTT = localStorage.getItem('pd_tiktok_username');
-                if (savedTT) displayOwner = '@' + savedTT.toLowerCase();
-            }
-            var displayScore = (displayOwner && persistentScores[displayOwner]) ? persistentScores[displayOwner].score : score;
-            document.getElementById('scoreDisplay').textContent = '⛏ ' + displayScore;
 
             // ── Democratic Camera: follow the deepest player for 5+ seconds ──
             var allCamPicks = [pick].concat(userPicks).filter(function (p) { return p && !p.stuck && (p === pick ? p.active : true); });
@@ -5236,9 +5412,9 @@
                 if (!_bp) continue;
                 if (_bp.bigTimer > 0) _bp.bigTimer--;
                 if (_bp._safetyTimer > 0) _bp._safetyTimer--;
-                
+
                 // If Big and slow (potentially stuck), activate safety destruction briefly
-                var bSpd = Math.sqrt(_bp.vx*_bp.vx + _bp.vy*_bp.vy);
+                var bSpd = Math.sqrt(_bp.vx * _bp.vx + _bp.vy * _bp.vy);
                 if (_bp.bigTimer > 0 && bSpd < 0.5 && Math.abs(_bp.spin) < 0.02) {
                     _bp._stuckBigCount = (_bp._stuckBigCount || 0) + 1;
                     if (_bp._stuckBigCount > 10) { _bp._safetyTimer = 40; _bp._stuckBigCount = 0; }
@@ -5306,14 +5482,14 @@
                             bestTarget.hp -= dmgVal;
                             bestTarget.hurtTimer = isZ ? 18 : 10;
                             if (isZ) bestTarget.animTimer = 0; else bestTarget.anim = 0;
-                            
+
                             bestTarget.state = 'hurt';
 
                             if (player) registerComboHit(player, bestTarget.x, bestTarget.y);
                             spawnText(bestTarget.x, bestTarget.y - 40, '-' + dmgVal + ' ⚡', '#00ffff');
 
                             if (bestTarget.hp <= 0) {
-                                bestTarget.state = 'dead'; 
+                                bestTarget.state = 'dead';
                                 if (isZ) bestTarget.animTimer = 0; else bestTarget.anim = 0;
                                 bestTarget.deadTimer = 0;
                                 var pts = bestTarget.pts || 50;
@@ -5346,6 +5522,29 @@
                 if (_nukeTimer <= 0) _nukeActive = false;
             }
 
+            function applyBossBarrier(mz, mStart) {
+                var gateRow = mStart + MEGA_CLEARING_HEIGHT - 10;
+                console.log('Criando barreira Bedrock na linha', gateRow, 'para Zona', mz);
+                ensureRows(gateRow, gateRow + 3);
+                for (var gr = gateRow; gr < gateRow + 3; gr++) {
+                    if (!worldMap[gr]) worldMap[gr] = genRow(gr);
+                    for (var gc = 0; gc < COLS; gc++) {
+                        worldMap[gr][gc] = { t: BEDROCK, hp: 9999, cr: 0 };
+                    }
+                }
+            }
+
+            // Re-defining to fix potential loop variable conflict in future edits
+            function setMegaBarrier(mz, row) {
+                ensureRows(row, row + 3);
+                for (var r = row; r < row + 3; r++) {
+                    if (!worldMap[r]) worldMap[r] = genRow(r);
+                    for (var c = 0; c < COLS; c++) {
+                        worldMap[r][c] = { t: BEDROCK, hp: 9999, cr: 0 };
+                    }
+                }
+            }
+
             updateZombies();
             checkPickZombieCollisions();
             updateSpiders();
@@ -5365,6 +5564,7 @@
                         megaClearedZones[mz + '_tick'] = 0;
                         var bossTypeIdx = mz % 4; // 0=queen, 1=zombie, 2=blaze, 3=ghast
                         var typeName = ['queen', 'zombie', 'blaze', 'ghast'][bossTypeIdx];
+                        console.log('Iniciando Arena:', typeName, 'Zona:', mz);
                         megaClearedZones[mz + '_type'] = typeName;
 
                         if (typeName === 'zombie') {
@@ -5379,15 +5579,8 @@
                                 // 40% chance of mother in initial burst
                                 spawnBat(mx, my, mz, mi % 2.5 < 1);
                             }
-                            // Place cobblestone floor (2 rows thick, wall-to-wall)
-                            ensureRows(zbRow, zbRow + 2);
-                            for (var fr = zbRow; fr < zbRow + 2; fr++) {
-                                if (!worldMap[fr]) worldMap[fr] = genRow(fr);
-                                for (var fc = 0; fc < COLS; fc++) {
-                                    var brickType = (fr + fc) % 3 === 0 ? MOSSY : COBBLE;
-                                    worldMap[fr][fc] = { t: brickType, hp: 9999, cr: 0 };
-                                }
-                            }
+                            // Place Bedrock barrier floor (3 rows thick, wall-to-wall)
+                            setMegaBarrier(mz, zbRow);
                             var zbFloorY = zbRow * TILE;
                             megaClearedZones[mz + '_zbFloorRow'] = zbRow;
                             var zbY = zbFloorY - ZOMBIE_SIZE * ZBOSS_SCALE * 0.5;
@@ -5407,6 +5600,9 @@
                                 // 40% chance of mother in initial burst
                                 spawnBat(mx, my, mz, mi % 2.5 < 1);
                             }
+                            // Spawn Bedrock barrier for Queen
+                            var queenGateRow = mStart + MEGA_CLEARING_HEIGHT - 10;
+                            setMegaBarrier(mz, queenGateRow);
                             // Spawn Queen Gate at the bottom
                             var queenRow = mStart + MEGA_CLEARING_HEIGHT - 15;
                             var queenY = queenRow * TILE + TILE / 2;
@@ -5425,6 +5621,10 @@
                                 var my = myRow * TILE + TILE / 2;
                                 spawnBat(mx, my, mz, mi % 3 < 1);
                             }
+                            // Spawn Bedrock barrier for Blaze
+                            console.log('Gerando Bedrock para Blaze (Zona ' + mz + ')');
+                            var blazeGateRow = mStart + MEGA_CLEARING_HEIGHT - 10;
+                            setMegaBarrier(mz, blazeGateRow);
                             // Spawn Blaze Boss at the bottom
                             var blazeRow = mStart + MEGA_CLEARING_HEIGHT - 15;
                             var blazeY = blazeRow * TILE + TILE / 2;
@@ -5443,6 +5643,9 @@
                                 var my = myRow * TILE + TILE / 2;
                                 spawnGhast(mx, my, mz, mi % 4 < 1);
                             }
+                            // Spawn Bedrock barrier for Ghast
+                            var ghastGateRow = mStart + MEGA_CLEARING_HEIGHT - 10;
+                            setMegaBarrier(mz, ghastGateRow);
                             // Spawn Ghast Boss at the bottom
                             var ghastRow = mStart + MEGA_CLEARING_HEIGHT - 15;
                             var ghastY = ghastRow * TILE + TILE / 2;
@@ -5462,7 +5665,16 @@
                             for (var zci = 0; zci < zombies.length; zci++) {
                                 if (zombies[zci].isZBoss && zombies[zci].zone === mz && zombies[zci].state !== 'dead') aliveBosses++;
                             }
+                        } else if (gateType === 'blaze') {
+                            for (var bci = 0; bci < bats.length; bci++) {
+                                if (bats[bci].isBlaze && bats[bci].zone === mz && bats[bci].state !== 'dead') aliveBosses++;
+                            }
+                        } else if (gateType === 'ghast') {
+                            for (var gci = 0; gci < bats.length; gci++) {
+                                if (bats[gci].isGhast && (bats[gci].isMother || bats[gci].isZBoss || bats[gci].maxHp > 100) && bats[gci].zone === mz && bats[gci].state !== 'dead') aliveBosses++;
+                            }
                         } else {
+                            // Default for Queen
                             for (var qci = 0; qci < bats.length; qci++) {
                                 if (bats[qci].isQueen && bats[qci].zone === mz && bats[qci].state !== 'dead') aliveBosses++;
                             }
@@ -5473,10 +5685,10 @@
                             shakeAmt = 25;
                             // Destroy barrier blocks at gate row so pickaxes never stop
                             var gateRow = getMegaStart(mz) + MEGA_CLEARING_HEIGHT - 10;
-                            for (var gr = gateRow - 2; gr <= gateRow + 2; gr++) {
+                            for (var gr = gateRow - 2; gr <= gateRow + 5; gr++) {
                                 if (!worldMap[gr]) continue;
-                                for (var gc = 1; gc < COLS - 1; gc++) {
-                                    if (worldMap[gr][gc] && worldMap[gr][gc].t !== E && worldMap[gr][gc].t !== BEDROCK) {
+                                for (var gc = 0; gc < COLS; gc++) {
+                                    if (worldMap[gr][gc] && worldMap[gr][gc].t !== E) {
                                         worldMap[gr][gc].t = E; worldMap[gr][gc].hp = 0; worldMap[gr][gc].cr = 0;
                                     }
                                 }
@@ -6553,7 +6765,7 @@
                     ctx.fillStyle = '#00ff00';
                     ctx.fillRect(c.x - size / 2, c.y - size / 2, size, size);
                 }
-                
+
                 // Nome do mensageiro do Creeper
                 if (c.userName) {
                     ctx.save();
@@ -6590,13 +6802,13 @@
                 ctx.beginPath(); ctx.arc(_nukeLocation.x, _nukeLocation.y, nSize * 0.6, 0, Math.PI * 2); ctx.fill();
                 ctx.restore();
             }
-            
+
             // ── Creeper Spawn Visuals (Nuke-like circle) ──
             for (var i = _creeperSpawnEffects.length - 1; i >= 0; i--) {
                 var ef = _creeperSpawnEffects[i];
                 ef.life--;
                 if (ef.life <= 0) { _creeperSpawnEffects.splice(i, 1); continue; }
-                
+
                 var p = 1 - (ef.life / ef.maxLife);
                 var r = p * 110;
                 ctx.save();
@@ -6612,7 +6824,7 @@
                 ctx.beginPath(); ctx.arc(ef.x, ef.y, r * 0.6, 0, Math.PI * 2); ctx.fill();
                 ctx.restore();
             }
-            
+
             for (var tk = 0; tk < _thorBeams.length; tk++) {
                 var tb = _thorBeams[tk];
                 if (!tb.player || !tb.enemy) continue; // safety check
@@ -7049,6 +7261,13 @@
             updateFX();
             updateWeatherParticles();
             try { draw(); } catch (e) { console.warn('draw error:', e.message); }
+            // ── Otimização: Processa eventos da fila (max 5 por frame) ──
+            var eventsProcessed = 0;
+            while (liveEventQueue.length > 0 && eventsProcessed < 5) {
+                processLiveEvent(liveEventQueue.shift());
+                eventsProcessed++;
+            }
+
             requestAnimationFrame(loop);
         }
 
@@ -7458,7 +7677,11 @@
             });
         })();
 
-        function spawnBat(wx, wy, zone, isMother) {
+        function spawnGhast(wx, wy, zone, isMother) {
+            spawnBat(wx, wy, zone, isMother, true);
+        }
+
+        function spawnBat(wx, wy, zone, isMother, forceGhast) {
             // Use higher cap during mega-clearings
             var batRow = Math.floor(wy / TILE);
             var inMega = isMegaClearingRow(batRow);
@@ -7507,7 +7730,7 @@
                 zone: zone,
                 flyType: flyType,
                 isMother: motherFlag,
-                isGhast: (zone % 2 === 1),
+                isGhast: forceGhast || (zone % 2 === 1),
                 lastSpawnTime: Date.now(),
                 boundsMinX: minX + TILE, boundsMaxX: maxX - TILE,
                 boundsMinY: minY + TILE * 0.5, boundsMaxY: maxY - TILE,
@@ -8219,7 +8442,7 @@
                 var isMegaZ = (z.zone !== undefined || z.isZBoss);
                 var cullingDistZ = isMegaZ ? 12000 : 2000;
                 if (z.y < camY - 800 || z.y > camY + canvas.height + cullingDistZ) { zombies.splice(i, 1); continue; }
-                
+
                 if (z._dirTimer > 0) z._dirTimer--;
 
                 // ── DEAD: play full animation then remove ──
@@ -9064,7 +9287,7 @@
                 var s = swordHitSound.cloneNode();
                 s.volume = 0.5;
                 s.play();
-            } catch (e) {}
+            } catch (e) { }
         }
 
         var sheepSounds = [
@@ -9076,8 +9299,8 @@
             if (!_audioStarted) return;
             // Only play if at least one sheep is visible (unless forced)
             if (!force) {
-                var visible = bonusBalls.some(function(b) { 
-                    return b.animalType === 'sheep' && b.y > camY && b.y < camY + canvas.height; 
+                var visible = bonusBalls.some(function (b) {
+                    return b.animalType === 'sheep' && b.y > camY && b.y < camY + canvas.height;
                 });
                 if (!visible) return;
             }
@@ -9086,7 +9309,7 @@
                 var s = sheepSounds[Math.floor(Math.random() * sheepSounds.length)].cloneNode();
                 s.volume = 0.4;
                 s.play();
-            } catch (e) {}
+            } catch (e) { }
         }
 
         var pigSounds = [
@@ -9098,8 +9321,8 @@
             if (!_audioStarted) return;
             // Only play if at least one pig is visible (unless forced)
             if (!force) {
-                var visible = bonusBalls.some(function(b) { 
-                    return b.animalType === 'pig' && b.y > camY && b.y < camY + canvas.height; 
+                var visible = bonusBalls.some(function (b) {
+                    return b.animalType === 'pig' && b.y > camY && b.y < camY + canvas.height;
                 });
                 if (!visible) return;
             }
@@ -9108,7 +9331,7 @@
                 var s = pigSounds[Math.floor(Math.random() * pigSounds.length)].cloneNode();
                 s.volume = 0.4;
                 s.play();
-            } catch (e) {}
+            } catch (e) { }
         }
 
         // ── Música de Boss ──────────────────────────────────────────────────────────
@@ -9831,9 +10054,22 @@
         }
 
         function handleLiveEvent(data) {
+            // Adiciona na fila para processamento suave durante o loop de jogo
+            liveEventQueue.push(data);
+            if (liveEventQueue.length > 200) liveEventQueue.shift(); // Evita estouro da fila
+        }
+
+        function processLiveEvent(data) {
             var plat = data.platform || 'tiktok';
             console.log('[Live]', plat, data.type, data.message || data.username || '');
             if (data.type === 'connected') {
+                if (data.ownerAvatar) {
+                    pick.userAvatarUrl = data.ownerAvatar;
+                    if (ownerName) {
+                        if (!persistentScores[ownerName]) persistentScores[ownerName] = { score: 0, likes: 0, giftsValue: 0, avatar: data.ownerAvatar };
+                        else persistentScores[ownerName].avatar = data.ownerAvatar;
+                    }
+                }
                 if (plat === 'tiktok') {
                     _ttConnected = true;
                     if (data.availableGifts && data.availableGifts.length > 0) {
@@ -9869,29 +10105,35 @@
                 var tx = uPick ? uPick.x : undefined, ty = uPick ? uPick.y : undefined;
 
                 words.forEach(function (word) {
-                    if (word === 'play' || word === 'join') spawnUserPickaxe(cUser, cAvatar);
-                    else if (word === 'sr') activateSpin(cUser, 'right');
-                    else if (word === 'sl') activateSpin(cUser, 'left');
-                    else if (word === 'su') activateSpin(cUser, 'up');
-                    else if (word === 'sd') activateSpin(cUser, 'down');
-                    else if (word === 'mega' || word === 'powertnt') activateMegaTNT(tx, ty, cUser, cAvatar);
-                    else if (word === 'tnt') activateTNT(tx, ty, cUser, cAvatar);
-                    else if (word === 'clone' || word === 'clonar') spawnClone(cUser, cAvatar);
-                    else if (word === 'thor' || word === 'raio') activateThor(tx, ty, cUser, cAvatar);
-                    else if (word === 'sword' || word === 'espada') activateSword(userPick);
-                    else if (word === 'nuke' || word === 'nuclear') activateNuke(tx, ty, cUser, cAvatar);
-                    else if (word === 'pp' || word === 'storm' || word === 'tempestade') activateStorm(uPick);
-                    else if (word === 'bh' || word === 'blackhole' || word === 'buraco') activateBlackHole(tx, ty, cUser, cAvatar);
-                    else if (word === 'creeper') {
+                    var cmd = word.trim().replace(/^!/, ''); // Remove prefixo ! se houver
+                    if (cmd === 'play' || cmd === 'join') spawnUserPickaxe(cUser, cAvatar);
+                    else if (cmd === 'sr') activateSpin(cUser, 'right');
+                    else if (cmd === 'sl') activateSpin(cUser, 'left');
+                    else if (cmd === 'su') activateSpin(cUser, 'up');
+                    else if (cmd === 'sd') activateSpin(cUser, 'down');
+                    else if (cmd === 'mega' || cmd === 'powertnt') activateMegaTNT(tx, ty, cUser, cAvatar);
+                    else if (cmd === 'tnt') activateTNT(tx, ty, cUser, cAvatar);
+                    else if (cmd === 'clone' || cmd === 'clonar') spawnClone(cUser, cAvatar);
+                    else if (cmd === 'thor' || cmd === 'raio') activateThor(tx, ty, cUser, cAvatar);
+                    else if (cmd === 'sword' || cmd === 'espada') activateSword(uPick);
+                    else if (cmd === 'nuke' || cmd === 'nuclear') activateNuke(tx, ty, cUser, cAvatar);
+                    else if (cmd === 'pp' || cmd === 'storm' || cmd === 'tempestade') activateStorm(uPick);
+                    else if (cmd === 'bh' || cmd === 'blackhole' || cmd === 'buraco') activateBlackHole(tx, ty, cUser, cAvatar);
+                    else if (cmd === 'creeper') {
                         var cdKey = cUser + '_creeper';
                         if (!(skillCooldowns[cdKey] > 0)) {
                             skillCooldowns[cdKey] = creeperCooldown;
-                            for (var ci = 0; ci < 10; ci++) activateCreeper(tx + (Math.random() - 0.5) * TILE * 4, ty - Math.random() * TILE * 2, cUser);
+                            // Gera 10 creepers ao redor do jogador
+                            for (var ci = 0; ci < 10; ci++) {
+                                var cx = (tx !== undefined) ? tx + (Math.random() - 0.5) * TILE * 4 : undefined;
+                                var cy = (ty !== undefined) ? ty - Math.random() * TILE * 2 : undefined;
+                                activateCreeper(cx, cy, cUser);
+                            }
+                            console.log('[Command] Creeper spawned for', cUser);
                         }
                     }
-                    else if (word === 'big' || word === 'grande') activateBig(cUser);
-
-                    else if (word === 'bot20ok') { for (var bi = 0; bi < 20; bi++) { var bn = '@Bot_' + (1 + Math.floor(Math.random() * 9999)); spawnUserPickaxe(bn, ''); } spawnText(canvas.width / 2, camY + 100, '20 BOTS!', '#ffff00'); }
+                    else if (cmd === 'big' || cmd === 'grande') activateBig(cUser);
+                    else if (cmd === 'bot20ok') { for (var bi = 0; bi < 20; bi++) { var bn = '@Bot_' + (1 + Math.floor(Math.random() * 9999)); spawnUserPickaxe(bn, ''); } spawnText(canvas.width / 2, camY + 100, '20 BOTS!', '#ffff00'); }
                 });
 
                 // Flags System: check if msg is a country code or name
@@ -9950,7 +10192,7 @@
                 }
                 triggerBotrixEvent('superchat', scUser, scAvatar);
             }
-            else if (data.type === 'member') { var mUserRaw = data.user || ''; var mUser = (mUserRaw.charAt(0) === '@' ? mUserRaw : '@' + mUserRaw).toLowerCase(); if (mUser === '@') return; lastActivity[mUser] = Date.now(); if (data.avatar) loadAvatar(data.avatar); spawnUserPickaxe(mUser, data.avatar || ''); }
+            else if (data.type === 'member') { var mUserRaw = data.user || ''; var mUser = (mUserRaw.charAt(0) === '@' ? mUserRaw : '@' + mUserRaw).toLowerCase(); if (mUser === '@') return; lastActivity[mUser] = Date.now(); if (data.avatar) loadAvatar(data.avatar); }
             else if (data.type === 'gift') {
                 var gUserRaw = data.user || 'unknown';
                 var gUser = (gUserRaw.charAt(0) === '@' ? gUserRaw : '@' + gUserRaw).toLowerCase(), gAvatar = data.avatar || '', giftName = (data.giftName || '').toLowerCase();
@@ -9962,7 +10204,7 @@
                 var gy = gPick ? gPick.y : refP.y;
                 var diamonds = data.diamondCount || 1, repeat = data.repeatCount || 1;
                 if (data.platform === 'youtube') { repeat = 1; }
-                
+
                 var resultingPickaxe = null;
 
                 if (giftName.includes('ice cream') || giftName.includes('sorvete')) {
@@ -9977,57 +10219,57 @@
                     resultingPickaxe = getPickaxeForGifts(gUser);
                     if (gPick) gPick.pickaxe = resultingPickaxe;
                 }
-                else if (giftName.includes('rose') || giftName.includes('rosa')) { 
-                    var count = 10 * Math.min(repeat, 5); 
-                    for (var gi = 0; gi < count; gi++) activateTNT(gx + (Math.random() - 0.5) * TILE * 3, gy, gUser, gAvatar); 
-                    spawnText(gx, gy - 30, '🌹 ' + count + ' TNT!', '#ff6688'); if (pick.active) score += 1 * repeat; 
+                else if (giftName.includes('rose') || giftName.includes('rosa')) {
+                    var count = 10 * Math.min(repeat, 5);
+                    for (var gi = 0; gi < count; gi++) activateTNT(gx + (Math.random() - 0.5) * TILE * 3, gy, gUser, gAvatar);
+                    spawnText(gx, gy - 30, '🌹 ' + count + ' TNT!', '#ff6688'); if (pick.active) score += 1 * repeat;
                 }
-                else if (giftName.includes('gg')) { 
+                else if (giftName.includes('gg')) {
                     var count = 20 * Math.min(repeat, 3);
-                    for (var gi = 0; gi < count; gi++) activateTNT(gx + (Math.random() - 0.5) * TILE * 5, gy, gUser, gAvatar); 
-                    spawnText(gx, gy - 30, '🎮 ' + count + ' TNT!', '#44ff44'); if (pick.active) score += 4 * repeat; 
+                    for (var gi = 0; gi < count; gi++) activateTNT(gx + (Math.random() - 0.5) * TILE * 5, gy, gUser, gAvatar);
+                    spawnText(gx, gy - 30, '🎮 ' + count + ' TNT!', '#44ff44'); if (pick.active) score += 4 * repeat;
                 }
-                else if (giftName.includes('creeper')) { 
-                    for (var gi = 0; gi < Math.min(repeat, 3); gi++) activateCreeper(gx + (Math.random()-0.5)*TILE*2, gy, gUser); 
-                    spawnText(gx, gy - 30, '💣 CREEPER!', '#44ff44'); if (pick.active) score += 5 * repeat; 
+                else if (giftName.includes('creeper')) {
+                    for (var gi = 0; gi < Math.min(repeat, 3); gi++) activateCreeper(gx + (Math.random() - 0.5) * TILE * 2, gy, gUser);
+                    spawnText(gx, gy - 30, '💣 CREEPER!', '#44ff44'); if (pick.active) score += 5 * repeat;
                 }
                 else if (giftName.includes('donut') || giftName.includes('rosquinha')) {
                     var wavesLeft = 20 * repeat;
                     spawnText(gx, gy - 30, '🍩 DONUT CREEPER RAIN!', '#00ff00');
                     if (pick.active) score += 50 * repeat;
-                    for (var gi = 0; gi < 10; gi++) activateCreeper(gx + (Math.random()-0.5)*TILE*4, gy - Math.random()*TILE*2, gUser);
+                    for (var gi = 0; gi < 10; gi++) activateCreeper(gx + (Math.random() - 0.5) * TILE * 4, gy - Math.random() * TILE * 2, gUser);
                     wavesLeft--;
-                    var donutInt = setInterval(function() {
+                    var donutInt = setInterval(function () {
                         if (wavesLeft <= 0 || !_gameStarted) { clearInterval(donutInt); return; }
                         wavesLeft--;
-                        var cPick = userPicks.find(function(up) { return up.userName === gUser; });
+                        var cPick = userPicks.find(function (up) { return up.userName === gUser; });
                         var px = cPick ? cPick.x : (pick.active ? pick.x : canvas.width / 2);
                         var py = cPick ? cPick.y : (pick.active ? pick.y : camY + canvas.height / 2);
-                        for (var gi = 0; gi < 10; gi++) activateCreeper(px + (Math.random()-0.5)*TILE*4, py - Math.random()*TILE*2, gUser);
+                        for (var gi = 0; gi < 10; gi++) activateCreeper(px + (Math.random() - 0.5) * TILE * 4, py - Math.random() * TILE * 2, gUser);
                         spawnText(px, py - 30, '🍩 WAVES LEFT: ' + wavesLeft, '#00ff00');
                     }, 30000);
                     giftName = 'donut (10x CREEPERS / 30s)';
                     resultingPickaxe = { img: 'block/creeper.png' };
                 }
-                else if (giftName.includes('heart me') || giftName.includes('heart_me') || giftName.includes('coração') || giftName.includes('heart')) { 
+                else if (giftName.includes('heart me') || giftName.includes('heart_me') || giftName.includes('coração') || giftName.includes('heart')) {
                     var count = 30 * Math.min(repeat, 3);
-                    for (var gi = 0; gi < count; gi++) activateHeartTNT(gx + (Math.random() - 0.5) * TILE * 4, gy, gUser, gAvatar); 
-                    spawnText(gx, gy - 30, '❤️ ' + count + ' CORAÇÕES!', '#ff6688'); if (pick.active) score += 3 * repeat; 
+                    for (var gi = 0; gi < count; gi++) activateHeartTNT(gx + (Math.random() - 0.5) * TILE * 4, gy, gUser, gAvatar);
+                    spawnText(gx, gy - 30, '❤️ ' + count + ' CORAÇÕES!', '#ff6688'); if (pick.active) score += 3 * repeat;
                 }
-                else if (giftName.includes('like')) { 
-                    for (var gi = 0; gi < Math.min(repeat, 5); gi++) activateMegaTNT(gx + (Math.random() - 0.5) * TILE * 3, gy, gUser, gAvatar); 
-                    spawnText(gx, gy - 30, '❤️ MEGA!', '#ff4488'); if (pick.active) score += 5 * repeat; 
+                else if (giftName.includes('like')) {
+                    for (var gi = 0; gi < Math.min(repeat, 5); gi++) activateMegaTNT(gx + (Math.random() - 0.5) * TILE * 3, gy, gUser, gAvatar);
+                    spawnText(gx, gy - 30, '❤️ MEGA!', '#ff4488'); if (pick.active) score += 5 * repeat;
                 }
-                else { 
-                    for (var gi = 0; gi < Math.min(repeat, 10); gi++) activateTNT(gx + (Math.random() - 0.5) * TILE * 3, gy, gUser, gAvatar); 
-                    spawnText(gx, gy - 30, '🎁 TNT!', '#ffaa44'); if (pick.active) score += 1 * repeat; 
+                else {
+                    for (var gi = 0; gi < Math.min(repeat, 10); gi++) activateTNT(gx + (Math.random() - 0.5) * TILE * 3, gy, gUser, gAvatar);
+                    spawnText(gx, gy - 30, '🎁 TNT!', '#ffaa44'); if (pick.active) score += 1 * repeat;
                 }
                 // Contabilizar valor dos presentes (diamantes) no ranking — TODOS os jogadores, incluindo owner
                 if (!persistentScores[gUser]) persistentScores[gUser] = { score: 0, avatar: gAvatar, color: '#ff88ff', likes: 0, giftsValue: 0, giftsCount: 0 };
                 var giftScoreValue = diamonds * repeat;
                 persistentScores[gUser].score += giftScoreValue;
                 persistentScores[gUser].giftsValue = (persistentScores[gUser].giftsValue || 0) + giftScoreValue;
-                
+
                 // Adiciona também ao cycle score para aparecer no ranking
                 addCycleScore(gUser, giftScoreValue);
 
@@ -10082,7 +10324,7 @@
                 var refP = (pick.active) ? pick : (camTarget || pick);
                 var sx = sPick ? sPick.x : refP.x;
                 var sy = sPick ? sPick.y : refP.y;
-                activateMegaTNT(sx, sy, sUser, data.avatar || ''); if (pick.active) score += 10; spawnText(sx, sy - 30, '+10 SHARE!', '#44ddff');
+                activateTNT(sx, sy, sUser, data.avatar || ''); if (pick.active) score += 10; spawnText(sx, sy - 30, '+10 SHARE!', '#44ddff');
             }
         }
 
@@ -10093,13 +10335,21 @@
             var savedYT = localStorage.getItem('pd_youtube_id');
             if (savedTT) {
                 _tiktokUsername = savedTT;
-                document.getElementById('tiktokUsernameInput').value = savedTT;
+                var ttInput = document.getElementById('tiktokUsernameInput');
+                if (ttInput) ttInput.value = savedTT;
                 ownerName = '@' + savedTT.toLowerCase();
                 pick.userName = ownerName;
                 if (!persistentScores[ownerName]) persistentScores[ownerName] = { score: 0, avatar: '', color: '#ffdd44' };
             }
-            if (savedTTSid) { document.getElementById('tiktokSessionInput').value = savedTTSid; }
-            if (savedYT) { _youtubeId = savedYT; document.getElementById('youtubeIdInput').value = savedYT; }
+            if (savedTTSid) {
+                var ttsInput = document.getElementById('tiktokSessionInput');
+                if (ttsInput) ttsInput.value = savedTTSid;
+            }
+            if (savedYT) {
+                _youtubeId = savedYT;
+                var ytInput = document.getElementById('youtubeIdInput');
+                if (ytInput) ytInput.value = savedYT;
+            }
             // Restore avatars
             var keys = Object.keys(persistentScores);
             for (var i = 0; i < keys.length; i++) { var av = persistentScores[keys[i]].avatar; if (av) loadAvatar(av); }
@@ -10921,6 +11171,7 @@
 
         function updateLeaderboard() {
             if (_cycleOverlay) return; // Skip update if ranking overlay is active
+
             for (var i = 0; i < userPicks.length; i++) {
                 userPicks[i].pickaxe = getPickaxeForGifts(userPicks[i].userName);
             }
@@ -10928,80 +11179,93 @@
             var list = document.getElementById('leaderboardList');
             if (!list) return;
 
-            // Get list of players currently in game
-            var inGamePlayers = {};
-            if (ownerName && persistentScores[ownerName]) {
-                inGamePlayers[ownerName] = true;
-            }
-            for (var j = 0; j < userPicks.length; j++) {
-                inGamePlayers[userPicks[j].userName] = true;
-            }
-
-            // Get all players sorted by global score
-            var allSorted = Object.keys(persistentScores)
-                .map(function (name) {
-                    var ps = persistentScores[name];
-                    return { userName: name, score: ps.score || 0, likes: ps.likes || 0, giftsValue: ps.giftsValue || 0, avatar: ps.avatar || '' };
-                })
-                .filter(function (p) { return p.score > 0 || p.giftsValue > 0 || p.likes > 0; })
-                .sort(function (a, b) { return b.score - a.score; });
-
-            // Filter to only in-game players but keep their global ranking position
-            var globalRankMap = {};
-            allSorted.forEach(function (p, idx) { globalRankMap[p.userName] = idx + 1; });
-
-            var playersInGame = allSorted
-                .filter(function (p) { return inGamePlayers[p.userName]; })
-                .map(function (p) {
-                    var pTier = currentPickaxe;
-                    if (ownerName && p.userName === ownerName) {
-                        pTier = currentPickaxe;
-                    } else {
-                        for (var k = 0; k < userPicks.length; k++) {
-                            if (userPicks[k].userName === p.userName) { pTier = userPicks[k].pickaxe || PICKAXES[0]; break; }
-                        }
+            try {
+                // Ensure all in-game players are in persistentScores
+                var inGamePlayers = {};
+                if (ownerName) {
+                    inGamePlayers[ownerName] = true;
+                    if (!persistentScores[ownerName]) persistentScores[ownerName] = { score: 0, likes: 0, giftsValue: 0, avatar: pick.userAvatarUrl || '' };
+                    if (pick.userAvatarUrl && persistentScores[ownerName].avatar !== pick.userAvatarUrl) {
+                        persistentScores[ownerName].avatar = pick.userAvatarUrl;
                     }
-                    var cs = _cycleScores[p.userName] || {};
-                    return {
-                        userName: p.userName,
-                        globalRank: globalRankMap[p.userName] || 0,
-                        score: p.score,
-                        kills: cs.kills || 0,
-                        items: cs.items || 0,
-                        balls: cs.balls || 0,
-                        likes: p.likes,
-                        giftsValue: p.giftsValue,
-                        userAvatarUrl: p.avatar,
-                        pickaxe: pTier
-                    };
-                })
-                .slice(0, 10);
+                }
+                for (var j = 0; j < userPicks.length; j++) {
+                    var uname = userPicks[j].userName;
+                    inGamePlayers[uname] = true;
+                    if (!persistentScores[uname]) persistentScores[uname] = { score: 0, likes: 0, giftsValue: 0, avatar: userPicks[j].userAvatarUrl || '' };
+                }
 
-            if (playersInGame.length === 0) {
-                list.innerHTML = '<div style="text-align:center; opacity:0.5; font-size:11px;">Round ' + ((_currentCycle || 0) + 1) + ' — 400m</div>';
-                return;
+                // Get all players sorted by global score
+                var allSorted = Object.keys(persistentScores)
+                    .map(function (name) {
+                        var ps = persistentScores[name];
+                        return { userName: name, score: ps.score || 0, likes: ps.likes || 0, giftsValue: ps.giftsValue || 0, avatar: ps.avatar || '' };
+                    })
+                    .sort(function (a, b) { return b.score - a.score; });
+
+                var globalRankMap = {};
+                allSorted.forEach(function (p, idx) { globalRankMap[p.userName] = idx + 1; });
+
+                var playersInGame = allSorted
+                    .filter(function (p) { return inGamePlayers[p.userName]; })
+                    .map(function (p) {
+                        var pTier = currentPickaxe;
+                        if (ownerName && p.userName === ownerName) { pTier = currentPickaxe; }
+                        else {
+                            for (var k = 0; k < userPicks.length; k++) {
+                                if (userPicks[k].userName === p.userName) { pTier = userPicks[k].pickaxe || PICKAXES[0]; break; }
+                            }
+                        }
+                        var cs = _cycleScores[p.userName] || {};
+                        return {
+                            userName: p.userName, globalRank: globalRankMap[p.userName] || 0,
+                            score: p.score, kills: cs.kills || 0, items: cs.items || 0,
+                            sheep: cs.sheep || 0, pig: cs.pig || 0,
+                            likes: p.likes, giftsValue: p.giftsValue, userAvatarUrl: p.avatar, pickaxe: pTier
+                        };
+                    }).slice(0, 10);
+
+                var rankEmoji = ['🥇', '🥈', '🥉'];
+                var html = '';
+
+                playersInGame.forEach(function (u, i) {
+                    var av = u.userAvatarUrl || '';
+                    var cachedImg = avatarCache[av];
+                    var avSrc = (cachedImg && cachedImg.src && cachedImg.naturalWidth > 0) ? cachedImg.src : av;
+                    var pickColor = u.pickaxe ? u.pickaxe.color : '#c8a464';
+                    var rankLabel = i < 3 ? rankEmoji[i] : '#' + u.globalRank;
+                    var displayName = u.userName.replace(/^@/, '');
+
+                    var stats = '';
+                    if (u.kills > 0) stats += '<img src="slime/Slime.png" style="width:14px;height:14px;vertical-align:middle;">' + u.kills + ' ';
+                    if (u.sheep > 0) stats += '<img src="animais bonus/ovelha/ovo ovelha.png" style="width:14px;height:14px;vertical-align:middle;">' + u.sheep + ' ';
+                    if (u.pig > 0) stats += '<img src="pig/Pig eg.png" style="width:14px;height:14px;vertical-align:middle;">' + u.pig + ' ';
+                    if (u.likes > 0) stats += '❤️' + u.likes + ' ';
+                    if (u.giftsValue > 0) stats += '🎁' + u.giftsValue + ' ';
+
+                    var shadow = i < 3 ? 'box-shadow: inset 0 0 10px rgba(255,215,0,0.2); background: rgba(255,215,0,0.1); border-radius: 8px; padding: 4px;' : '';
+                    var font = i < 3 ? 'text-shadow: 0 0 5px rgba(255,255,255,0.5);' : '';
+
+                    var stroke = 'text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; ';
+                    var fontBase = 'font-family: \\\'Inter\\\', Arial, sans-serif; ';
+
+                    html += '<div class="lb-item" style="display:flex; align-items:center; gap:6px; margin-bottom:4px; padding-bottom:2px; border-bottom:1px solid rgba(255,255,255,0.05); ' + shadow + ' ' + font + '">';
+                    html += '  <span style="' + fontBase + ' font-size:12px; width:18px; font-weight:900; color:#aaa; ' + stroke + '">' + rankLabel + '</span>';
+                    html += '  <img src="' + avSrc + '" style="width:20px; height:20px; border-radius:50%; border:1px solid rgba(255,255,255,0.4); box-shadow: 0 0 4px #000;" onerror="this.style.display=\'none\'">';
+                    html += '  <div style="flex:1; display:flex; flex-direction:column; overflow:hidden; line-height:1.1;">';
+                    html += '    <span style="' + fontBase + ' font-size:13px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#fff; ' + stroke + '">' + displayName + '</span>';
+                    html += '    <div style="' + fontBase + ' font-size:11px; font-weight:700; opacity:0.9; ' + stroke + '">' + stats + '</div>';
+                    html += '  </div>';
+                    var pImg = u.pickaxe ? u.pickaxe.img : 'pickaxe/wooden_pickaxe.png';
+                    html += '  <span style="' + fontBase + ' font-size:15px; font-weight:900; color:' + pickColor + '; ' + stroke + '"><img src="' + pImg + '" style="width:18px; height:18px; vertical-align:middle; margin-right:2px; filter: drop-shadow(0 0 2px #000);"> ' + Math.floor(u.score) + '</span>';
+                    html += '</div>';
+                });
+
+                list.innerHTML = html || '<div style="text-align:center; opacity:0.5; font-size:11px;">Aguardando... (uPicks: ' + userPicks.length + ', sorted: ' + allSorted.length + ', inGame: ' + playersInGame.length + ')</div>';
+            } catch (e) {
+                list.innerHTML = '<div style="color:red; font-size:12px;">ERR: ' + e.message + '</div>';
+                console.error("Leaderboard Premium Error:", e);
             }
-
-            var rankClass = ['gold', 'silver', 'bronze'];
-            var rankEmoji = ['🥇', '🥈', '🥉'];
-            var html = '';
-            playersInGame.forEach((u, i) => {
-                var av = u.userAvatarUrl || '';
-                var cachedImg = avatarCache[av];
-                var avSrc = (cachedImg && cachedImg.src && cachedImg.naturalWidth > 0) ? cachedImg.src : av;
-                var pickColor = u.pickaxe ? u.pickaxe.color : '#c8a464';
-                var rClass = rankClass[i] || '';
-                var rankLabel = i < 3 ? rankEmoji[i] : '#' + u.globalRank;
-                var displayName = u.userName.replace(/^@/, '');
-                var stats = '';
-                if (u.kills > 0) stats += '<span class="lb-stat">💥' + u.kills + '</span>';
-                if (u.balls > 0) stats += '<span class="lb-stat">🔮' + u.balls + '</span>';
-                if (u.likes > 0) stats += '<span class="lb-stat lb-like">❤️' + u.likes + '</span>';
-                if (u.giftsValue > 0) stats += '<span class="lb-stat lb-gift">🎁' + u.giftsValue + '</span>';
-                html += `<div class="lb-item"><span class="lb-rank ${rClass}">${rankLabel}</span><img class="lb-avatar" src="${avSrc}" onerror="this.onerror=null;this.style.display='none'"><span class="lb-name">${displayName}</span><span class="lb-stats">${stats}</span><span class="lb-score" style="color:${pickColor}">${Math.floor(u.score)}</span></div>`;
-            });
-            list.innerHTML = html;
-
         }
         setInterval(updateLeaderboard, 1000);
 
@@ -11053,10 +11317,10 @@
             alertEl.style.animation = 'slideInDown 0.4s ease-out forwards, giftPulse 2s infinite ease-in-out 0.4s';
             alertEl.style.transition = 'transform 0.2s';
             alertEl.style.backdropFilter = 'blur(4px)'; // Adds a premium glassmorphism effect without heavy cost if small
-            
+
             var defAvatar = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="%23ccc"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
             var defGift = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="%23ffaa00"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>';
-            
+
             var av = document.createElement('img');
             av.src = userAvatar || defAvatar;
             av.style.width = '40px';
@@ -11082,7 +11346,59 @@
             alertEl.appendChild(textWrap);
             alertEl.appendChild(giftImg);
 
-            if (resultingPickaxe && resultingPickaxe.img) {
+            var rewardInfo = null;
+            var gn = giftName.toLowerCase();
+            if (gn === 'rose') rewardInfo = { img: 'block/tnt.png', qty: 10 };
+            else if (gn === 'gg') rewardInfo = { img: 'block/tnt.png', qty: 20 };
+            else if (gn.includes('donut')) rewardInfo = { img: 'block/creeper.png', qty: 10 };
+            else if (gn === 'heart me') rewardInfo = { img: 'block/heart_tnt.png', qty: 30 };
+            else if (gn === 'ice cream') rewardInfo = { img: 'pickaxe/wooden_pickaxe.png', symbol: '+ 1' };
+            else if (gn === 'finger heart') rewardInfo = { img: 'pickaxe/wooden_pickaxe.png', symbol: '++', img2: 'pickaxe/netherite_pickaxe.png' };
+
+            if (rewardInfo) {
+                var separator = document.createElement('span');
+                separator.innerText = '➔';
+                separator.style.fontSize = '20px';
+                separator.style.color = '#fff';
+                separator.style.margin = '0 4px';
+                alertEl.appendChild(separator);
+
+                if (rewardInfo.img) {
+                    var rImg = document.createElement('img');
+                    rImg.src = rewardInfo.img;
+                    rImg.style.width = '32px';
+                    rImg.style.height = '32px';
+                    rImg.style.objectFit = 'contain';
+                    rImg.style.verticalAlign = 'middle';
+                    alertEl.appendChild(rImg);
+                }
+
+                if (rewardInfo.qty) {
+                    var rQty = document.createElement('span');
+                    rQty.innerText = ' x ' + rewardInfo.qty;
+                    rQty.style.fontSize = '20px';
+                    rQty.style.fontWeight = '900';
+                    alertEl.appendChild(rQty);
+                }
+
+                if (rewardInfo.symbol) {
+                    var rSym = document.createElement('span');
+                    rSym.innerText = ' ' + rewardInfo.symbol + ' ';
+                    rSym.style.fontSize = '20px';
+                    rSym.style.fontWeight = '900';
+                    alertEl.appendChild(rSym);
+                }
+
+                if (rewardInfo.img2) {
+                    var rImg2 = document.createElement('img');
+                    rImg2.src = rewardInfo.img2;
+                    rImg2.style.width = '32px';
+                    rImg2.style.height = '32px';
+                    rImg2.style.objectFit = 'contain';
+                    rImg2.style.verticalAlign = 'middle';
+                    alertEl.appendChild(rImg2);
+                }
+            } else if (resultingPickaxe && resultingPickaxe.img) {
                 var eq = document.createElement('span');
                 eq.innerText = '=';
                 eq.style.fontSize = '24px';
@@ -11094,16 +11410,16 @@
                 pickImg.style.width = '40px';
                 pickImg.style.height = '40px';
                 pickImg.style.objectFit = 'contain';
-                
+
                 alertEl.appendChild(eq);
                 alertEl.appendChild(pickImg);
             }
 
             container.appendChild(alertEl);
 
-            setTimeout(function() {
+            setTimeout(function () {
                 alertEl.style.animation = 'slideOutUp 0.3s ease-in forwards';
-                setTimeout(function() { alertEl.remove(); }, 300);
+                setTimeout(function () { alertEl.remove(); }, 300);
             }, 2500);
         }
 
@@ -11507,7 +11823,7 @@
         // ── Load Cached Gifts ──────────────────────────────────────────────────────
         function applyGiftImages(gifts) {
             if (!gifts || !gifts.length) return;
-            gifts.forEach(function(g) {
+            gifts.forEach(function (g) {
                 if (g.name.includes('rose') || g.name.includes('rosa')) {
                     var el = document.getElementById('imgGiftRose');
                     var txt = document.getElementById('txtGiftRose');
@@ -11532,9 +11848,14 @@
                     var txt = document.getElementById('txtGiftIceCream');
                     if (el && txt) { el.src = g.url; el.style.display = 'inline-block'; txt.style.display = 'none'; }
                 }
+                if (g.name.includes('donut') || g.name.includes('rosquinha')) {
+                    var el = document.getElementById('imgGiftDonut');
+                    var txt = document.getElementById('txtGiftDonut');
+                    if (el && txt) { el.src = g.url; el.style.display = 'inline-block'; txt.style.display = 'none'; }
+                }
             });
         }
-        (function() {
+        (function () {
             var cachedGiftsStr = localStorage.getItem('pd_cached_gifts');
             if (cachedGiftsStr) {
                 try {
@@ -11542,6 +11863,8 @@
                 } catch (e) { console.error('Failed to load cached gifts', e); }
             }
         })();
+
+
 
     </script>
 </body>

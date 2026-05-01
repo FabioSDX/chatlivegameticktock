@@ -88,7 +88,9 @@ function connectTikTok(ws, username, sessionId) {
         return { name: g.name ? g.name.toLowerCase() : '', url: (g.image && g.image.url_list) ? g.image.url_list[0] : '' };
       });
     }
-    send(ws, { type: 'connected', platform: 'tiktok', username: username, roomId: state.roomId, availableGifts: gifts });
+    var hostAvatar = '';
+    try { hostAvatar = state.roomInfo.owner.avatar_thumb.url_list[0]; } catch(e) {}
+    send(ws, { type: 'connected', platform: 'tiktok', username: username, roomId: state.roomId, availableGifts: gifts, ownerAvatar: hostAvatar });
   }).catch(function (err) {
     console.error('[TikTok] Failed:', err.message);
     // Retry without websocket upgrade if that was the issue
@@ -108,7 +110,9 @@ function connectTikTok(ws, username, sessionId) {
             return { name: g.name ? g.name.toLowerCase() : '', url: (g.image && g.image.url_list) ? g.image.url_list[0] : '' };
           });
         }
-        send(ws, { type: 'connected', platform: 'tiktok', username: username, roomId: state.roomId, availableGifts: gifts });
+        var hostAvatar = '';
+        try { hostAvatar = state.roomInfo.owner.avatar_thumb.url_list[0]; } catch(e) {}
+        send(ws, { type: 'connected', platform: 'tiktok', username: username, roomId: state.roomId, availableGifts: gifts, ownerAvatar: hostAvatar });
       }).catch(function (err2) {
         console.error('[TikTok] Polling also failed:', err2.message);
         send(ws, { type: 'error', platform: 'tiktok', message: 'TikTok: ' + err2.message });
@@ -142,7 +146,26 @@ function attachTikTokEvents(ws, tiktok, username, session) {
   });
   tiktok.on('like', function (data) {
     var u = data.user || {}, uid = getUser(u, data, ''), nick = getNick(u, data, uid), av = getAvatar(u, data);
-    if (uid) send(ws, { type: 'like', platform: 'tiktok', user: uid, nickname: nick, avatar: av, likeCount: data.likeCount || 1 });
+    if (!uid) return;
+
+    // Buffer likes per user to avoid flooding the WebSocket
+    if (!session.likeBuffer) session.likeBuffer = {};
+    if (!session.likeBuffer[uid]) {
+      session.likeBuffer[uid] = { type: 'like', platform: 'tiktok', user: uid, nickname: nick, avatar: av, likeCount: 0 };
+    }
+    session.likeBuffer[uid].likeCount += (data.likeCount || 1);
+
+    if (!session.likeTimeout) {
+      session.likeTimeout = setTimeout(function () {
+        if (session.likeBuffer) {
+          for (var user in session.likeBuffer) {
+            send(ws, session.likeBuffer[user]);
+          }
+          session.likeBuffer = {};
+        }
+        session.likeTimeout = null;
+      }, 300); // 300ms interval for responsiveness
+    }
   });
   tiktok.on('follow', function (data) {
     var u = data.user || {}, uid = getUser(u, data, 'unknown'), nick = getNick(u, data, uid), av = getAvatar(u, data);
@@ -295,15 +318,15 @@ async function getEdgeTTS(text, voice) {
   const { v4: uuidv4 } = require('crypto');
 
   return new Promise((resolve, reject) => {
-    const requestId = require('crypto').randomUUID().replace(/-/g, '');
-    const endpoint = 'wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D31491D611&ConnectionId=' + requestId;
+    const requestId = require('crypto').randomBytes(16).toString('hex');
+    const endpoint = 'wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=' + requestId;
 
     const ws = new WebSocket(endpoint, {
       headers: {
         'Pragma': 'no-cache',
         'Cache-Control': 'no-cache',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0',
-        'Origin': 'chrome-extension://jdicfbfdpnnddbnoocamehcunpfoocda',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0',
+        'Origin': 'chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold',
       }
     });
 
@@ -357,10 +380,22 @@ app.get('/tts', async function (req, res) {
 
   } catch (e) {
     console.error('[TTS] Erro Microsoft TTS:', e.message);
-    // Fallback final Google Translate
+    // Fallback final Google Translate (Proxy to avoid CORS/Referer issues)
     let tl = voice.startsWith('pt-BR') ? 'pt-br' : 'en';
     var googleUrl = 'https://translate.google.com/translate_tts?ie=UTF-8&q=' + encodeURIComponent(text) + '&tl=' + tl + '&client=tw-ob';
-    res.redirect(googleUrl);
+    
+    const https = require('https');
+    https.get(googleUrl, {
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    }, (gRes) => {
+      if (gRes.statusCode !== 200) {
+        return res.status(gRes.statusCode).send('Google TTS Error');
+      }
+      res.set('Content-Type', 'audio/mpeg');
+      gRes.pipe(res);
+    }).on('error', (err) => {
+      res.status(500).send('TTS Fallback Error: ' + err.message);
+    });
   }
 });
 
