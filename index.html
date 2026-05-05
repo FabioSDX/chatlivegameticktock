@@ -8,7 +8,7 @@
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛏</text></svg>" />
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
         * {
             box-sizing: border-box;
@@ -144,7 +144,7 @@
             height: 100vh;
             max-width: 100vw;
             object-fit: contain;
-            /* Mantém a proporção mas garante altura total */
+            background: #000;
         }
 
         #apiStatus {
@@ -1849,6 +1849,8 @@
                     <option value="en-US-EmmaNeural">Emma (English)</option>
                     <option value="en-US-AndrewNeural">Andrew (English)</option>
                     <option value="en-GB-SoniaNeural">Sonia (British)</option>
+                    <option value="pt-BR-FranciscaNeural">Francisca (Português)</option>
+                    <option value="pt-BR-AntonioNeural">Antonio (Português)</option>
                 </select>
 
             </div>
@@ -1906,6 +1908,7 @@
         </style>
         <div class="depth" id="depthDisplay">Depth: 0m</div>
         <div class="score-display" id="scoreDisplay" style="display:none">⛏ 0</div>
+        <div id="bossTimerDisplay" style="display:none; position:fixed; top:25px; left:4px; color:#ff4444; font-size:20px; font-weight:bold; background:rgba(0,0,0,0.6); padding:4px 10px; border-radius:6px; font-family:sans-serif; z-index:20000; border:1px solid #ff4444; box-shadow: 0 0 10px rgba(255,0,0,0.5);">BOSS TIMER: 01:00</div>
 
         <div id="commandBox">
             <!-- Join -->
@@ -1999,8 +2002,8 @@
                 </div>
                 <div class="cmd-row"
                     onclick="ensureAudio(); var m=(pick?pick.userName:'@player').toLowerCase(); var av=pick?pick.userAvatarUrl:''; var lx=pick?pick.x:canvas.width/2; var ly=pick?pick.y:camY+canvas.height/2; for(var i=0;i<30;i++){activateHeartTNT(lx+(Math.random()-0.5)*TILE*4,ly,m,av)}; score+=3; spawnText(lx,ly-20,'❤️ 30 CORAÇÕES!','#ff6688'); showGiftAlert(m, pick.userAvatarUrl, 'heart me', document.getElementById('imgGiftHeart').src);">
-                    <span class="cmd-badge badge-pink"><img src="block/heart_tnt.png"
-                            style="width:14px;height:14px;vertical-align:middle;margin-top:-2px;" /> x 30</span>
+                    <span class="cmd-badge badge-pink"><img id="giftPanelHeartIcon" src="block/heart_tnt.png"
+                            style="width:18px;height:18px;vertical-align:middle;margin-top:-2px;" /> x 30</span>
                     <img id="imgGiftHeart" src="" style="width:32px;height:32px;vertical-align:middle;display:none;" />
                     <span id="txtGiftHeart" class="cmd-icon">❤️</span>
                 </div>
@@ -2054,10 +2057,21 @@
         <div id="cycleRankingOverlay" class="ranking-overlay">
             <h1 class="ranking-title">RESUMO DO CICLO</h1>
             <div id="podiumContainer" class="podium-container"></div>
+            <div style="margin-top: 40px; display: flex; gap: 20px;">
+                <button onclick="generateCommemorativeImage()" class="ui-action-btn" style="background: rgba(0, 255, 136, 0.2); color: #00ff88; border: 2px solid #00ff88; padding: 12px 30px; font-size: 16px; border-radius: 50px; cursor: pointer; backdrop-filter: blur(5px); font-weight: 900; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);">
+                    📸 SALVAR IMAGEM
+                </button>
+            </div>
         </div>
+        <a id="downloadLink" style="display:none"></a>
         <canvas id="gameCanvas"></canvas>
     </div>
     <script>
+        function platformSkip() {
+            var overlay = document.getElementById('apiSetupOverlay');
+            if (overlay) overlay.style.display = 'none';
+            console.log('Skipped platform connection (Offline Mode)');
+        }
         var persistentScores = {};
         var userPicks = [];
         var ownerName = '';
@@ -2148,11 +2162,19 @@
         var canvas = document.getElementById('gameCanvas');
         var ctx = canvas.getContext('2d');
 
-        // Resolução Mobile Vertical 720x1280
+        // Resolução Dinâmica para Celular (Expandir Verticalmente)
         var COLS = 12, TILE = 60;
-        var VIS = 21;
+        var screenAspect = window.innerHeight / window.innerWidth;
+        // Se estiver no desktop (landscape), usa uma proporção vertical padrão (9:16)
+        if (screenAspect < 1.2) screenAspect = 1.77; 
+        
+        var VIS = Math.ceil((COLS * TILE * screenAspect) / TILE);
+        if (VIS < 21) VIS = 21; // Mínimo
+        if (VIS > 32) VIS = 32; // Máximo para evitar bugs de renderização/performance
+        
         canvas.width = COLS * TILE;
         canvas.height = VIS * TILE;
+        console.log('[Resolução] VIS:', VIS, 'Canvas:', canvas.width, 'x', canvas.height);
 
         var MAX_PARTS = 50;
         var MAX_DEBRIS = 20;
@@ -2247,6 +2269,18 @@
         var PIG_MOTHER_TEX = new Image(); PIG_MOTHER_TEX.src = 'pig/pig mother.png';
         var PIG_KID_TEX = new Image(); PIG_KID_TEX.src = 'pig/pig kid.png';
         var PIG_EGG_TEX = new Image(); PIG_EGG_TEX.src = 'pig/Pig eg.png';
+        
+        // --- Chicken Punishment Assets ---
+        var chickenFrames = [];
+        for (var i = 0; i < 8; i++) {
+            var img = new Image();
+            img.src = 'galinha/galinha.png/a3c8870fc87a45f4a67b28b8181a8133bAEgRDEP5hXtghXy-' + i + '.png';
+            chickenFrames.push(img);
+        }
+        var chickenSounds = [
+            new Audio('sons/galinha um.ogg'),
+            new Audio('sons/galinha dois.ogg')
+        ];
 
         var lastBonusType = 'pig'; // will start with sheep
 
@@ -2313,17 +2347,33 @@
 
         // Otimização: Cache de sprite para o Coração TNT (Blitting)
         var HEART_SPRITE = document.createElement('canvas');
-        HEART_SPRITE.width = 64;
-        HEART_SPRITE.height = 64;
+        HEART_SPRITE.width = 128;
+        HEART_SPRITE.height = 128;
+        var HEART_SPRITE_URL = '';
         (function preRenderHeart() {
             var sctx = HEART_SPRITE.getContext('2d');
-            sctx.shadowBlur = 15;
-            sctx.shadowColor = 'rgba(255, 0, 80, 0.8)';
-            sctx.fillStyle = '#ff3366';
-            sctx.font = 'bold 45px Arial';
+            // Aumentamos o canvas para 128x128 para a sombra não bater nas bordas (o que causava o efeito quadrado)
+            sctx.shadowBlur = 25;
+            sctx.shadowColor = 'rgba(255, 20, 147, 0.9)';
+            
+            var gradient = sctx.createRadialGradient(64, 64, 5, 64, 64, 40);
+            gradient.addColorStop(0, '#ffbbdd');
+            gradient.addColorStop(1, '#ff0066');
+            
+            sctx.fillStyle = gradient;
+            sctx.font = 'bold 70px Arial';
             sctx.textAlign = 'center';
             sctx.textBaseline = 'middle';
-            sctx.fillText('♥', 32, 32);
+            sctx.fillText('❤️', 64, 64);
+            
+            // Exporta como DataURL para usar no resto da UI
+            HEART_SPRITE_URL = HEART_SPRITE.toDataURL();
+            
+            // Aplica ao painel de presentes se o elemento já existir (ou fazemos depois do DOM Load)
+            setTimeout(function() {
+                var img = document.getElementById('giftPanelHeartIcon');
+                if (img) img.src = HEART_SPRITE_URL;
+            }, 100);
         })();
 
         var TNT_RADIUS = 3;
@@ -3274,6 +3324,41 @@
         var ZBOSS_COUNT = 4;
         var MAX_ZOMBIES_MEGA = 15;
 
+        // ── Dragon & Boss Timer State ──
+        var dragonFrames = [];
+        var dragonActive = false;
+        var dragonX = 0;
+        var dragonY = 0;
+        var dragonFrameIdx = 0;
+        var dragonFrameTimer = 0;
+        var dragonPhase = 'behind'; // 'behind' (R->L) ou 'front' (L->R)
+        var bossTimerStartTime = 0;
+        var isBossFightActive = false;
+        var isDragonLeaving = false;
+        var currentBossY = 0;
+        var activeFireballs = [];
+        var dragonFireTimer = 0;
+        var BOSS_TIMEOUT_MS = 1 * 60 * 1000; // 1 minuto
+        
+        var dragonRoarSounds = [];
+        var dragonFlapSounds = [];
+        var dragonRoarTimer = 0;
+        var dragonFlapTimer = 0;
+        var dragonFlapIdx = 0;
+
+        function loadDragonAssets() {
+            var base = 'dragon/Dragon.png/19c6a73862b342ecb815b3e2a4a583caxA9mvwh9CttJHnIZ-';
+            for (var i = 0; i < 100; i++) {
+                var img = new Image();
+                img.src = base + i + '.png';
+                dragonFrames.push(img);
+            }
+            // Sons do Dragão
+            for(var i=1; i<=4; i++) dragonRoarSounds.push(new Audio('sons/dragon_idle'+i+'.ogg'));
+            for(var i=1; i<=6; i++) dragonFlapSounds.push(new Audio('sons/dragon_flap'+i+'.ogg'));
+        }
+        loadDragonAssets();
+
         // ── Crystal types for clearings ──
         var CRYSTAL_TYPES = [
             'Black_crystal', 'Blue_crystal', 'Dark_red_ crystal', 'Green_crystal',
@@ -3937,7 +4022,7 @@
         var extraPicks = [];
         // userPicks movido para o topo do script
         var lastActivity = {};  // { userName: timestamp }
-        var INACTIVE_MS = 15 * 1000; // 15 seconds
+        var INACTIVE_MS = 30 * 1000; // 30 seconds
         var doublePickActive = false;
         var doublePickTimer = 0;
         var DOUBLE_PICK_DURATION = 600;
@@ -3954,6 +4039,9 @@
         var tormentaActive = false;
         var tormentaTimer = 0;
         var tormentaPick = null;
+        var STORM_DURATION = 600;
+        var stormActive = false;
+        var stormTimer = 0;
 
         // ── Spin Skill ──────────────────────────────────────────────────────────────
         var SPIN_CHARGE = 30;       // 0.5s charge-up
@@ -4036,6 +4124,10 @@
             stormActive = false; stormTimer = 0;
             tormentaActive = false; tormentaTimer = 0; tormentaPick = null;
             activeSpins = []; spinCooldowns = {}; spinQueues = {};
+            isBossFightActive = false; dragonActive = false; isDragonLeaving = false; activeFireballs = [];
+            dragonRoarSounds.forEach(function(s){ s.pause(); s.currentTime = 0; });
+            dragonFlapSounds.forEach(function(s){ s.pause(); s.currentTime = 0; });
+            var btDisp = document.getElementById('bossTimerDisplay'); if (btDisp) btDisp.style.display = 'none';
             bgChunks = {}; bgTick = 0;
             document.getElementById('depthDisplay').textContent = 'Depth: 0m';
             // Show preserved score from persistentScores (daily total)
@@ -4263,8 +4355,19 @@
 
         function updateUserPicks() {
             var fallLimit = camY + canvas.height + 800;
+            var now = Date.now();
+            var INACTIVE_TIMEOUT = 300000; // 5 minutos (300.000 ms)
+
             for (var i = userPicks.length - 1; i >= 0; i--) {
                 var up = userPicks[i];
+                
+                // Otimização: Remoção de jogadores inativos
+                var lastAct = lastActivity[up.userName] || 0;
+                if (now - lastAct > INACTIVE_TIMEOUT) {
+                    userPicks.splice(i, 1);
+                    continue;
+                }
+
                 // Proteção anti-queda infinita
                 if (!isFinite(up.y) || !isFinite(up.x) || up.y > fallLimit) {
                     up.x = canvas.width * 0.3 + Math.random() * canvas.width * 0.4;
@@ -5323,11 +5426,20 @@
                 } else { pick.stuckTimer = 0; }
             }
 
-            // Depth calculation based on deepest active player
-            var depthPicks = [pick].concat(userPicks).filter(function (p) { return p && !p.stuck && (p === pick ? p.active : true); });
-            var deepestYForDepth = 0;
-            depthPicks.forEach(function (p) { if (p.y > deepestYForDepth) deepestYForDepth = p.y; });
-            var depth = Math.floor(deepestYForDepth / TILE);
+            // Otimização: Substituído concat/filter por loop direto para evitar Garbage Collection
+            var deepestPick = pick;
+            var deepestY = (pick && pick.active && !pick.stuck) ? pick.y : -999999;
+            
+            for (var i = 0; i < userPicks.length; i++) {
+                var up = userPicks[i];
+                if (!up || up.stuck) continue;
+                if (up.y > deepestY) {
+                    deepestY = up.y;
+                    deepestPick = up;
+                }
+            }
+
+            var depth = Math.floor(Math.max(0, deepestY) / TILE);
 
             // Otimização: Atualiza placar e profundidade apenas a cada 10 frames
             uiUpdateTick++;
@@ -5357,33 +5469,19 @@
                 document.getElementById('scoreDisplay').textContent = '⛏ ' + displayScore;
             }
 
-            // ── Democratic Camera: follow the deepest player for 5+ seconds ──
-            var allCamPicks = [pick].concat(userPicks).filter(function (p) { return p && !p.stuck && (p === pick ? p.active : true); });
-            var deepestPick = pick;
-            var deepestY = (pick && pick.active) ? pick.y : -999999;
-            for (var ci = 0; ci < allCamPicks.length; ci++) {
-                if (allCamPicks[ci].y > deepestY) {
-                    deepestY = allCamPicks[ci].y;
-                    deepestPick = allCamPicks[ci];
-                }
-            }
+            // ── Democratic Camera: follow the deepest player ──
             if (!camTarget) camTarget = pick;
             if (deepestPick === camTarget) {
-                // Current leader still deepest — keep following
                 camLeaderTimer = 0;
             } else {
-                // Someone else is deeper
-                if (deepestPick !== camTarget) {
-                    camLeaderTimer++;
-                    if (camLeaderTimer >= CAM_SWITCH_FRAMES) {
-                        camTarget = deepestPick;
-                        camLeaderTimer = 0;
-                    }
+                camLeaderTimer++;
+                if (camLeaderTimer >= CAM_SWITCH_FRAMES) {
+                    camTarget = deepestPick;
+                    camLeaderTimer = 0;
                 }
             }
-            // If camTarget got stuck, removed or inactive, fallback to pick or first user
             if (!camTarget || camTarget.stuck || (camTarget === pick && !pick.active)) {
-                camTarget = (userPicks.length > 0 && userPicks[0]) ? userPicks[0] : pick;
+                camTarget = (userPicks.length > 0) ? userPicks[0] : pick;
                 camLeaderTimer = 0;
             }
 
@@ -5403,6 +5501,130 @@
             updateFallingBlocks();
             updateBonusBalls();
             updateItems();
+            // ── Update Boss Timer & Dragon ──
+            if (isBossFightActive) {
+                var elapsed = Date.now() - bossTimerStartTime;
+                var remaining = Math.max(0, BOSS_TIMEOUT_MS - elapsed);
+                var mins = Math.floor(remaining / 60000);
+                var secs = Math.floor((remaining % 60000) / 1000);
+                document.getElementById('bossTimerDisplay').textContent = 'BOSS TIMER: ' + 
+                    (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+                
+                if (remaining <= 0 && !dragonActive) {
+                    dragonActive = true;
+                    isDragonLeaving = false;
+                    dragonPhase = 'behind';
+                    dragonX = canvas.width + 800;
+                    dragonY = currentBossY - 300;
+                    document.getElementById('bossTimerDisplay').style.display = 'none';
+                    spawnText(canvas.width / 2, camY + 100, '⚠️ THE DRAGON HAS ARRIVED!', '#ff0000');
+                }
+            }
+
+            if (dragonActive) {
+                // Movimentação
+                if (dragonPhase === 'behind') {
+                    dragonX -= 4.5; // Direita para Esquerda
+                    if (dragonX < -1200) {
+                        if (isDragonLeaving) {
+                            dragonActive = false;
+                        } else {
+                            dragonPhase = 'front';
+                            dragonX = -3000;
+                        }
+                    }
+                } else {
+                    dragonX += 12; // Esquerda para Direita (mais rápido na frente)
+                    if (dragonX > canvas.width + 4000) {
+                        if (isDragonLeaving) {
+                            dragonActive = false;
+                        } else {
+                            dragonPhase = 'behind';
+                            dragonX = canvas.width + 1200;
+                        }
+                    }
+                }
+
+                // Se o dragão sumiu, para todos os sons
+                if (!dragonActive) {
+                    dragonRoarSounds.forEach(function(s){ s.pause(); s.currentTime = 0; });
+                    dragonFlapSounds.forEach(function(s){ s.pause(); s.currentTime = 0; });
+                }
+
+                // Flutua em torno da altura do boss
+                var verticalOffset = (dragonPhase === 'front') ? -100 : -350;
+                dragonY = currentBossY + verticalOffset + Math.sin(Date.now() * 0.001) * 120;
+                
+                dragonFrameTimer++;
+                if (dragonFrameTimer >= 3) {
+                    dragonFrameIdx = (dragonFrameIdx + 1) % 100;
+                    dragonFrameTimer = 0;
+                }
+
+                // Sons de Rugido (Aleatório)
+                dragonRoarTimer++;
+                if (dragonRoarTimer > 400 && Math.random() < 0.01) {
+                    if (_audioStarted) {
+                        var roar = dragonRoarSounds[Math.floor(Math.random() * dragonRoarSounds.length)];
+                        roar.volume = (dragonPhase === 'front' ? 1.0 : 0.4);
+                        roar.play().catch(function(e){});
+                    }
+                    dragonRoarTimer = 0;
+                }
+
+                // Sons de Bater de Asas (Contínuo)
+                dragonFlapTimer++;
+                if (dragonFlapTimer > 15) {
+                    if (_audioStarted) {
+                        var flap = dragonFlapSounds[dragonFlapIdx];
+                        flap.volume = (dragonPhase === 'front' ? 0.8 : 0.3);
+                        flap.play().catch(function(e){});
+                    }
+                    dragonFlapIdx = (dragonFlapIdx + 1) % 6;
+                    dragonFlapTimer = 0;
+                }
+
+                // Dragon shoots fireballs (DESATIVADO)
+                /*
+                dragonFireTimer++;
+                if (dragonFireTimer > 100) { 
+                    var fx = (dragonPhase === 'front') ? dragonX + 1000 : dragonX - 200;
+                    activeFireballs.push({
+                        x: fx,
+                        y: dragonY + 100,
+                        vx: (dragonPhase === 'behind' ? -3 : 3) + (Math.random() - 0.5) * 4,
+                        vy: 8,
+                        life: 300
+                    });
+                    dragonFireTimer = 0;
+                }
+                */
+            }
+
+            // Update Fireballs
+            for (var fi = activeFireballs.length - 1; fi >= 0; fi--) {
+                var f = activeFireballs[fi];
+                f.x += f.vx;
+                f.y += f.vy;
+                f.life--;
+                
+                // Colisão simples com jogadores
+                [pick].concat(userPicks).forEach(function(p) {
+                    if (p && !p.stuck) {
+                        var dx = p.x - f.x, dy = p.y - f.y;
+                        if (dx*dx + dy*dy < 1600) { // 40px radius
+                            p.vx += (dx / 40) * 15;
+                            p.vy -= 10;
+                            p.life = 0; // explode fireball
+                            spawnText(p.x, p.y - 20, '🔥', '#ff4400');
+                        }
+                    }
+                });
+
+                if (f.life <= 0 || f.y > camY + canvas.height + 200) {
+                    activeFireballs.splice(fi, 1);
+                }
+            }
             updateExplosions();
             updateStorm();
             // Decrement bigTimer on all picks
@@ -5425,9 +5647,13 @@
             updateSpins();
 
             // ── Mechanics updates ──
-            var skKeys = Object.keys(skillCooldowns);
-            for (var ki = 0; ki < skKeys.length; ki++) {
-                if (skillCooldowns[skKeys[ki]] > 0) skillCooldowns[skKeys[ki]]--;
+            // Otimização: Iteração direta para reduzir criação de arrays
+            for (var skKey in skillCooldowns) {
+                if (skillCooldowns[skKey] > 0) {
+                    skillCooldowns[skKey]--;
+                } else {
+                    delete skillCooldowns[skKey]; // Limpa memória de chaves expiradas
+                }
             }
             // Process Chain Lightning Core
             for (var ati = activeThorAttacks.length - 1; ati >= 0; ati--) {
@@ -5567,6 +5793,17 @@
                         console.log('Iniciando Arena:', typeName, 'Zona:', mz);
                         megaClearedZones[mz + '_type'] = typeName;
 
+                        // Inicia o Timer do Boss
+                        isBossFightActive = true;
+                        bossTimerStartTime = Date.now();
+                        document.getElementById('bossTimerDisplay').style.display = 'block';
+                        dragonActive = false; 
+                        dragonX = -800;
+                        activeFireballs = [];
+                        
+                        // Captura a posição Y da arena (aproximadamente o meio/chão)
+                        currentBossY = (mStart + MEGA_CLEARING_HEIGHT - 10) * TILE;
+
                         if (typeName === 'zombie') {
                             // ── ZOMBIE GATE: spawn bats (flying) + zombie bosses on brick floor ──
                             // Spawn flying enemies in upper portion of clearing (above the floor)
@@ -5681,6 +5918,13 @@
                         }
                         if (aliveBosses === 0) {
                             megaClearedZones[mz + '_gateOpen'] = true;
+                            
+                            // Finaliza Timer do Boss e prepara saída do Dragão
+                            isBossFightActive = false;
+                            isDragonLeaving = true;
+                            document.getElementById('bossTimerDisplay').style.display = 'none';
+                            activeFireballs = [];
+
                             spawnText(canvas.width / 2, followPick.y - 80, '🎉 PASSAGE OPEN!', '#44ff44');
                             shakeAmt = 25;
                             // Destroy barrier blocks at gate row so pickaxes never stop
@@ -6370,6 +6614,18 @@
             var sy = shakeAmt > 0 ? (Math.random() - 0.5) * 2 * shakeAmt : 0;
             ctx.translate(sx, sy - camY); // aplica câmera + tremor
 
+            // ── Ender Dragon (Atrás dos blocos, Fase: behind) ──
+            if (dragonActive && dragonPhase === 'behind') {
+                var df = dragonFrames[dragonFrameIdx];
+                if (df && df.complete && df.naturalWidth > 0) {
+                    ctx.save();
+                    ctx.translate(dragonX, dragonY);
+                    // No phase behind (R->L), o dragão já está apontado para a esquerda (original)
+                    ctx.drawImage(df, -400, -200, 800, 400);
+                    ctx.restore();
+                }
+            }
+
             // linhas visíveis
             var rStart = Math.floor(camY / TILE);
             var rEnd = Math.ceil((camY + canvas.height) / TILE) + 1;
@@ -6387,14 +6643,17 @@
                 for (var c = 0; c < COLS; c++) {
                     var cell = getCell(r, c);
                     if (!cell || cell.t === E) continue;
-                    var x = c * TILE;
-                    var y = r * TILE;
-                    var tex = BTEX[cell.t];
-
+                    
                     var aboveCell = getCell(r - 1, c);
                     var rightCell = getCell(r, c + 1);
                     var aboveEmpty = !aboveCell || aboveCell.t === E;
                     var rightEmpty = !rightCell || rightCell.t === E;
+
+                    if (!aboveEmpty && !rightEmpty) continue; // Nada pra desenhar em 3D
+
+                    var x = c * TILE;
+                    var y = r * TILE;
+                    var tex = BTEX[cell.t];
 
                     // Top face
                     if (aboveEmpty) {
@@ -6412,7 +6671,6 @@
                             ctx.drawImage(tex, 0, 0, TILE, TILE);
                             ctx.restore();
                         }
-                        // Crack on top face
                         if (cell.cr > 0.01) {
                             var stageT = Math.min(9, Math.floor(cell.cr * 10));
                             var dtexT = DESTROY_TEX[stageT];
@@ -6444,7 +6702,6 @@
                             ctx.drawImage(tex, 0, 0, TILE, TILE);
                             ctx.restore();
                         }
-                        // Crack on right face
                         if (cell.cr > 0.01) {
                             var stageR = Math.min(9, Math.floor(cell.cr * 10));
                             var dtexR = DESTROY_TEX[stageR];
@@ -6710,12 +6967,23 @@
                         ctx.fillRect(-drawSize / 2, -drawSize / 2, drawSize, drawSize);
                     }
                 } else if (b.heart) {
-                    // Otimização: Blitting de sprite cache + efeito de pulso
-                    var pulse = 1 + Math.sin(b.blinkTimer * 0.15) * 0.15;
-                    var hsScale = (drawSize / 32) * pulse;
+                    // Otimização: Sempre usa o ícone de coração estilizado para o "Tap Tap"
+                    var pulse = 1 + Math.sin(b.blinkTimer * 0.15) * 0.2;
+                    // Ajuste de escala para o novo tamanho do sprite (128px)
+                    var hsScale = (drawSize / 128) * pulse; 
                     ctx.scale(hsScale, hsScale);
-                    ctx.globalAlpha = 0.85 + glow * 0.15;
-                    ctx.drawImage(HEART_SPRITE, -32, -32, 64, 64);
+                    
+                    // Se estiver piscando (glow), desenhamos uma camada extra com 'lighter' para um brilho que segue o formato
+                    if (glow > 0.1) {
+                        ctx.save();
+                        ctx.globalCompositeOperation = 'lighter';
+                        ctx.globalAlpha = glow * 0.5;
+                        ctx.drawImage(HEART_SPRITE, -64, -64, 128, 128);
+                        ctx.restore();
+                    }
+                    
+                    ctx.globalAlpha = 0.9 + glow * 0.1;
+                    ctx.drawImage(HEART_SPRITE, -64, -64, 128, 128);
                 } else {
                     if (SHADOW_ENABLED) { ctx.shadowBlur = 10 + glow * 40; ctx.shadowColor = 'rgba(255,' + Math.floor(80 + glow * 100) + ',0,1)'; }
                     if (tntTexture && tntTexture.complete && tntTexture.naturalWidth > 0) {
@@ -6959,13 +7227,19 @@
                         ctx.drawImage(hMask, -PICK_HALF, -PICK_HALF, PICK_HALF * 2, PICK_HALF * 2);
                         ctx.restore();
                     }
-                    // Draw Pickaxe (or Sword)
+                    // Draw Pickaxe (or Sword) or Chicken
                     var pickTex = pimg;
-                    if (pick.swordTimer > 0) {
-                        var matName = (currentPickaxe && currentPickaxe.name) || 'Wood';
-                        if (SWORD_ASSETS[matName]) pickTex = SWORD_ASSETS[matName];
+                    if (pick.isChicken) {
+                        var frame = Math.floor((Date.now() / 100) % chickenFrames.length);
+                        pickTex = chickenFrames[frame];
+                        ctx.drawImage(pickTex, -PICK_HALF * 1.5, -PICK_HALF * 1.5, PICK_HALF * 3, PICK_HALF * 3);
+                    } else {
+                        if (pick.swordTimer > 0) {
+                            var matName = (currentPickaxe && currentPickaxe.name) || 'Wood';
+                            if (SWORD_ASSETS[matName]) pickTex = SWORD_ASSETS[matName];
+                        }
+                        ctx.drawImage(pickTex, -PICK_HALF, -PICK_HALF, PICK_HALF * 2, PICK_HALF * 2);
                     }
-                    ctx.drawImage(pickTex, -PICK_HALF, -PICK_HALF, PICK_HALF * 2, PICK_HALF * 2);
                 } else {
                     ctx.fillStyle = currentPickaxe.color;
                     ctx.fillRect(-PICK_HALF, -PICK_HALF, PICK_HALF * 2, PICK_HALF * 2);
@@ -7138,23 +7412,26 @@
                 var cPickObj = up.pickaxe || currentPickaxe;
                 var uImg = cPickObj.imgObj;
                 if (uImg && uImg.complete && uImg.naturalWidth > 0) {
-                    // Head Glow Effect (only if NOT sword)
-                    var hMask = cPickObj.headMask;
                     if (hMask && !(up.swordTimer > 0)) {
-                        ctx.save();
-                        var pulse = (Math.sin(Date.now() * 0.004) + 1) / 2;
-                        ctx.shadowBlur = 10 + pulse * 15;
-                        ctx.shadowColor = cPickObj.color || '#fff';
+                        // Otimização: Sombras pesadas desativadas para jogadores do chat
+                        // Usamos um brilho radial simples ou apenas desenhamos a máscara
+                        ctx.globalAlpha = 0.6 + Math.sin(Date.now() * 0.01) * 0.4;
                         ctx.drawImage(hMask, -PICK_HALF, -PICK_HALF, PICK_HALF * 2, PICK_HALF * 2);
-                        ctx.restore();
+                        ctx.globalAlpha = 1.0;
                     }
-                    // Draw Pickaxe (or Sword)
+                    // Draw Pickaxe (or Sword) or Chicken
                     var upPickTex = uImg;
-                    if (up.swordTimer > 0) {
-                        var upMat = (up.pickaxe && up.pickaxe.name) || 'Wood';
-                        if (SWORD_ASSETS[upMat]) upPickTex = SWORD_ASSETS[upMat];
+                    if (up.isChicken) {
+                        var frame = Math.floor((Date.now() / 100) % chickenFrames.length);
+                        upPickTex = chickenFrames[frame];
+                        ctx.drawImage(upPickTex, -PICK_HALF * 1.5, -PICK_HALF * 1.5, PICK_HALF * 3, PICK_HALF * 3);
+                    } else {
+                        if (up.swordTimer > 0) {
+                            var upMat = (up.pickaxe && up.pickaxe.name) || 'Wood';
+                            if (SWORD_ASSETS[upMat]) upPickTex = SWORD_ASSETS[upMat];
+                        }
+                        ctx.drawImage(upPickTex, -PICK_HALF, -PICK_HALF, PICK_HALF * 2, PICK_HALF * 2);
                     }
-                    ctx.drawImage(upPickTex, -PICK_HALF, -PICK_HALF, PICK_HALF * 2, PICK_HALF * 2);
                 }
                 ctx.restore();
 
@@ -7172,9 +7449,11 @@
                 var avY = up.y - PICK_HALF - 44;
                 if (avImg && avImg.complete && avImg.naturalWidth > 0) {
                     ctx.save();
+                    // Avatar redondo (estética premium)
                     ctx.beginPath(); ctx.arc(up.x - 10 - avSize / 2, avY, avSize / 2, 0, Math.PI * 2); ctx.clip();
                     try { ctx.drawImage(avImg, up.x - 10 - avSize, avY - avSize / 2, avSize, avSize); } catch (e) { }
                     ctx.restore();
+                    // Borda redonda
                     ctx.strokeStyle = up.color || '#fff'; ctx.lineWidth = 2;
                     ctx.beginPath(); ctx.arc(up.x - 10 - avSize / 2, avY, avSize / 2, 0, Math.PI * 2); ctx.stroke();
                 } else {
@@ -7234,6 +7513,32 @@
                 ctx.globalAlpha = 1;
                 ctx.restore();
             }
+
+            // ── Ender Dragon (Frente de tudo, Fase: front) ──
+            if (dragonActive && dragonPhase === 'front') {
+                var df = dragonFrames[dragonFrameIdx];
+                if (df && df.complete && df.naturalWidth > 0) {
+                    ctx.save();
+                    ctx.translate(dragonX, dragonY);
+                    ctx.scale(-1, 1); // Flip horizontal para ele olhar para a direita (L->R)
+                    var sizeMult = 5;
+                    ctx.drawImage(df, -400 * sizeMult, -200 * sizeMult, 800 * sizeMult, 400 * sizeMult);
+                    ctx.restore();
+                }
+            }
+
+            // ── Bolas de Fogo do Dragão (Frente de tudo) ──
+            activeFireballs.forEach(function(f) {
+                ctx.save();
+                ctx.translate(f.x, f.y);
+                var pulse = 1 + Math.sin(Date.now() * 0.01) * 0.2;
+                ctx.fillStyle = '#ff4400';
+                ctx.beginPath(); ctx.arc(0, 0, 15 * pulse, 0, Math.PI * 2); ctx.fill();
+                ctx.shadowBlur = 20; ctx.shadowColor = '#ff0000';
+                ctx.fillStyle = '#ffff00';
+                ctx.beginPath(); ctx.arc(0, 0, 8 * pulse, 0, Math.PI * 2); ctx.fill();
+                ctx.restore();
+            });
 
             ctx.restore(); // fim da câmera
 
@@ -9570,9 +9875,11 @@
             if (customBGMPlaying) {
                 customBGM.pause();
                 customBGMPlaying = false;
+                startMusic(); // Resume game music
             } else {
                 customBGM.play();
                 customBGMPlaying = true;
+                stopMusic(); // Stop game music
             }
             var btn = document.getElementById('btnMusic');
             if (btn) btn.textContent = customBGMPlaying ? '🎵 Trilha' : '⏸️ Pausa';
@@ -10163,7 +10470,11 @@
                     var isPureCommand = words.every(function (w) { return commandList.indexOf(w) !== -1; });
 
                     if (!isPureCommand) {
-                        speakTTS(data.nickname + ' said: ' + cText);
+                        if (cText.startsWith('!')) {
+                            speakTTS(data.nickname + ' disse: ' + cText.substring(1), 'pt-BR-FranciscaNeural');
+                        } else {
+                            speakTTS(data.nickname + ' said: ' + cText);
+                        }
                     }
                 }
             }
@@ -10278,7 +10589,38 @@
             else if (data.type === 'follow') {
                 var fUserRaw = data.user || 'unknown';
                 var fUser = (fUserRaw.charAt(0) === '@' ? fUserRaw : '@' + fUserRaw).toLowerCase(); lastActivity[fUser] = Date.now();
-                if (data.avatar) loadAvatar(data.avatar); spawnUserPickaxe(fUser, data.avatar || '');
+                if (data.avatar) loadAvatar(data.avatar); 
+
+                // --- Proteção Contra Spam de Follow/Unfollow ---
+                if (!persistentScores[fUser]) persistentScores[fUser] = { score: 0, avatar: data.avatar || '', color: '#ffdd44', followCount: 0 };
+                persistentScores[fUser].followCount = (persistentScores[fUser].followCount || 0) + 1;
+
+                if (persistentScores[fUser].followCount > 1) {
+                    persistentScores[fUser].isChicken = true;
+                    var fPick = (ownerName && fUser === ownerName) ? pick : userPicks.find(function(up){ return up.userName === fUser; });
+                    
+                    if (fPick) {
+                        fPick.isChicken = true;
+                        if (_audioStarted) {
+                            var snd = chickenSounds[Math.floor(Math.random() * chickenSounds.length)];
+                            snd.volume = 0.6;
+                            snd.play().catch(function(e){});
+                        }
+                        spawnText(fPick.x, fPick.y - 60, '🐔 PUNIDO POR SPAM!', '#ff4444');
+                    } else {
+                        // Se não estiver em jogo ainda, spawnamos ele já como galinha
+                        spawnUserPickaxe(fUser, data.avatar || '');
+                        var newP = userPicks.find(up => up.userName === fUser);
+                        if (newP) {
+                             newP.isChicken = true;
+                             if (_audioStarted) chickenSounds[0].play().catch(e=>{});
+                             spawnText(newP.x, newP.y - 60, '🐔 PUNIDO POR SPAM!', '#ff4444');
+                        }
+                    }
+                    return; // Bloqueia a chuva de bombas
+                }
+
+                spawnUserPickaxe(fUser, data.avatar || '');
                 var refP = (pick.active) ? pick : (camTarget || pick);
                 var fx = refP.x, fy = refP.y;
                 for (var fi = 0; fi < 10; fi++) activateTNT(fx + (Math.random() - 0.5) * TILE * 4, fy, fUser, data.avatar || '');
@@ -10305,8 +10647,37 @@
                 spawnParts(lx, ly, '#ff4488', Math.min(likeCount, 5));
                 spawnText(lx, ly - 20, '+' + likePts + ' ❤', '#ff4488');
                 // Contabilizar likes no ranking
-                if (!persistentScores[lUser]) persistentScores[lUser] = { score: 0, avatar: lAvatar, color: '#ff4488', likes: 0, giftsValue: 0 };
-                persistentScores[lUser].likes = (persistentScores[lUser].likes || 0) + likeCount;
+                if (!persistentScores[lUser]) persistentScores[lUser] = { score: 0, avatar: lAvatar, color: '#ff4488', likes: 0, giftsValue: 0, giftsCount: 0 };
+                
+                var oldLikes = persistentScores[lUser].likes || 0;
+                var newLikes = oldLikes + likeCount;
+                
+                // Milestone: Cada 1000 likes ganha um upgrade de picareta
+                if (Math.floor(newLikes / 1000) > Math.floor(oldLikes / 1000)) {
+                    persistentScores[lUser].giftsCount = (persistentScores[lUser].giftsCount || 0) + 1;
+                    var newPick = getPickaxeForGifts(lUser);
+                    
+                    // Atualiza a picareta visual do jogador se ele estiver em jogo
+                    if (lPick) {
+                        lPick.pickaxe = newPick;
+                        spawnText(lPick.x, lPick.y - 100, '🚀 UPGRADE POR LIKES!', '#ff4488');
+                    }
+                    
+                    // Se for o host, atualiza a picareta principal
+                    if (ownerName && lUser === ownerName) {
+                        currentPickaxe = newPick || PICKAXES[0];
+                        pick.pickaxe = currentPickaxe;
+                        safeUpdate('pickaxeDisplay', '⛏ ' + currentPickaxe.name, currentPickaxe.color);
+                        if (_audioStarted) sfxPickaxeChange();
+                    }
+                    
+                    // Exibe banner de upgrade
+                    if (typeof showGiftAlert === 'function') {
+                        showGiftAlert(lUser, lAvatar, '1000 LIKES!', 'block/heart_tnt.png', newPick);
+                    }
+                }
+
+                persistentScores[lUser].likes = newLikes;
                 persistentScores[lUser].score = (persistentScores[lUser].score || 0) + likePts;
                 // Atualiza cycle scores
                 if (!_cycleScores[lUser]) _cycleScores[lUser] = { score: 0, kills: 0, items: 0, balls: 0, likes: 0, avatar: persistentScores[lUser].avatar || '' };
@@ -10384,6 +10755,7 @@
                 joinTime: Date.now(),
                 pickaxe: getPickaxeForGifts(userName),
                 score: (persistentScores[userName] ? persistentScores[userName].score : 0),
+                isChicken: (persistentScores[userName] && persistentScores[userName].isChicken),
                 stormTimer: 0,
                 color: (persistentScores[userName] && persistentScores[userName].color)
                     ? persistentScores[userName].color
@@ -11182,7 +11554,7 @@
             try {
                 // Ensure all in-game players are in persistentScores
                 var inGamePlayers = {};
-                if (ownerName) {
+                if (ownerName && pick.active) {
                     inGamePlayers[ownerName] = true;
                     if (!persistentScores[ownerName]) persistentScores[ownerName] = { score: 0, likes: 0, giftsValue: 0, avatar: pick.userAvatarUrl || '' };
                     if (pick.userAvatarUrl && persistentScores[ownerName].avatar !== pick.userAvatarUrl) {
@@ -11283,7 +11655,8 @@
         }, 30000); // atualiza a cada 1s
 
         // ── UI de Alerta de Presente (Global Banner) ─────────────────────────
-        function showGiftAlert(userName, userAvatar, giftName, giftImgUrl, resultingPickaxe) {
+        function showGiftAlert(userName, userAvatar, giftName, giftImgUrl, rewardInfo) {
+            var resultingPickaxe = rewardInfo;
             var container = document.getElementById('giftAlertContainer');
             if (!container) {
                 container = document.createElement('div');
@@ -11345,15 +11718,6 @@
             alertEl.appendChild(av);
             alertEl.appendChild(textWrap);
             alertEl.appendChild(giftImg);
-
-            var rewardInfo = null;
-            var gn = giftName.toLowerCase();
-            if (gn === 'rose') rewardInfo = { img: 'block/tnt.png', qty: 10 };
-            else if (gn === 'gg') rewardInfo = { img: 'block/tnt.png', qty: 20 };
-            else if (gn.includes('donut')) rewardInfo = { img: 'block/creeper.png', qty: 10 };
-            else if (gn === 'heart me') rewardInfo = { img: 'block/heart_tnt.png', qty: 30 };
-            else if (gn === 'ice cream') rewardInfo = { img: 'pickaxe/wooden_pickaxe.png', symbol: '+ 1' };
-            else if (gn === 'finger heart') rewardInfo = { img: 'pickaxe/wooden_pickaxe.png', symbol: '++', img2: 'pickaxe/netherite_pickaxe.png' };
 
             if (rewardInfo) {
                 var separator = document.createElement('span');
@@ -11437,23 +11801,17 @@
             var cfg = config[type];
             if (!cfg) return;
 
-            // buscar avatar automaticamente se não fornecido
             if (!avatar) {
-                // tentar userPicks
                 var up = userPicks.find(function (u) { return u.userName === name; });
                 if (up && up.avatarUrl) { avatar = up.avatarUrl; }
-                // tentar persistentScores
                 if (!avatar && persistentScores[name] && persistentScores[name].avatar) {
                     avatar = persistentScores[name].avatar;
                 }
-                // tentar ranking carregado
                 if (!avatar && rankingData.length > 0) {
                     var rk = rankingData.find(function (r) { return r.user === name || r.user === '@' + name; });
                     if (rk && rk.avatarUrl) avatar = rk.avatarUrl;
                 }
             }
-
-            // avatar HTML
             var avatarHtml = '';
             if (avatar) {
                 avatarHtml = '<img class="announce-avatar" src="' + avatar + '" style="border-color:' + cfg.color + ';box-shadow:0 0 12px ' + cfg.color + '" />';
@@ -11461,7 +11819,6 @@
                 avatarHtml = '<div class="announce-avatar-placeholder" style="border-color:' + cfg.color + ';box-shadow:0 0 12px ' + cfg.color + '">' + cfg.icon + '</div>';
             }
 
-            // anúncio centralizado (DOM overlay)
             var overlay = document.getElementById('announceOverlay');
             var card = document.createElement('div');
             card.className = 'announce-card';
@@ -11474,21 +11831,16 @@
                 '<div class="announce-pts" style="color:' + cfg.color + '">+' + cfg.pts + ' pts</div>';
             overlay.appendChild(card);
 
-            // fade out e remover após duração
-            var displayMs = cfg.dur * 16.67; // frames → ms
+            var displayMs = cfg.dur * 16.67;
             setTimeout(function () {
                 card.classList.add('fade-out');
                 setTimeout(function () { if (card.parentNode) card.parentNode.removeChild(card); }, 500);
             }, displayMs);
 
-            // pontos
-            if (pick.active) {
-                score += cfg.pts;
-            }
+            if (pick.active) { score += cfg.pts; }
             spawnText(cx, cy + 15, '+' + cfg.pts, cfg.color);
             if (_audioStarted) sfxSkillActivate();
 
-            // Confetti rain
             var confettiColors = ['#ff4444', '#44ff44', '#4444ff', '#ffff44', '#ff44ff', '#44ffff', '#ff8800', '#ffffff'];
             for (var ci = 0; ci < 40; ci++) {
                 parts.push({
@@ -11501,98 +11853,359 @@
                     c: confettiColors[Math.floor(Math.random() * confettiColors.length)]
                 });
             }
-            // Firework bursts
-            for (var fi = 0; fi < 3; fi++) {
-                var fx = cx + (Math.random() - 0.5) * 300;
-                var fy = cy - 100 - Math.random() * 200;
-                for (var fj = 0; fj < 15; fj++) {
-                    var fa = Math.random() * Math.PI * 2;
-                    var fs = 3 + Math.random() * 5;
-                    parts.push({
-                        x: fx, y: fy,
-                        vx: Math.cos(fa) * fs,
-                        vy: Math.sin(fa) * fs,
-                        life: 1, dec: 0.02 + Math.random() * 0.02,
-                        r: 2 + Math.random() * 3,
-                        c: cfg.color
-                    });
-                }
-            }
-
-            // efeitos por tipo
-            if (type === 'follow') {
-                for (var i = 0; i < 3; i++) activateTNT(cx + (i - 1) * TILE * 2, cy, name, '');
-            }
-            else if (type === 'superchat') {
-                for (var i = 0; i < 2; i++) activateMegaTNT(cx + (i - 0.5) * TILE * 3, cy, name, '');
-                shakeAmt = Math.max(shakeAmt, 18);
-            }
-            else if (type === 'member') {
-                for (var i = 0; i < 5; i++) activateTNT(cx + (i - 2) * TILE * 1.5, cy, name, '');
-                activateMegaTNT(cx, cy, name, '');
-            }
-            else if (type === 'gift') {
-                activateMegaTNT(cx - TILE * 2, cy, name, '');
-                activateMegaTNT(cx + TILE * 2, cy, name, '');
-                for (var i = 0; i < 8; i++) activateTNT(cx + (Math.random() - 0.5) * TILE * 8, cy, name, '');
-                shakeAmt = Math.max(shakeAmt, 22);
-            }
         }
 
-        // ── Gerar relatório de pontuação (top 50) ──
-        function generateScoreReport() {
-            var players = Object.keys(persistentScores)
-                .map(function (name) {
-                    var ps = persistentScores[name];
-                    return {
-                        name: name,
-                        score: ps.score || 0,
-                        likes: ps.likes || 0,
-                        gifts: ps.giftsValue || 0
-                    };
-                })
-                .sort(function (a, b) { return b.score - a.score; })
-                .slice(0, 50);
+        async function generateScoreReport() {
+            console.log('Generating Score Report...');
+            var now = new Date();
+            var dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            
+            spawnText(canvas.width / 2, camY + canvas.height / 2, '📦 PREPARING REPORT...', '#00ff88');
+
+            function getLeaderboardSrc(url) {
+                if (!url) return 'pickaxe/default_avatar.png';
+                var cached = avatarCache[url];
+                if (cached && cached.src && cached.naturalWidth > 0) return cached.src;
+                return url;
+            }
+
+            var hostUser = ownerName || ('@' + (localStorage.getItem('pd_tiktok_username') || '').toLowerCase());
+            var hAvUrl = (persistentScores[hostUser] && persistentScores[hostUser].avatar) ? persistentScores[hostUser].avatar : 'pickaxe/default_avatar.png';
+            const hostAvatarSrc = getLeaderboardSrc(hAvUrl);
+
+            var players = Object.keys(persistentScores).map(function (n) {
+                var p = persistentScores[n];
+                return { name: n, score: p.score || 0, likes: p.likes || 0, gifts: p.giftsValue || 0, avatar: p.avatar };
+            }).filter(function(p) { 
+                return p.name.toLowerCase() !== hostUser.toLowerCase(); 
+            }).sort(function (a, b) { return b.score - a.score; }).slice(0, 10);
 
             if (players.length === 0) {
-                alert('Nenhum jogador com pontuação registrada.');
+                alert('Nenhum jogador encontrado para o relatório.');
                 return;
             }
 
-            var now = new Date();
-            var dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            var playersHTML = players.map(function(p, idx) {
+                var medal = (idx === 0) ? 'gold' : (idx === 1 ? 'silver' : (idx === 2 ? 'bronze' : ''));
+                var stats = [];
+                if (p.likes > 0) stats.push('❤️' + p.likes);
+                if (p.gifts > 0) stats.push('🎁' + p.gifts);
+                var displaySrc = getLeaderboardSrc(p.avatar || 'pickaxe/default_avatar.png');
+                return `
+                <div class="item">
+                    <div class="rank ${medal}">${idx < 3 ? '' : '#' + (idx + 1)}</div>
+                    <img class="avatar" src="${displaySrc}" onerror="this.src='pickaxe/default_avatar.png'">
+                    <div class="info">
+                        <div class="name">${p.name.replace(/^@/, '')}</div>
+                        <div class="stats">${stats.join(' • ')}</div>
+                    </div>
+                    <div class="score">${Math.floor(p.score)}</div>
+                </div>`;
+            }).join('');
 
-            var content = 'RELATÓRIO DE PONTUAÇÕES - PICKAXE DROP\n';
-            content += 'Gerado em: ' + dateStr + '\n';
-            content += 'Total de jogadores com pontuação: ' + players.length + '\n';
-            content += '\n';
-            content += 'TOP 50 JOGADORES\n';
-            content += '──────────────────────────────────────\n';
-            players.forEach(function (p, idx) {
-                content += (idx + 1) + '. ' + p.name + ' — ' + Math.floor(p.score) + ' pts';
-                if (p.likes > 0 || p.gifts > 0) {
-                    content += ' (';
-                    var extras = [];
-                    if (p.likes > 0) extras.push('❤️ ' + p.likes);
-                    if (p.gifts > 0) extras.push('🎁 ' + p.gifts);
-                    content += extras.join(', ');
-                    content += ')';
-                }
-                content += '\n';
-            });
-            content += '\n';
-            var totalScore = players.reduce(function (sum, p) { return sum + p.score; }, 0);
-            content += 'Soma total dos top 50: ' + Math.floor(totalScore) + ' pts\n';
+            var assetPaths = ['block/creeper.png', 'block/tnt.png', 'item/diamond.png', 'pickaxe/diamond_pickaxe.png', 'slime/Slime.png'];
+            var decoHTML = '';
+            for (var i = 0; i < 30; i++) {
+                var path = assetPaths[Math.floor(Math.random() * assetPaths.length)];
+                var t = Math.random() * 100, l = Math.random() * 100, s = 80 + Math.random() * 150, r = Math.random() * 360, o = 0.05 + Math.random() * 0.1;
+                decoHTML += `<img src="${path}" class="deco" style="top:${t}%; left:${l}%; width:${s}px; transform:rotate(${r}deg); opacity:${o};" onerror="this.style.display='none'">`;
+            }
 
-            var blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            var htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ranking Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body { background: #000; margin: 0; padding: 0; width: 1080px; height: 1920px; font-family: 'Inter', sans-serif; overflow: hidden; color: #fff; }
+        .container { width: 1080px; height: 1920px; background: linear-gradient(180deg, #0a0a1a 0%, #050510 100%); position: relative; padding: 60px 40px; display: flex; flex-direction: column; overflow: hidden; }
+        .deco { position: absolute; pointer-events: none; z-index: 1; }
+        .content { position: relative; z-index: 10; display: flex; flex-direction: column; height: 100%; width: 100%; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { font-size: 100px; font-weight: 900; margin: 0; color: #00ff88; text-transform: uppercase; letter-spacing: -2px; }
+        .header p { font-size: 32px; opacity: 0.5; margin: 5px 0 0; font-weight: 700; }
+        .list { flex: 1; display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
+        .item { display: flex; align-items: center; background: rgba(255,255,255,0.04); padding: 15px 25px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(10px); height: 105px; }
+        .rank { font-size: 32px; font-weight: 900; color: #555; width: 60px; text-align: center; }
+        .rank.gold { color: #ffd700; font-size: 45px; } .rank.gold::after { content: '🥇'; }
+        .rank.silver { color: #ccc; font-size: 40px; } .rank.silver::after { content: '🥈'; }
+        .rank.bronze { color: #cd7f32; font-size: 40px; } .rank.bronze::after { content: '🥉'; }
+        .avatar { width: 75px; height: 75px; border-radius: 18px; margin: 0 20px; object-fit: cover; border: 2px solid rgba(255,255,255,0.2); background: #111; }
+        .info { flex: 1; min-width: 0; }
+        .name { font-weight: 900; font-size: 34px; margin-bottom: 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .stats { font-size: 20px; opacity: 0.7; font-weight: 700; color: #00ff88; }
+        .score { text-align: right; font-weight: 900; color: #ffd700; font-size: 38px; margin-left: 20px; }
+        .thanks { background: linear-gradient(135deg, rgba(0,255,136,0.1) 0%, rgba(0,255,136,0.02) 100%); border-radius: 35px; border: 2px solid rgba(0,255,136,0.2); padding: 25px; text-align: center; backdrop-filter: blur(5px); }
+        .host-av { width: 130px; height: 130px; border-radius: 50%; border: 6px solid #00ff88; margin-bottom: 15px; object-fit: cover; box-shadow: 0 0 30px rgba(0,255,136,0.4); background: #111; }
+        .thanks h2 { font-size: 44px; font-weight: 900; margin: 0; color: #fff; }
+        .thanks p { font-size: 26px; opacity: 0.8; margin: 5px 0 0; line-height: 1.2; }
+        .footer { text-align: center; margin-top: 30px; font-size: 20px; opacity: 0.2; font-weight: 900; letter-spacing: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        ${decoHTML}
+        <div class="content">
+            <div class="header">
+                <h1>TOP RANKING</h1>
+                <p>PICKAXE DROP • ${dateStr}</p>
+            </div>
+            <div class="list">${playersHTML}</div>
+            <div class="thanks">
+                <img src="${hostAvatarSrc}" class="host-av" onerror="this.src='pickaxe/default_avatar.png'">
+                <h2>THANK YOU ALL!</h2>
+                <p>Thanks for participating in our stream!<br>Follow us for the next match!</p>
+            </div>
+            <div class="footer">GENERATED BY PICKAXE DROP SERVER</div>
+        </div>
+    </div>
+</body>
+</html>`;
+
+            var blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
             var url = URL.createObjectURL(blob);
             var a = document.createElement('a');
             a.href = url;
-            a.download = 'relatorio_pontuacao_' + now.toISOString().slice(0, 10) + '.txt';
+            a.download = 'ranking_' + now.getTime() + '.html';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+            spawnText(canvas.width / 2, camY + canvas.height / 2, '✅ REPORT GENERATED!', '#00ff88');
+        }
+
+        async function generateCommemorativeImage() {
+            var players = Object.keys(_cycleScores).map(function (n) {
+                var cs = _cycleScores[n];
+                var av = cs.avatar || (persistentScores[n] ? persistentScores[n].avatar : '');
+                var giftsTotal = (persistentScores[n] && persistentScores[n].giftsValue !== undefined) ? persistentScores[n].giftsValue : 0;
+                return { name: n, score: cs.score || 0, kills: cs.kills || 0, items: cs.items || 0, balls: cs.balls || 0, likes: cs.likes || 0, giftsValue: giftsTotal, userAvatarUrl: av };
+            }).sort(function (a, b) { return b.score - a.score; });
+
+            if (players.length === 0) {
+                // Fallback to general ranking if match ranking is empty
+                players = Object.keys(persistentScores).map(function(n) {
+                    var ps = persistentScores[n];
+                    return { name: n, score: ps.score || 0, kills: ps.kills || 0, items: 0, balls: 0, likes: ps.likes || 0, giftsValue: ps.giftsValue || 0, userAvatarUrl: ps.avatar };
+                }).sort(function(a, b) { return b.score - a.score; });
+            }
+
+            if (players.length === 0) {
+                alert('Nenhum dado de ranking disponível.');
+                return;
+            }
+
+            spawnText(canvas.width / 2, camY + canvas.height / 2, '🎨 GERANDO IMAGEM...', '#00ff88');
+
+            const W = 1080, H = 1920;
+            const c = document.createElement('canvas');
+            c.width = W; c.height = H;
+            const x = c.getContext('2d');
+
+            // 1. Background Gradient
+            var grad = x.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, W);
+            grad.addColorStop(0, '#1a1a3a');
+            grad.addColorStop(1, '#050510');
+            x.fillStyle = grad;
+            x.fillRect(0, 0, W, H);
+
+            // 2. Subtle Grid/Pattern
+            x.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+            x.lineWidth = 1;
+            for (var i = 0; i < W; i += 60) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, H); x.stroke(); }
+            for (var i = 0; i < H; i += 60) { x.beginPath(); x.moveTo(0, i); x.lineTo(W, i); x.stroke(); }
+
+            // 3. Title
+            x.textAlign = 'center';
+            x.fillStyle = '#fff';
+            x.font = '900 80px Inter, Arial';
+            x.shadowColor = '#ffd700';
+            x.shadowBlur = 20;
+            x.fillText('PICKAXE DROP', W / 2, 180);
+            
+            x.shadowBlur = 0;
+            x.font = '800 40px Inter, Arial';
+            x.fillStyle = '#ffd700';
+            x.fillText('RANKING DA PARTIDA', W / 2, 250);
+
+            // 4. Draw Podium (Top 3)
+            const top3 = players.slice(0, 3);
+            const podiumPositions = [
+                { x: W / 2, y: 700, scale: 1.4, color: '#ffd700', label: '1º', medal: '🥇' }, // 1st
+                { x: W / 2 - 320, y: 850, scale: 1.1, color: '#c0c0c0', label: '2º', medal: '🥈' }, // 2nd
+                { x: W / 2 + 320, y: 880, scale: 1.0, color: '#cd7f32', label: '3º', medal: '🥉' }  // 3rd
+            ];
+
+            // Helper to resolve image with CORS support
+            async function resolveAvatarImage(url) {
+                const rawUrl = url || 'pickaxe/default_avatar.png';
+                return new Promise((resolve) => {
+                    // 1. Check data cache
+                    if (_avatarDataCache[rawUrl]) {
+                        const img = new Image();
+                        img.onload = () => resolve(img);
+                        img.onerror = () => resolve(null);
+                        img.src = _avatarDataCache[rawUrl];
+                        return;
+                    }
+                    // 2. Check if already data URL
+                    if (rawUrl.startsWith('data:')) {
+                        const img = new Image();
+                        img.onload = () => resolve(img);
+                        img.onerror = () => resolve(null);
+                        img.src = rawUrl;
+                        return;
+                    }
+                    // 3. Check avatarCache for safe sources
+                    if (avatarCache[rawUrl] && avatarCache[rawUrl].complete && avatarCache[rawUrl].naturalWidth > 0) {
+                        const cached = avatarCache[rawUrl];
+                        if (cached.src.startsWith('data:') || cached.src.startsWith('blob:') || !cached.src.startsWith('http')) {
+                            return resolve(cached);
+                        }
+                    }
+                    // 4. Local files
+                    if (!rawUrl.startsWith('http')) {
+                        const img = new Image();
+                        img.onload = () => resolve(img);
+                        img.onerror = () => resolve(null);
+                        img.src = rawUrl;
+                        return;
+                    }
+                    // 5. Proxy external
+                    const img = new Image();
+                    img.crossOrigin = "anonymous";
+                    img.onload = () => resolve(img);
+                    img.onerror = () => resolve(null);
+                    img.src = '/proxy-image?url=' + encodeURIComponent(rawUrl);
+                });
+            }
+
+            // Reorder for drawing (3rd, 2nd, then 1st on top)
+            const drawOrder = [2, 1, 0];
+            
+            for (let idx of drawOrder) {
+                const p = top3[idx];
+                if (!p) continue;
+                const pos = podiumPositions[idx];
+
+                // Base / Glow
+                var pGrad = x.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 250 * pos.scale);
+                pGrad.addColorStop(0, pos.color + '33');
+                pGrad.addColorStop(1, 'transparent');
+                x.fillStyle = pGrad;
+                x.beginPath(); x.arc(pos.x, pos.y, 250 * pos.scale, 0, Math.PI * 2); x.fill();
+
+                // Avatar
+                const avSize = 180 * pos.scale;
+                x.save();
+                x.beginPath(); x.arc(pos.x, pos.y - 100, avSize / 2, 0, Math.PI * 2); x.clip();
+                
+                try {
+                    const avImg = await resolveAvatarImage(p.userAvatarUrl);
+                    if (avImg) {
+                        x.drawImage(avImg, pos.x - avSize / 2, pos.y - 100 - avSize / 2, avSize, avSize);
+                    } else {
+                        x.fillStyle = '#333'; x.fillRect(pos.x - avSize / 2, pos.y - 100 - avSize / 2, avSize, avSize);
+                        x.fillStyle = '#fff'; x.font = '60px Arial'; x.textAlign = 'center'; x.fillText('👤', pos.x, pos.y - 80);
+                    }
+                } catch(e) { console.error(e); }
+                x.restore();
+
+                // Avatar Border
+                x.strokeStyle = pos.color;
+                x.lineWidth = 10;
+                x.beginPath(); x.arc(pos.x, pos.y - 100, avSize / 2, 0, Math.PI * 2); x.stroke();
+
+                // Medal
+                x.font = '80px Arial';
+                x.textAlign = 'center';
+                x.fillText(pos.medal, pos.x + avSize/2.5, pos.y - 100 + avSize/3);
+
+                // Name & Score
+                x.fillStyle = '#fff';
+                x.font = '900 ' + (45 * pos.scale) + 'px Inter, Arial';
+                x.fillText(p.name.replace(/^@/, '').toUpperCase(), pos.x, pos.y + 60);
+                
+                x.fillStyle = pos.color;
+                x.font = '800 ' + (35 * pos.scale) + 'px Inter, Arial';
+                x.fillText(Math.floor(p.score) + ' PTS', pos.x, pos.y + 110);
+            }
+
+            // 5. Divider
+            x.strokeStyle = 'rgba(255,255,255,0.1)';
+            x.lineWidth = 2;
+            x.beginPath(); x.moveTo(100, 1050); x.lineTo(W - 100, 1050); x.stroke();
+
+            // 6. List Top 10 (from 4th to 10th or just top 10 if match is small)
+            x.textAlign = 'left';
+            x.fillStyle = 'rgba(255,255,255,0.6)';
+            x.font = '800 30px Inter, Arial';
+            x.fillText('TOP GERAL DA RODADA', 120, 1110);
+
+            const listPlayers = players.slice(3, 11);
+            let curY = 1180;
+            for (let i = 0; i < listPlayers.length; i++) {
+                const p = listPlayers[i];
+                const rank = i + 4;
+                x.fillStyle = 'rgba(255,255,255,0.1)';
+                x.beginPath(); x.roundRect(100, curY - 45, W - 200, 70, 15); x.fill();
+
+                x.fillStyle = '#aaa';
+                x.font = '900 35px Inter, Arial';
+                x.fillText('#' + rank, 130, curY);
+
+                // Avatar in list
+                const listAvImg = await resolveAvatarImage(p.userAvatarUrl);
+                if (listAvImg) {
+                    x.save();
+                    x.beginPath(); x.roundRect(200, curY - 35, 50, 50, 12); x.clip();
+                    x.drawImage(listAvImg, 200, curY - 35, 50, 50);
+                    x.restore();
+                    x.strokeStyle = 'rgba(255,255,255,0.2)';
+                    x.lineWidth = 2;
+                    x.beginPath(); x.roundRect(200, curY - 35, 50, 50, 12); x.stroke();
+                }
+
+                x.fillStyle = '#fff';
+                x.font = '800 35px Inter, Arial';
+                x.fillText(p.name.replace(/^@/, ''), listAvImg ? 270 : 220, curY);
+
+                x.textAlign = 'right';
+                x.fillStyle = '#ffd700';
+                x.fillText(Math.floor(p.score) + ' PTS', W - 130, curY);
+                x.textAlign = 'left';
+
+                curY += 85;
+            }
+
+            // 7. Footer
+            x.textAlign = 'center';
+            x.fillStyle = 'rgba(255,255,255,0.3)';
+            x.font = '700 25px Inter, Arial';
+            var now = new Date();
+            var dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            x.fillText('GERADO EM: ' + dateStr, W / 2, H - 100);
+            
+            if (ownerName) {
+                x.fillStyle = '#00f2ea';
+                x.font = '800 30px Inter, Arial';
+                x.fillText('LIVE DE ' + ownerName.toUpperCase(), W / 2, H - 150);
+            }
+
+            // 8. Download
+            try {
+                const dataUrl = c.toDataURL('image/png');
+                const link = document.getElementById('downloadLink');
+                link.href = dataUrl;
+                link.download = 'ranking_partida_' + now.getTime() + '.png';
+                link.click();
+                spawnText(canvas.width / 2, camY + canvas.height / 2, '✅ IMAGEM SALVA!', '#00ff88');
+            } catch(e) {
+                console.error('Erro ao exportar imagem:', e);
+                alert('Erro ao exportar imagem. Tente novamente.');
+            }
         }
 
         // ── Zerar todas as pontuações ──
@@ -11683,22 +12296,24 @@
             document.getElementById('ttsVoice').style.display = (_ttsMode === 'tiktok' ? 'block' : 'none');
         }
 
-        function speakTTS(text) {
+        function speakTTS(text, customVoice) {
             if (!_ttsEnabled) return;
             // Se for modo nativo, verifica suporte
             if (_ttsMode === 'browser' && !window.speechSynthesis) return;
 
-            _ttsQueue.push(text);
+            _ttsQueue.push({ text: text, voice: customVoice || _ttsVoice });
             if (!_isSpeaking) processTTSQueue();
         }
 
         function processTTSQueue() {
             if (_ttsQueue.length === 0) { _isSpeaking = false; return; }
             _isSpeaking = true;
-            var text = _ttsQueue.shift();
+            var item = _ttsQueue.shift();
+            var text = item.text;
+            var voice = item.voice;
 
             if (_ttsMode === 'tiktok') {
-                var audio = new Audio('/tts?text=' + encodeURIComponent(text) + '&voice=' + _ttsVoice);
+                var audio = new Audio('/tts?text=' + encodeURIComponent(text) + '&voice=' + voice);
                 audio.onended = function () {
                     setTimeout(processTTSQueue, 300);
                 };
@@ -11715,11 +12330,17 @@
             } else {
                 var utterance = new SpeechSynthesisUtterance(text);
                 var voices = window.speechSynthesis.getVoices();
-                var enVoice = voices.find(function (v) { return v.lang.includes('en-US') && v.name.includes('Google'); }) ||
-                    voices.find(function (v) { return v.lang.includes('en-US'); }) ||
-                    voices.find(function (v) { return v.lang.includes('en'); });
+                var selectedVoice;
+                
+                if (voice && voice.startsWith('pt-BR')) {
+                    selectedVoice = voices.find(function (v) { return v.lang.includes('pt-BR'); });
+                } else {
+                    selectedVoice = voices.find(function (v) { return v.lang.includes('en-US') && v.name.includes('Google'); }) ||
+                                    voices.find(function (v) { return v.lang.includes('en-US'); }) ||
+                                    voices.find(function (v) { return v.lang.includes('en'); });
+                }
 
-                if (enVoice) utterance.voice = enVoice;
+                if (selectedVoice) utterance.voice = selectedVoice;
                 utterance.rate = 1.1;
                 utterance.pitch = 1.0;
 

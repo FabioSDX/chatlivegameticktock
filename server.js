@@ -129,7 +129,20 @@ function attachTikTokEvents(ws, tiktok, username, session) {
 
   tiktok.on('chat', function (data) {
     var u = data.user || {}, uid = getUser(u, data, username), nick = getNick(u, data, uid), av = getAvatar(u, data);
-    send(ws, { type: 'chat', platform: 'tiktok', user: uid, nickname: nick, avatar: av, comment: data.comment || '' });
+    var chatEv = { type: 'chat', platform: 'tiktok', user: uid, nickname: nick, avatar: av, comment: data.comment || '' };
+    
+    if (!session.chatBuffer) session.chatBuffer = [];
+    session.chatBuffer.push(chatEv);
+
+    if (!session.chatTimeout) {
+      session.chatTimeout = setTimeout(function () {
+        if (session.chatBuffer) {
+          session.chatBuffer.forEach(function(msg) { send(ws, msg); });
+          session.chatBuffer = [];
+        }
+        session.chatTimeout = null;
+      }, 100);
+    }
   });
   tiktok.on('member', function (data) {
     var u = data.user || {}, uid = getUser(u, data, ''), nick = getNick(u, data, uid), av = getAvatar(u, data);
@@ -360,6 +373,29 @@ async function getEdgeTTS(text, voice) {
     ws.on('error', (err) => { clearTimeout(timeout); reject(err); });
   });
 }
+
+// ── Image Proxy (to allow drawing external avatars on canvas) ──
+app.get('/proxy-image', function (req, res) {
+  var url = req.query.url;
+  if (!url) return res.status(400).send('URL is required');
+
+  const https = require('https');
+  const http = require('http');
+  const agent = url.startsWith('https') ? https : http;
+
+  agent.get(url, {
+    headers: { 'User-Agent': 'Mozilla/5.0' }
+  }, (pRes) => {
+    if (pRes.statusCode !== 200) {
+      return res.status(pRes.statusCode).send('Proxy Error');
+    }
+    res.set('Content-Type', pRes.headers['content-type']);
+    res.set('Access-Control-Allow-Origin', '*');
+    pRes.pipe(res);
+  }).on('error', (err) => {
+    res.status(500).send('Proxy Error: ' + err.message);
+  });
+});
 
 app.get('/tts', async function (req, res) {
   var text = req.query.text;
